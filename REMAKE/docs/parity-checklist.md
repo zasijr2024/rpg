@@ -50,9 +50,9 @@ Status legend:
 - [x] Terrain probabilities represented.
 - [x] Landmark definitions represented.
 - [x] Weapon definitions represented.
-- [ ] Ship constants represented.
-- [ ] Space constants represented.
-- [ ] Fabricator craftables represented.
+- [x] Ship constants represented.
+- [x] Space constants represented.
+- [x] Fabricator craftables represented.
 - [x] Perk definitions represented.
 - [ ] Audio manifest stored as deferred data.
 - [ ] Localization files stored as deferred data.
@@ -172,17 +172,17 @@ Status legend:
 ## Ship, Fabricator, Space, Ending Parity
 
 - [ ] Ship unlock matches original.
-- [ ] Hull reinforcement cost matches original.
-- [ ] Engine upgrade cost matches original.
+- [~] Hull reinforcement cost matches original.
+- [~] Engine upgrade cost matches original.
 - [ ] Lift-off gating matches original.
 - [ ] Fabricator unlock matches original.
-- [ ] Every fabricator craftable has matching cost, type, quantity, blueprint gate, and message.
+- [~] Every fabricator craftable has matching cost, type, quantity, blueprint gate, and message.
 - [ ] Blueprint redemption matches original.
-- [ ] Space ship movement speed formula matches original.
-- [ ] Asteroid spawn timing matches original.
-- [ ] Asteroid speed/randomness matches original.
+- [~] Space ship movement speed formula matches original.
+- [~] Asteroid spawn timing matches original.
+- [~] Asteroid speed/randomness matches original.
 - [ ] Collision/hull loss matches original.
-- [ ] Altitude progression and title changes match original.
+- [~] Altitude progression and title changes match original.
 - [ ] Crash behavior matches original.
 - [ ] Escape threshold and win flow match original.
 - [ ] Score calculation matches original.

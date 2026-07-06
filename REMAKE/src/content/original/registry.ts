@@ -14,6 +14,13 @@ import {
   originalRoomTemperatures,
   originalRoomTradeGoods
 } from "./room/roomData";
+import {
+  originalFabricatorCraftables,
+  originalSpaceAsteroids,
+  originalSpaceAsteroidWaveThresholds,
+  originalSpaceHitAudioTiers,
+  originalSpaceTitleThresholds
+} from "./lateGame/lateGameData";
 import { originalWorldLandmarks, originalWorldWeapons } from "./world/worldData";
 
 export const originalContentRegistry = {
@@ -25,6 +32,11 @@ export const originalContentRegistry = {
   roomCraftables: originalRoomCraftables,
   roomTradeGoods: originalRoomTradeGoods,
   roomMiscItems: originalRoomMiscItems,
+  fabricatorCraftables: originalFabricatorCraftables,
+  spaceTitleThresholds: originalSpaceTitleThresholds,
+  spaceAsteroids: originalSpaceAsteroids,
+  spaceAsteroidWaveThresholds: originalSpaceAsteroidWaveThresholds,
+  spaceHitAudioTiers: originalSpaceHitAudioTiers,
   outsideWorkerIncome: originalOutsideWorkerIncome,
   outsideWorkerUnlocks: originalOutsideWorkerUnlocks,
   trapDrops: originalTrapDrops,

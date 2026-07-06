@@ -4,6 +4,33 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 2 Original Late-Game Data Values
+
+- Added typed original late-game data module for Ship, Space, and Fabricator.
+- Ported exact Ship constants:
+  - lift-off cooldown
+  - alloy cost per hull and thruster
+  - base hull and thruster values
+- Ported exact Space constants:
+  - ship speed
+  - asteroid delay and speed values
+  - fade/ascent timing
+  - starfield dimensions, star count, and animation speed
+  - frame/timer intervals
+  - original 700px playfield bounds and ship positions
+  - asteroid speed randomization factor
+- Ported exact Fabricator craftables, including type, cost, maximum, blueprint gate, quantity, and messages.
+- Ported Space title thresholds, asteroid glyph probabilities, asteroid wave thresholds, hit-sound altitude tiers, and key bindings.
+- Added pure helpers for ship speed, asteroid duration, asteroid scheduling delay, asteroid count by altitude, title lookup, hit audio tier, and background music volume.
+- Wired late-game data into the original content registry.
+- Added late-game parity tests for constants, manifest keys, Fabricator craftables, Space thresholds/tables, helper formulas, and registry wiring.
+
+### Verified - Phase 2 Original Late-Game Data Values
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ### Added - Phase 2 Original Room Data Values
 
 - Added typed original room data module.
