@@ -35,7 +35,7 @@ Status legend:
 - [ ] State categories represented.
 - [ ] State migration behavior reviewed.
 - [ ] Scoring formula represented.
-- [ ] Prestige store map represented.
+- [x] Prestige store map represented.
 - [ ] Room constants represented.
 - [ ] Room fire states represented.
 - [ ] Room craftables represented.
@@ -44,7 +44,7 @@ Status legend:
 - [ ] Worker income definitions represented.
 - [ ] Trap drop table represented.
 - [ ] Path constants represented.
-- [ ] Item weight overrides represented.
+- [x] Item weight overrides represented.
 - [ ] World constants represented.
 - [ ] World tile constants represented.
 - [ ] Terrain probabilities represented.
@@ -53,7 +53,7 @@ Status legend:
 - [ ] Ship constants represented.
 - [ ] Space constants represented.
 - [ ] Fabricator craftables represented.
-- [~] Perk definitions represented.
+- [x] Perk definitions represented.
 - [ ] Audio manifest stored as deferred data.
 - [ ] Localization files stored as deferred data.
 

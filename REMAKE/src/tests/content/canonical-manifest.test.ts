@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   canonicalManifest,
+  DEFAULT_BAG_SPACE,
+  DEFAULT_ITEM_WEIGHT,
   originalContentRegistry,
+  originalPathWeightFor,
   SOURCE_BASELINE_COMMIT
 } from "../../content/original";
 
@@ -81,5 +84,49 @@ describe("canonical manifest", () => {
       originalContentRegistry.pathWeightOverrides.map((weight) => weight.key)
     ).toEqual(canonicalManifest.keys.pathWeightOverrides);
   });
-});
 
+  it("ports exact perk text values", () => {
+    expect(originalContentRegistry.perks).toContainEqual({
+      key: "evasive",
+      name: "evasive",
+      desc: "dodge attacks more effectively",
+      notify: "learned to be where they're not"
+    });
+    expect(originalContentRegistry.perks).toContainEqual({
+      key: "martial artist",
+      name: "martial artist",
+      desc: "punches do even more damage.",
+      notify: "learned to fight quite effectively without weapons"
+    });
+  });
+
+  it("ports exact prestige store type mapping", () => {
+    expect(originalContentRegistry.prestigeStores.slice(0, 4)).toEqual([
+      { key: "wood", type: "g" },
+      { key: "fur", type: "g" },
+      { key: "meat", type: "g" },
+      { key: "iron", type: "g" }
+    ]);
+    expect(originalContentRegistry.prestigeStores.slice(-4)).toEqual([
+      { key: "bullets", type: "a" },
+      { key: "energy cell", type: "a" },
+      { key: "grenade", type: "a" },
+      { key: "bolas", type: "a" }
+    ]);
+  });
+
+  it("ports exact path weight values and default behavior", () => {
+    expect(DEFAULT_BAG_SPACE).toBe(10);
+    expect(DEFAULT_ITEM_WEIGHT).toBe(1);
+    expect(originalPathWeightFor("bone spear")).toBe(2);
+    expect(originalPathWeightFor("iron sword")).toBe(3);
+    expect(originalPathWeightFor("steel sword")).toBe(5);
+    expect(originalPathWeightFor("rifle")).toBe(5);
+    expect(originalPathWeightFor("bullets")).toBe(0.1);
+    expect(originalPathWeightFor("energy cell")).toBe(0.2);
+    expect(originalPathWeightFor("laser rifle")).toBe(5);
+    expect(originalPathWeightFor("plasma rifle")).toBe(5);
+    expect(originalPathWeightFor("bolas")).toBe(0.5);
+    expect(originalPathWeightFor("wood")).toBe(1);
+  });
+});

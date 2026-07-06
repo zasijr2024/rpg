@@ -4,6 +4,22 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 2 Original Core Data Values
+
+- Replaced key-only perk registry entries with exact original names, descriptions, and notifications.
+- Replaced key-only prestige registry entries with exact original store type mappings.
+- Replaced key-only path weight entries with exact original weight values.
+- Added original path constants:
+  - `DEFAULT_BAG_SPACE = 10`
+  - `DEFAULT_ITEM_WEIGHT = 1`
+- Added `originalPathWeightFor()` with original default weight behavior.
+- Added exact-value tests for perks, prestige mappings, and path weights.
+
+### Verified - Phase 2 Original Core Data Values
+
+- `npm test`
+- `npm run build`
+
 ### Added - Phase 2 Data Port Foundation Slice
 
 - Copied generated `DATA/canonical-manifest.json` into `src/generated` for typed app/test imports.

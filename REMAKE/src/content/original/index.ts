@@ -9,6 +9,13 @@ export type {
 } from "./manifest/types";
 export { originalContentRegistry } from "./registry";
 export { originalPerks } from "./core/perks";
-export { originalPrestigeStores } from "./core/prestige";
-export { originalPathWeightOverrides } from "./path/pathWeights";
-
+export {
+  originalPrestigeStores,
+  type OriginalPrestigeStoreType
+} from "./core/prestige";
+export {
+  DEFAULT_BAG_SPACE,
+  DEFAULT_ITEM_WEIGHT,
+  originalPathWeightFor,
+  originalPathWeightOverrides
+} from "./path/pathWeights";
