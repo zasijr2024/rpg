@@ -4,6 +4,22 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 2 Original World Data Values
+
+- Added typed original world data module.
+- Ported exact original world constants.
+- Ported exact world tile symbols.
+- Ported exact terrain probabilities.
+- Ported exact world weapon definitions.
+- Ported exact landmark definitions, including conditional prestige cache metadata.
+- Wired world weapons and landmarks into the original content registry.
+- Added world data parity tests for constants, tiles, probabilities, weapons, landmarks, and manifest key matching.
+
+### Verified - Phase 2 Original World Data Values
+
+- `npm test`
+- `npm run build`
+
 ### Added - Phase 2 Original Core Data Values
 
 - Replaced key-only perk registry entries with exact original names, descriptions, and notifications.

@@ -45,11 +45,11 @@ Status legend:
 - [ ] Trap drop table represented.
 - [ ] Path constants represented.
 - [x] Item weight overrides represented.
-- [ ] World constants represented.
-- [ ] World tile constants represented.
-- [ ] Terrain probabilities represented.
-- [ ] Landmark definitions represented.
-- [ ] Weapon definitions represented.
+- [x] World constants represented.
+- [x] World tile constants represented.
+- [x] Terrain probabilities represented.
+- [x] Landmark definitions represented.
+- [x] Weapon definitions represented.
 - [ ] Ship constants represented.
 - [ ] Space constants represented.
 - [ ] Fabricator craftables represented.
