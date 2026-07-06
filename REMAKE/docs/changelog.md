@@ -4,6 +4,27 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 2 Data Port Foundation Slice
+
+- Copied generated `DATA/canonical-manifest.json` into `src/generated` for typed app/test imports.
+- Added typed canonical manifest definitions and baseline assertion.
+- Added initial original content registry skeleton for:
+  - perks
+  - prestige store keys
+  - path weight override keys
+- Added source-baseline drift tests against selected `ORIGINAL/` file hashes.
+- Added manifest parity tests for:
+  - source commit
+  - required source file checksums
+  - initial core key sets
+  - room definitions, workers, weapons, fabricator craftables, world tiles, and landmarks
+  - event files and representative event titles
+
+### Verified - Phase 2 Data Port Foundation Slice
+
+- `npm test`
+- `npm run build`
+
 ### Added - Phase 1 Engine Services
 
 - Added typed `EventBus`.

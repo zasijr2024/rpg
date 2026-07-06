@@ -53,7 +53,7 @@ Status legend:
 - [ ] Ship constants represented.
 - [ ] Space constants represented.
 - [ ] Fabricator craftables represented.
-- [ ] Perk definitions represented.
+- [~] Perk definitions represented.
 - [ ] Audio manifest stored as deferred data.
 - [ ] Localization files stored as deferred data.
 
@@ -228,8 +228,8 @@ These tests protect the original reveal curve.
 - [x] Notification model tests.
 - [x] Button cooldown model tests.
 - [x] Dev save round-trip tests.
-- [ ] Data key parity tests.
-- [ ] Data constant parity tests.
+- [~] Data key parity tests.
+- [~] Data constant parity tests.
 - [ ] Behavior scenario tests.
 - [ ] Discovery parity tests.
 - [ ] Full playthrough smoke test.
