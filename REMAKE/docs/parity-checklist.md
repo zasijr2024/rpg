@@ -20,13 +20,13 @@ Status legend:
 
 ## Project Gates
 
-- [ ] Git repository initialized.
-- [ ] Baseline source/reference commit created.
-- [ ] Planning/docs hardening commit created.
-- [ ] `DATA/canonical-manifest.json` generated from `ORIGINAL/`.
-- [ ] Source baseline pinned in `REMAKE/docs/source-baseline.md`.
-- [ ] License/attribution plan accepted.
-- [ ] Deferred scope accepted.
+- [x] Git repository initialized.
+- [x] Baseline source/reference commit created.
+- [x] Planning/docs hardening commit created.
+- [x] `DATA/canonical-manifest.json` generated from `ORIGINAL/`.
+- [x] Source baseline pinned in `REMAKE/docs/source-baseline.md`.
+- [x] License/attribution plan accepted.
+- [x] Deferred scope accepted.
 - [ ] Phase 0.5 risk spike completed before gameplay implementation.
 
 ## Source Data Coverage
@@ -219,10 +219,10 @@ These tests protect the original reveal curve.
 
 ## Test Coverage Gates
 
-- [ ] State path API tests.
-- [ ] Deterministic RNG tests.
-- [ ] Timer scheduler tests.
-- [ ] Resource mutation tests.
+- [x] State path API tests.
+- [x] Deterministic RNG tests.
+- [x] Timer scheduler tests.
+- [x] Resource mutation tests.
 - [ ] Data key parity tests.
 - [ ] Data constant parity tests.
 - [ ] Behavior scenario tests.

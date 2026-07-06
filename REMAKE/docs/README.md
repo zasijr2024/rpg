@@ -15,6 +15,7 @@ Recommended reading order:
 9. `deviations.md`
 10. `license-attribution.md`
 11. `git-versioning.md`
+12. `changelog.md`
 
 Current implementation stance:
 
@@ -23,4 +24,3 @@ Current implementation stance:
 - Original data/behavior parity: yes.
 - Desktop first, including 4K: yes.
 - Audio/mobile/durable save migration/new content: deferred.
-

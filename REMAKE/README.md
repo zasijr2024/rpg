@@ -15,8 +15,17 @@ Start here:
 - `docs/deviations.md` - intentional parity deviations log.
 - `docs/license-attribution.md` - licensing and attribution requirements.
 - `docs/git-versioning.md` - branch, commit, and tag rules.
+- `docs/changelog.md` - implementation history.
 
 Implementation rule:
 
 Build a new modern headless TypeScript engine and restrained desktop UI. Preserve original data and behavior, not the original jQuery architecture.
 
+Current implementation commands:
+
+```text
+npm install
+npm test
+npm run build
+npm run test:e2e
+```

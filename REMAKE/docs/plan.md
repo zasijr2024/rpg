@@ -995,6 +995,7 @@ Create and maintain:
 - `REMAKE/docs/source-baseline.md` - pinned original source target
 - `REMAKE/docs/license-attribution.md` - licensing and attribution handling
 - `REMAKE/docs/git-versioning.md` - repository and milestone versioning rules
+- `REMAKE/docs/changelog.md` - implementation history and verification log
 
 Timing:
 

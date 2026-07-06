@@ -1,0 +1,80 @@
+:root {
+  color-scheme: light;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #111;
+  background: #f7f7f4;
+  --page-padding: clamp(1rem, 2vw, 3rem);
+  --reading-width: min(72ch, calc(100vw - (var(--page-padding) * 2)));
+  --rule: #d8d8d2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.appShell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--page-padding);
+}
+
+.panel {
+  width: var(--reading-width);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 2rem 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #666;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.1rem + 0.8vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.statusLine {
+  margin: 1rem 0 1.5rem;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+
+.metaGrid div {
+  min-width: 0;
+}
+
+.metaGrid dt {
+  color: #666;
+}
+
+.metaGrid dd {
+  margin: 0.25rem 0 0;
+  overflow-wrap: anywhere;
+}
+
