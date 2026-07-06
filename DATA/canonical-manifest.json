@@ -1,0 +1,1237 @@
+﻿{
+    "generatedAt":  "2026-07-06T18:47:19+02:00",
+    "source":  {
+                   "repository":  "https://github.com/doublespeakgames/adarkroom",
+                   "commit":  "1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7",
+                   "localRoot":  "F:\\ADR20\\ORIGINAL"
+               },
+    "files":  [
+                  {
+                      "path":  "ORIGINAL/script/audio.js",
+                      "bytes":  12449,
+                      "lines":  268,
+                      "sha256":  "1b46893780fac21a32513bee7ce5bac3cada73ffaf5cce7c88a34aec51f0f010"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/audioLibrary.js",
+                      "bytes":  4351,
+                      "lines":  91,
+                      "sha256":  "253074a27627e2683185c292e9dc2dd8dd2264b4ea27281be5498530df0713dd"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/Button.js",
+                      "bytes":  3597,
+                      "lines":  120,
+                      "sha256":  "f23855f5d21cb10b7346876c3a54537abdc5e560db4797adb541b18656b263c1"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/dropbox.js",
+                      "bytes":  10722,
+                      "lines":  312,
+                      "sha256":  "489e985f98963c4e36d0f1c30d64e24820a9cc102ce4ed8c82e3423815a46bf5"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/engine.js",
+                      "bytes":  28110,
+                      "lines":  834,
+                      "sha256":  "9c12898360bae770cf1321265fe4ae613398a931568b64ffc54a4e7400186e99"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events.js",
+                      "bytes":  40565,
+                      "lines":  1349,
+                      "sha256":  "7f450f94703097bfa91b75f544b786478db81408df56f8b0a270cacaf4202543"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/encounters.js",
+                      "bytes":  8793,
+                      "lines":  437,
+                      "sha256":  "5e86058d765ea4fe7364ab385d83480c6392cab3a570b1d0b03f8b0b203390b6"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/executioner.js",
+                      "bytes":  60447,
+                      "lines":  2318,
+                      "sha256":  "4cd3d694d8424b6538488367ce398992a54b7446fdb2a58fc58386a540c22dfc"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/global.js",
+                      "bytes":  1703,
+                      "lines":  67,
+                      "sha256":  "e353f4b779cadb29825da666e6b000f9f491033d6c7ac0f41ee45565ccec685f"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/marketing.js",
+                      "bytes":  1029,
+                      "lines":  34,
+                      "sha256":  "a431131d18e3bbd55e4fca4cafbd70517da0a2a2ed4e86220054d6db622c6e60"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/outside.js",
+                      "bytes":  7595,
+                      "lines":  292,
+                      "sha256":  "a190e1c4776c0156db08c84c9dfcf4010a353abe1267a6df5fc92d0b4cb114ce"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/room.js",
+                      "bytes":  16827,
+                      "lines":  682,
+                      "sha256":  "22762cfafe0b48b272d5570fa54bf5ef7569984edd01fe6061fc8982b3b2cb55"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/setpieces.js",
+                      "bytes":  71305,
+                      "lines":  3585,
+                      "sha256":  "876d21f55c9ff9daea581a7f81304caaa78f058752fc53e8c2e4aefd8d953064"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/fabricator.js",
+                      "bytes":  7406,
+                      "lines":  223,
+                      "sha256":  "dc1ae9a3e4264be7cb78cfc4a1c4878c1c40beab03bc2a80289c508d22c63a35"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/header.js",
+                      "bytes":  741,
+                      "lines":  34,
+                      "sha256":  "182f367ce3633e9ffbd419fe5115244da1f35b99c06143b5825912fa0df3511f"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/localization.js",
+                      "bytes":  1440,
+                      "lines":  68,
+                      "sha256":  "a9669c83850f10fe613323ff5ff4ae6edab79d05c96d2a88860b5977bae661b3"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/notifications.js",
+                      "bytes":  2093,
+                      "lines":  78,
+                      "sha256":  "980a7bae07e5638f534d4fc734521f3e20500c451eb72df2f8d3e8b453436127"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/outside.js",
+                      "bytes":  19154,
+                      "lines":  660,
+                      "sha256":  "aefa2f2168b5ee83efdd30e77561bba84a31206148db0d6429d90cd1fbc3de3a"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/path.js",
+                      "bytes":  11121,
+                      "lines":  331,
+                      "sha256":  "f22e6e47a66bfb783830771420e683e5cfdbf99926b2de82e48da73215246b67"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/prestige.js",
+                      "bytes":  2472,
+                      "lines":  99,
+                      "sha256":  "42f59d3523c35857445cb276db99391f44ec7fed022aad65d987ab6b3c6ddc60"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/room.js",
+                      "bytes":  34853,
+                      "lines":  1182,
+                      "sha256":  "b090d0b69c28af0723f77140800b1ac898cbae26d98e562001f863bf54c1e17b"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/scoring.js",
+                      "bytes":  883,
+                      "lines":  28,
+                      "sha256":  "cfa10dd662d2071cd04bad96d19ad487e98051ffca47abd82870f7ffc045fc15"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/ship.js",
+                      "bytes":  4975,
+                      "lines":  176,
+                      "sha256":  "30747339fb2f7bab0008829a643781769fde0feb046e8be25c46fa6cd8ee69d2"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/space.js",
+                      "bytes":  16746,
+                      "lines":  617,
+                      "sha256":  "b0f9929a2888e6671a3085d547102ee7afdf74aa16325b8f21e511c370849212"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/state_manager.js",
+                      "bytes":  13112,
+                      "lines":  392,
+                      "sha256":  "a3e2e53727b54706982904154720590fb912739662e942b1aafe1f43a696082a"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/world.js",
+                      "bytes":  34934,
+                      "lines":  1014,
+                      "sha256":  "eb5ca326624f456931be8a6f0b8e2be238a91f7a3afb36233479c9b8e59b1d40"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/encounters.js",
+                      "bytes":  8793,
+                      "lines":  437,
+                      "sha256":  "5e86058d765ea4fe7364ab385d83480c6392cab3a570b1d0b03f8b0b203390b6"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/executioner.js",
+                      "bytes":  60447,
+                      "lines":  2318,
+                      "sha256":  "4cd3d694d8424b6538488367ce398992a54b7446fdb2a58fc58386a540c22dfc"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/global.js",
+                      "bytes":  1703,
+                      "lines":  67,
+                      "sha256":  "e353f4b779cadb29825da666e6b000f9f491033d6c7ac0f41ee45565ccec685f"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/marketing.js",
+                      "bytes":  1029,
+                      "lines":  34,
+                      "sha256":  "a431131d18e3bbd55e4fca4cafbd70517da0a2a2ed4e86220054d6db622c6e60"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/outside.js",
+                      "bytes":  7595,
+                      "lines":  292,
+                      "sha256":  "a190e1c4776c0156db08c84c9dfcf4010a353abe1267a6df5fc92d0b4cb114ce"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/room.js",
+                      "bytes":  16827,
+                      "lines":  682,
+                      "sha256":  "22762cfafe0b48b272d5570fa54bf5ef7569984edd01fe6061fc8982b3b2cb55"
+                  },
+                  {
+                      "path":  "ORIGINAL/script/events/setpieces.js",
+                      "bytes":  71305,
+                      "lines":  3585,
+                      "sha256":  "876d21f55c9ff9daea581a7f81304caaa78f058752fc53e8c2e4aefd8d953064"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/dark.css",
+                      "bytes":  3094,
+                      "lines":  152,
+                      "sha256":  "e677cfcb308d22fdbaef5992f02166415a84954669bc773f6f7f0822f2b7f163"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/fabricator.css",
+                      "bytes":  553,
+                      "lines":  31,
+                      "sha256":  "6872e43b67cc5be04426523aa212798b5d120c2b81eb9025b8f45eab754bcf17"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/main.css",
+                      "bytes":  10564,
+                      "lines":  546,
+                      "sha256":  "d4eff702c3915c2bd30817e6a8d2c20b426e37b5bf71164de33d072f4e9612e4"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/outside.css",
+                      "bytes":  915,
+                      "lines":  52,
+                      "sha256":  "3615ad3d93553068d709e94a76d962f9cbdbb9e3822673f6bd1140244ef82075"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/path.css",
+                      "bytes":  1092,
+                      "lines":  59,
+                      "sha256":  "49bec1b2b69bf2bffcc1e5aa3de405621faf0409541ccc9c73a2eadfcb71b062"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/room.css",
+                      "bytes":  908,
+                      "lines":  52,
+                      "sha256":  "56bb3b9c3b908009be71822b2645f75de6d92f13bf6cf37459027b3afc20e751"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/ship.css",
+                      "bytes":  93,
+                      "lines":  7,
+                      "sha256":  "492482737b18f90e940ea897ed375464284be4866f5ae471d81e58c31c7844f1"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/space.css",
+                      "bytes":  2983,
+                      "lines":  154,
+                      "sha256":  "eb5236a8892e391b7aff432b5632754a99dc120c0319406c10ef956634298262"
+                  },
+                  {
+                      "path":  "ORIGINAL/css/world.css",
+                      "bytes":  1338,
+                      "lines":  66,
+                      "sha256":  "5b6e5588d6b2a7a6ebab9ab9cf4a31a8b20eaf92d243c175e9e89079bef39311"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/adarkroom.pot",
+                      "bytes":  74593,
+                      "lines":  2582,
+                      "sha256":  "57dafdda8b434311facbab61eed080ca6feaadbe7deb9fada066204154b842af"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/babel.cfg",
+                      "bytes":  43,
+                      "lines":  2,
+                      "sha256":  "c0fcc79973812a12c8cc9ded9bef1f3ef43bc34e5f0792456f3a00e0645cfb7e"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/cs/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/cs/strings.js",
+                      "bytes":  63018,
+                      "lines":  1,
+                      "sha256":  "8294e249bfb19f11f7c24733b07714a955efd9ef66532f5adb3c83b3c75d53eb"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/cs/strings.po",
+                      "bytes":  99113,
+                      "lines":  2636,
+                      "sha256":  "769a142d3ddec884833919354a01869d50d427c6930825f109b1711e069e9e35"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/de/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/de/strings.js",
+                      "bytes":  53871,
+                      "lines":  1,
+                      "sha256":  "d9d594d314de4f4ea23f570238054af3979ba5dc8b9aea35426294c5b97dfb0e"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/de/strings.po",
+                      "bytes":  97814,
+                      "lines":  2583,
+                      "sha256":  "034311a8becda4101da190885e7bbe8c731037772d8220cd97dd920049813279"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/el/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/el/strings.js",
+                      "bytes":  153897,
+                      "lines":  1,
+                      "sha256":  "88d9996dceb3735700868bf94e59b40d7d7b2eb07dbe852f7e4492ee2e063961"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/el/strings.po",
+                      "bytes":  119848,
+                      "lines":  2704,
+                      "sha256":  "d11738c79a3a7370c70f31da2059a0ff35cb4563547fce957affd50f2b7ea248"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/eo/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/eo/strings.js",
+                      "bytes":  52837,
+                      "lines":  1,
+                      "sha256":  "ea4e9e2b4651af1746d6d9b2397c648964f2591a8cb59e4c5bdc11a3ee8498e2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/eo/strings.po",
+                      "bytes":  94801,
+                      "lines":  2532,
+                      "sha256":  "df1353286322ea277e5f619677a9efc624de74b742f12cb7c6e0a522c7668551"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/es/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/es/strings.js",
+                      "bytes":  55410,
+                      "lines":  1,
+                      "sha256":  "7d51db014159f648e5c94739d65ad882495eb6767557183463c6c1484023c65d"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/es/strings.po",
+                      "bytes":  98295,
+                      "lines":  2600,
+                      "sha256":  "59d8654278bfd9bb5e9fa2f92646ac1ca55b13911161cb1612ac8e2b613859ec"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/fr/main.css",
+                      "bytes":  400,
+                      "lines":  18,
+                      "sha256":  "02e774ba3cba2db13cf8634fa8eef8b657bf7d008c40ee0be06b4ba6402dc4b5"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/fr/strings.js",
+                      "bytes":  57815,
+                      "lines":  1,
+                      "sha256":  "2b772351a8c7711679a0aa7d98f515ea359fe7dd5d7a207198333412f4b219e6"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/fr/strings.po",
+                      "bytes":  106219,
+                      "lines":  2626,
+                      "sha256":  "ece287a73d30002e8d97eff073ea0c3570b80039d7f0345c084bdd39f28288e2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/gl/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/gl/strings.js",
+                      "bytes":  54165,
+                      "lines":  1,
+                      "sha256":  "35ae1d9e2092ad375201347f4555c1a93e2628159264e7f04ae0ad3d41503364"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/gl/strings.po",
+                      "bytes":  97514,
+                      "lines":  2616,
+                      "sha256":  "3793393f6a15189cd33e8040470a6b1caaa00b1762754f3e228cccbfc8d75283"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/id/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/id/strings.js",
+                      "bytes":  50329,
+                      "lines":  1,
+                      "sha256":  "f19407ce539883f7ac3329d179944b8051a3f7ab77017fb38f9a101e6bc2dbe3"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/id/strings.po",
+                      "bytes":  98897,
+                      "lines":  2781,
+                      "sha256":  "71b9de736660147c5ccb70ce5b7d5f15745f5e61e0aa840d6689630bf709838d"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/it/main.css",
+                      "bytes":  132,
+                      "lines":  3,
+                      "sha256":  "21129d046bd94c1ad5aa315189449130fdd3e9f8cc796a75c36de70c22e9d3d9"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/it/strings.js",
+                      "bytes":  55650,
+                      "lines":  1,
+                      "sha256":  "fdf9d16779029508c44f1b0a594b0f75cd20ef32303abc79433f633b47870174"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/it/strings.po",
+                      "bytes":  99489,
+                      "lines":  2610,
+                      "sha256":  "46d3653462172406bcbae694d2d7ec4f3e06c678855cafeaf18a5f5e83044109"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ja/main.css",
+                      "bytes":  133,
+                      "lines":  3,
+                      "sha256":  "6b07a38decda7500b1abdaf3ac5881e8b2c55e510903d0265b123555d76a504a"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ja/strings.js",
+                      "bytes":  80655,
+                      "lines":  1,
+                      "sha256":  "a15bbeff821ee9c80888ea7ced807e1f87a71d0c03befa745f0c71158daf9289"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ja/strings.po",
+                      "bytes":  99195,
+                      "lines":  2518,
+                      "sha256":  "68b42f7c5ffecfd017e8c7a19434088e53eb7c4262c7944d843517a0dcbe1229"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ko/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ko/strings.js",
+                      "bytes":  78909,
+                      "lines":  1,
+                      "sha256":  "4d9eb3e9a11aaeb4afeea033e13344f956e09a45dcfd7f06675985b64e3fe491"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ko/strings.po",
+                      "bytes":  99029,
+                      "lines":  2502,
+                      "sha256":  "9855e5adc70863619cdc050da9d7293537ef1e8d810dbd5e13e1e3a2a047d3ab"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/langs.js",
+                      "bytes":  586,
+                      "lines":  28,
+                      "sha256":  "b748d33c7d552997c45d2c6351c37a09b5466e9cf3606bd877c9e56f20a550f2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/lt_LT/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/lt_LT/strings.js",
+                      "bytes":  56413,
+                      "lines":  1,
+                      "sha256":  "8b1265aebf161f40aaa6e4a754e2255d1e68a587c5e6b78bf9f251807d619d52"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/lt_LT/strings.mo",
+                      "bytes":  62882,
+                      "lines":  106,
+                      "sha256":  "348deab20cdde646196651c87f5976ee3534e7772721fdc972c0cfef23f2ab65"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/lt_LT/strings.po",
+                      "bytes":  94623,
+                      "lines":  2526,
+                      "sha256":  "1d59cc6ec54af174bbd54efa56dad4d81d27724e361b95b337a73fbf8418c60a"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/lv/strings.js",
+                      "bytes":  60492,
+                      "lines":  1,
+                      "sha256":  "243c57748756962e9609aeef5ce2e786c8915f95460ad7b938c7c346e11ad0a9"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/lv/strings.po",
+                      "bytes":  96134,
+                      "lines":  2536,
+                      "sha256":  "a22b6298bdb40537c9282acde4a6e80efecf0e50c94ad6e9339876d79c436043"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/nb/main.css",
+                      "bytes":  133,
+                      "lines":  3,
+                      "sha256":  "6b07a38decda7500b1abdaf3ac5881e8b2c55e510903d0265b123555d76a504a"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/nb/strings.js",
+                      "bytes":  50627,
+                      "lines":  1,
+                      "sha256":  "93bbe8c2ab577fe2f0e96a2f0c733c88f94fdfa3359e656f391b5fccd59076ab"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/nb/strings.po",
+                      "bytes":  94172,
+                      "lines":  2540,
+                      "sha256":  "303ca6b3fb5fa56bc1136ff7f658074fed4eebb91c57f104583dbcc795fed2d0"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pl/main.css",
+                      "bytes":  132,
+                      "lines":  3,
+                      "sha256":  "21129d046bd94c1ad5aa315189449130fdd3e9f8cc796a75c36de70c22e9d3d9"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pl/strings.js",
+                      "bytes":  58910,
+                      "lines":  1,
+                      "sha256":  "7b35df5421209d1311ed092a541a59d9084a9e27adb0b32ee8ad1d298af5efc7"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pl/strings.po",
+                      "bytes":  97077,
+                      "lines":  2562,
+                      "sha256":  "7d73a55e90e41f63cf70a93705eabfb4f95304d04a2c6a47590381f291d7ef09"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pt/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pt/strings.js",
+                      "bytes":  52568,
+                      "lines":  1,
+                      "sha256":  "3af0e4ed8d9d249901f39917f91b51ec1ca526c4e949718b550822230027e0d5"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pt/strings.po",
+                      "bytes":  96571,
+                      "lines":  2580,
+                      "sha256":  "71e4f37b0c002f0a2dd5f1ae2bbe6ab580b5b01f719064febc01c3c2e3222a85"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pt_br/main.css",
+                      "bytes":  132,
+                      "lines":  3,
+                      "sha256":  "21129d046bd94c1ad5aa315189449130fdd3e9f8cc796a75c36de70c22e9d3d9"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pt_br/strings.js",
+                      "bytes":  54610,
+                      "lines":  1,
+                      "sha256":  "245d52c0ed92a45cf54b453977a4d437e5ce01612b6c05cb0654eb691aaf5553"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/pt_br/strings.po",
+                      "bytes":  96710,
+                      "lines":  2508,
+                      "sha256":  "eb3c79d3b4566c4c37f596f3b6c52b2fdb409e5ece4b69395478ddb9e44e33a4"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ru/main.css",
+                      "bytes":  286,
+                      "lines":  7,
+                      "sha256":  "e48b0df40902af1925601550a480f50012591f990969c920f19c59a2f1ea566d"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ru/strings.js",
+                      "bytes":  84291,
+                      "lines":  1,
+                      "sha256":  "6e0b1ab494e6321cc2b7beb8f3ba750ba5c76f369427bcdaa90dff66d937c827"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/ru/strings.po",
+                      "bytes":  118569,
+                      "lines":  2564,
+                      "sha256":  "f63a24ad36068110014314c0bd59bc407c29865ad556e31de393a4da1e88d1f5"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/sv/main.css",
+                      "bytes":  133,
+                      "lines":  3,
+                      "sha256":  "6b07a38decda7500b1abdaf3ac5881e8b2c55e510903d0265b123555d76a504a"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/sv/strings.js",
+                      "bytes":  37796,
+                      "lines":  1,
+                      "sha256":  "69b52da75371f90c0af064f472141f030dbc7849dfafaac92de38a7342583f4c"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/sv/strings.po",
+                      "bytes":  88481,
+                      "lines":  2560,
+                      "sha256":  "9dc14deb451510660646849cec650208add83442d847f02e389b24717179958c"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/th/main.css",
+                      "bytes":  132,
+                      "lines":  3,
+                      "sha256":  "13000067d4a8ed7d238aa03d07c475bf7cba89ce944a0616de85a45750b6aeff"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/th/strings.js",
+                      "bytes":  85244,
+                      "lines":  304,
+                      "sha256":  "5bc60ce3f9908ba75a9f3422e2995249fa080aa7113a6369baa717e5ce9fbdb9"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/th/strings.po",
+                      "bytes":  131582,
+                      "lines":  2629,
+                      "sha256":  "f33636c426ec5011a2f9621d8efd2aeab14a70bcc4da0e728ab423180fd96c44"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/tr/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "3a7fe5f31b668080a6db22aeb3a9ffc7d09bc435baca1206a970eb5f96cd16a2"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/tr/strings.js",
+                      "bytes":  37686,
+                      "lines":  1,
+                      "sha256":  "5f9de5a4be4b3512b86554441e7a313c74c59cdda45dd46284d987615abf9f28"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/tr/strings.po",
+                      "bytes":  97007,
+                      "lines":  2582,
+                      "sha256":  "98fd9124ce082e35935c2312775190b15b9d3931326e2b6c0fc0f9f0a29663b8"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/uk/main.css",
+                      "bytes":  177,
+                      "lines":  4,
+                      "sha256":  "2d8569bf5b48fdfe5137fee649630d3974a0f4dec92f859cb29f9a08405dce6b"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/uk/strings.js",
+                      "bytes":  84792,
+                      "lines":  1,
+                      "sha256":  "cda39fca42e2c4063a488776a588721607d571bec82c636fa8af53a3303fc7d7"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/uk/strings.po",
+                      "bytes":  119271,
+                      "lines":  2577,
+                      "sha256":  "1bb96be970966a5271f6ab14c9330403b7a63b9b0b06cfad430dec56ce5e979f"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/vi/main.css",
+                      "bytes":  130,
+                      "lines":  3,
+                      "sha256":  "0b374acf5b68319073407ef19fab5358f0d14e4ff8df65853b078f2e88ba5e1a"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/vi/strings.js",
+                      "bytes":  73052,
+                      "lines":  1,
+                      "sha256":  "3f6a9feb5e11c585f61ac3a3d289cfbe3d79b59f85908614fbd6cc1a0ef92405"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/vi/strings.po",
+                      "bytes":  101067,
+                      "lines":  2547,
+                      "sha256":  "4557d65c015c0ca66d5c1b8b778bb6304db1677ed7d123150c2bb375a5e0ce4d"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/zh_cn/main.css",
+                      "bytes":  132,
+                      "lines":  3,
+                      "sha256":  "21129d046bd94c1ad5aa315189449130fdd3e9f8cc796a75c36de70c22e9d3d9"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/zh_cn/strings.js",
+                      "bytes":  67430,
+                      "lines":  1,
+                      "sha256":  "693a829fa591ab09eb155b3b5482fc562057a902c2264a829a2962a61c388496"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/zh_cn/strings.po",
+                      "bytes":  93095,
+                      "lines":  2545,
+                      "sha256":  "e458f4f02171c0cea3056bf81ea5eeeaf80dc727ec6ef9d6639edcc51793fa1e"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/zh_tw/main.css",
+                      "bytes":  132,
+                      "lines":  3,
+                      "sha256":  "21129d046bd94c1ad5aa315189449130fdd3e9f8cc796a75c36de70c22e9d3d9"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/zh_tw/strings.js",
+                      "bytes":  40560,
+                      "lines":  1,
+                      "sha256":  "e17a3197e3a855fee0cbf88bafcaf25fab782b1068adeaaa5ee0b27860672939"
+                  },
+                  {
+                      "path":  "ORIGINAL/lang/zh_tw/strings.po",
+                      "bytes":  92265,
+                      "lines":  2535,
+                      "sha256":  "50cf40dce03b58257d77aa0754930889e7c0d0571d286b9e0f992e0b57f13ecd"
+                  },
+                  {
+                      "path":  "ORIGINAL/doc/Events.xlsx",
+                      "bytes":  10337,
+                      "lines":  51,
+                      "sha256":  "634a63f30ab90bc32b4508c7803b3fd928d1e3d8d229a6fc2f87f5ce8f589084"
+                  },
+                  {
+                      "path":  "ORIGINAL/doc/translation.txt",
+                      "bytes":  3918,
+                      "lines":  94,
+                      "sha256":  "bc5b68b5d36ab00968195d815eecaad37eb06dd0320b5fe47698fde3cc09ef3d"
+                  },
+                  {
+                      "path":  "ORIGINAL/doc/Zones.txt",
+                      "bytes":  209,
+                      "lines":  5,
+                      "sha256":  "da601b99075d4351eadc8bdce40510499ad7dc173e0b6ed6bc52d97ddb68ff83"
+                  },
+                  {
+                      "path":  "ORIGINAL/index.html",
+                      "bytes":  5331,
+                      "lines":  119,
+                      "sha256":  "fd2d3a7f3261e50a09c9cc2c9757f4051d285cb0047c7ba76095074d28982388"
+                  },
+                  {
+                      "path":  "ORIGINAL/browserWarning.html",
+                      "bytes":  1539,
+                      "lines":  43,
+                      "sha256":  "a6f013ff8b26438c9c595ac5d8f7b74535baaf9e016a1a3c8071f7d95d00f0d2"
+                  },
+                  {
+                      "path":  "ORIGINAL/mobileWarning.html",
+                      "bytes":  1412,
+                      "lines":  57,
+                      "sha256":  "d272b41e3c9f5e9b32d29968737d36dd19b6b9c1ec9cda259560d3e879df6956"
+                  },
+                  {
+                      "path":  "ORIGINAL/package.json",
+                      "bytes":  462,
+                      "lines":  16,
+                      "sha256":  "d916939736ca04b615523d1f9ed5ff387ab321b20e197d6fb54d27499eb05f85"
+                  },
+                  {
+                      "path":  "ORIGINAL/README.md",
+                      "bytes":  2710,
+                      "lines":  42,
+                      "sha256":  "8b7ef9a4a491104110a116d76c16f15dc0463f4e18a1cc4ffb22f6f0470c2828"
+                  },
+                  {
+                      "path":  "ORIGINAL/LICENSE.md",
+                      "bytes":  17110,
+                      "lines":  295,
+                      "sha256":  "6db24666cf2c9187fa25ecfbbe5a7ac112f64f39326e34e3a6fd2277ee42cb92"
+                  }
+              ],
+    "keys":  {
+                 "roomDefinitions":  [
+                                         "trap",
+                                         "cart",
+                                         "hut",
+                                         "lodge",
+                                         "trading post",
+                                         "tannery",
+                                         "smokehouse",
+                                         "workshop",
+                                         "steelworks",
+                                         "armoury",
+                                         "torch",
+                                         "waterskin",
+                                         "cask",
+                                         "water tank",
+                                         "bone spear",
+                                         "rucksack",
+                                         "wagon",
+                                         "convoy",
+                                         "l armour",
+                                         "i armour",
+                                         "s armour",
+                                         "iron sword",
+                                         "steel sword",
+                                         "rifle",
+                                         "scales",
+                                         "teeth",
+                                         "iron",
+                                         "coal",
+                                         "steel",
+                                         "medicine",
+                                         "bullets",
+                                         "energy cell",
+                                         "bolas",
+                                         "grenade",
+                                         "bayonet",
+                                         "alien alloy",
+                                         "compass",
+                                         "laser rifle"
+                                     ],
+                 "workers":  [
+                                 "gatherer",
+                                 "hunter",
+                                 "trapper",
+                                 "tanner",
+                                 "charcutier",
+                                 "iron miner",
+                                 "coal miner",
+                                 "sulphur miner",
+                                 "steelworker",
+                                 "armourer"
+                             ],
+                 "weapons":  [
+                                 "fists",
+                                 "bone spear",
+                                 "iron sword",
+                                 "steel sword",
+                                 "bayonet",
+                                 "rifle",
+                                 "laser rifle",
+                                 "grenade",
+                                 "bolas",
+                                 "plasma rifle",
+                                 "energy blade",
+                                 "disruptor"
+                             ],
+                 "fabricatorCraftables":  [
+                                              "energy blade",
+                                              "fluid recycler",
+                                              "cargo drone",
+                                              "kinetic armour",
+                                              "disruptor",
+                                              "hypo",
+                                              "stim",
+                                              "plasma rifle",
+                                              "glowstone"
+                                          ],
+                 "perks":  [
+                               "boxer",
+                               "martial artist",
+                               "unarmed master",
+                               "barbarian",
+                               "slow metabolism",
+                               "desert rat",
+                               "evasive",
+                               "precise",
+                               "scout",
+                               "stealthy",
+                               "gastronome"
+                           ],
+                 "prestigeStores":  [
+                                        "wood",
+                                        "fur",
+                                        "meat",
+                                        "iron",
+                                        "coal",
+                                        "sulphur",
+                                        "steel",
+                                        "cured meat",
+                                        "scales",
+                                        "teeth",
+                                        "leather",
+                                        "bait",
+                                        "torch",
+                                        "cloth",
+                                        "bone spear",
+                                        "iron sword",
+                                        "steel sword",
+                                        "bayonet",
+                                        "rifle",
+                                        "laser rifle",
+                                        "bullets",
+                                        "energy cell",
+                                        "grenade",
+                                        "bolas"
+                                    ],
+                 "pathWeightOverrides":  [
+                                             "bone spear",
+                                             "iron sword",
+                                             "steel sword",
+                                             "rifle",
+                                             "bullets",
+                                             "energy cell",
+                                             "laser rifle",
+                                             "plasma rifle",
+                                             "bolas"
+                                         ],
+                 "audioConstants":  [
+                                        "MUSIC_DUSTY_PATH",
+                                        "MUSIC_SILENT_FOREST",
+                                        "MUSIC_LONELY_HUT",
+                                        "MUSIC_TINY_VILLAGE",
+                                        "MUSIC_MODEST_VILLAGE",
+                                        "MUSIC_LARGE_VILLAGE",
+                                        "MUSIC_RAUCOUS_VILLAGE",
+                                        "MUSIC_FIRE_DEAD",
+                                        "MUSIC_FIRE_SMOLDERING",
+                                        "MUSIC_FIRE_FLICKERING",
+                                        "MUSIC_FIRE_BURNING",
+                                        "MUSIC_FIRE_ROARING",
+                                        "MUSIC_WORLD",
+                                        "MUSIC_SPACE",
+                                        "MUSIC_ENDING",
+                                        "MUSIC_SHIP",
+                                        "EVENT_NOMAD",
+                                        "EVENT_NOISES_OUTSIDE",
+                                        "EVENT_NOISES_INSIDE",
+                                        "EVENT_BEGGAR",
+                                        "EVENT_SHADY_BUILDER",
+                                        "EVENT_MYSTERIOUS_WANDERER",
+                                        "EVENT_SCOUT",
+                                        "EVENT_WANDERING_MASTER",
+                                        "EVENT_SICK_MAN",
+                                        "EVENT_RUINED_TRAP",
+                                        "EVENT_HUT_FIRE",
+                                        "EVENT_SICKNESS",
+                                        "EVENT_PLAGUE",
+                                        "EVENT_BEAST_ATTACK",
+                                        "EVENT_SOLDIER_ATTACK",
+                                        "EVENT_THIEF",
+                                        "LANDMARK_FRIENDLY_OUTPOST",
+                                        "LANDMARK_SWAMP",
+                                        "LANDMARK_CAVE",
+                                        "LANDMARK_TOWN",
+                                        "LANDMARK_CITY",
+                                        "LANDMARK_HOUSE",
+                                        "LANDMARK_BATTLEFIELD",
+                                        "LANDMARK_BOREHOLE",
+                                        "LANDMARK_CRASHED_SHIP",
+                                        "LANDMARK_SULPHUR_MINE",
+                                        "LANDMARK_COAL_MINE",
+                                        "LANDMARK_IRON_MINE",
+                                        "LANDMARK_DESTROYED_VILLAGE",
+                                        "ENCOUNTER_TIER_1",
+                                        "ENCOUNTER_TIER_2",
+                                        "ENCOUNTER_TIER_3",
+                                        "LIGHT_FIRE",
+                                        "STOKE_FIRE",
+                                        "BUILD",
+                                        "CRAFT",
+                                        "BUY",
+                                        "GATHER_WOOD",
+                                        "CHECK_TRAPS",
+                                        "EMBARK",
+                                        "FOOTSTEPS_1",
+                                        "FOOTSTEPS_2",
+                                        "FOOTSTEPS_3",
+                                        "FOOTSTEPS_4",
+                                        "FOOTSTEPS_5",
+                                        "FOOTSTEPS_6",
+                                        "EAT_MEAT",
+                                        "USE_MEDS",
+                                        "WEAPON_UNARMED_1",
+                                        "WEAPON_UNARMED_2",
+                                        "WEAPON_UNARMED_3",
+                                        "WEAPON_MELEE_1",
+                                        "WEAPON_MELEE_2",
+                                        "WEAPON_MELEE_3",
+                                        "WEAPON_RANGED_1",
+                                        "WEAPON_RANGED_2",
+                                        "WEAPON_RANGED_3",
+                                        "DEATH",
+                                        "REINFORCE_HULL",
+                                        "UPGRADE_ENGINE",
+                                        "LIFT_OFF",
+                                        "ASTEROID_HIT_1",
+                                        "ASTEROID_HIT_2",
+                                        "ASTEROID_HIT_3",
+                                        "ASTEROID_HIT_4",
+                                        "ASTEROID_HIT_5",
+                                        "ASTEROID_HIT_6",
+                                        "ASTEROID_HIT_7",
+                                        "ASTEROID_HIT_8",
+                                        "CRASH"
+                                    ],
+                 "worldTileConstants":  [
+                                            "VILLAGE",
+                                            "IRON_MINE",
+                                            "COAL_MINE",
+                                            "SULPHUR_MINE",
+                                            "FOREST",
+                                            "FIELD",
+                                            "BARRENS",
+                                            "ROAD",
+                                            "HOUSE",
+                                            "CAVE",
+                                            "TOWN",
+                                            "CITY",
+                                            "OUTPOST",
+                                            "SHIP",
+                                            "BOREHOLE",
+                                            "BATTLEFIELD",
+                                            "SWAMP",
+                                            "CACHE",
+                                            "EXECUTIONER"
+                                        ],
+                 "worldLandmarkAssignments":  [
+                                                  "OUTPOST",
+                                                  "IRON_MINE",
+                                                  "COAL_MINE",
+                                                  "SULPHUR_MINE",
+                                                  "HOUSE",
+                                                  "CAVE",
+                                                  "TOWN",
+                                                  "CITY",
+                                                  "SHIP",
+                                                  "BOREHOLE",
+                                                  "BATTLEFIELD",
+                                                  "SWAMP",
+                                                  "EXECUTIONER",
+                                                  "CACHE"
+                                              ]
+             },
+    "events":  {
+                   "files":  [
+                                 "ORIGINAL/script/events/encounters.js",
+                                 "ORIGINAL/script/events/executioner.js",
+                                 "ORIGINAL/script/events/global.js",
+                                 "ORIGINAL/script/events/marketing.js",
+                                 "ORIGINAL/script/events/outside.js",
+                                 "ORIGINAL/script/events/room.js",
+                                 "ORIGINAL/script/events/setpieces.js"
+                             ],
+                   "titles":  [
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Snarling Beast"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Gaunt Man"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Strange Bird"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Two-Headed Creature"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Shivering Man"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Man-Eater"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Scavenger"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Huge Lizard"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Feral Terror"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Soldier"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/encounters.js",
+                                      "title":  "A Sniper"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/executioner.js",
+                                      "title":  "A Ravaged Battleship"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/executioner.js",
+                                      "title":  "Engineering Wing"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/executioner.js",
+                                      "title":  "Martial Wing"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/executioner.js",
+                                      "title":  "Medical Wing"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/executioner.js",
+                                      "title":  "Command Deck"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/global.js",
+                                      "title":  "The Thief"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/marketing.js",
+                                      "title":  "Penrose"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/outside.js",
+                                      "title":  "A Ruined Trap"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/outside.js",
+                                      "title":  "Fire"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/outside.js",
+                                      "title":  "Sickness"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/outside.js",
+                                      "title":  "Plague"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/outside.js",
+                                      "title":  "A Beast Attack"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/outside.js",
+                                      "title":  "A Military Raid"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "The Nomad"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "Noises"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "The Beggar"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "The Shady Builder"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "The Mysterious Wanderer"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "The Scout"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "The Master"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/room.js",
+                                      "title":  "The Sick Man"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "An Outpost"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Murky Swamp"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Damp Cave"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Deserted Town"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Ruined City"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "An Old House"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Forgotten Battlefield"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Huge Borehole"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Crashed Ship"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "The Sulphur Mine"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "The Coal Mine"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "The Iron Mine"
+                                  },
+                                  {
+                                      "file":  "ORIGINAL/script/events/setpieces.js",
+                                      "title":  "A Destroyed Village"
+                                  }
+                              ]
+               }
+}
