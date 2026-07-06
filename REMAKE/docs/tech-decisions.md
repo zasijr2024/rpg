@@ -78,7 +78,14 @@ Reason:
 
 ## TD-006: Use Canvas Spike for Space, Do Not Commit Until Proven
 
-Decision: Phase 0.5 must prototype the space sequence in Canvas and compare against DOM feasibility before final implementation.
+Decision: use Canvas for the final Space implementation unless later parity testing proves it cannot match the original behavior.
+
+Phase 0.5 evidence:
+
+- Canvas space prototype renders in the app shell.
+- DOM space prototype renders in the app shell for comparison.
+- Playwright verifies both prototypes at 1920x1080 and 3840x2160.
+- Canvas gives a clearer path for stable frame timing, symbol drawing, and collision checks without many positioned DOM nodes.
 
 Acceptance:
 
@@ -95,4 +102,3 @@ Reason:
 
 - Future expansions must not contaminate original mode.
 - Strict original mode is required.
-

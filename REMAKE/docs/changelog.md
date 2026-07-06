@@ -4,6 +4,27 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 0.5 Risk Spike
+
+- Added separated spike modules under `src/spikes`.
+- Added 61x61 ASCII world viewport generator.
+- Added miniature deterministic event runtime with cost, reward, transition, and RNG branch behavior.
+- Added cooldown pressure simulator to prove timer ticks can be coalesced into lower-frequency UI notifications.
+- Added Canvas and DOM space prototypes.
+- Added spike UI panel with tabs, keyboard focus probe, ASCII viewport, and both space prototypes.
+- Added Playwright 4K project at 3840x2160.
+- Added e2e checks for:
+  - ASCII viewport stability and no horizontal overflow
+  - keyboard focus and world movement probe
+  - Canvas and DOM space prototype visibility
+- Recorded Space rendering direction in `tech-decisions.md`: use Canvas for final Space implementation unless later parity evidence disproves it.
+
+### Verified - Phase 0.5 Risk Spike
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ### Added
 
 - Started implementation on `remake/parity`.
@@ -35,4 +56,3 @@ All notable remake implementation changes are recorded here.
 - No gameplay has been implemented yet.
 - The app shell is explicitly an implementation scaffold, not the final first-screen gameplay state.
 - Save/load remains dev-only and disposable until post-parity save versioning.
-

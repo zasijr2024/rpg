@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { createGameEngine } from "../engine";
+import { SpikeLab } from "./SpikeLab";
 
 export function App() {
   const engine = useMemo(() => createGameEngine(), []);
@@ -28,7 +29,7 @@ export function App() {
           </div>
         </dl>
       </section>
+      <SpikeLab />
     </main>
   );
 }
-

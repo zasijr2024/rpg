@@ -27,7 +27,7 @@ Status legend:
 - [x] Source baseline pinned in `REMAKE/docs/source-baseline.md`.
 - [x] License/attribution plan accepted.
 - [x] Deferred scope accepted.
-- [ ] Phase 0.5 risk spike completed before gameplay implementation.
+- [x] Phase 0.5 risk spike completed before gameplay implementation.
 
 ## Source Data Coverage
 
