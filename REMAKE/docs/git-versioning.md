@@ -1,4 +1,4 @@
-# Git Versioning Plan
+﻿# Git Versioning Plan
 
 Last updated: 2026-07-06
 
@@ -73,10 +73,11 @@ Recommended milestone tags:
 
 ## Source Protection
 
-`ORIGINAL/` is reference source. Do not edit it during remake implementation. If the upstream baseline changes intentionally, update `REMAKE/source-baseline.md`, regenerate `DATA/canonical-manifest.json`, and commit that as a source-baseline change.
+`ORIGINAL/` is reference source. Do not edit it during remake implementation. If the upstream baseline changes intentionally, update `REMAKE/docs/source-baseline.md`, regenerate `DATA/canonical-manifest.json`, and commit that as a source-baseline change.
 
 `ORIGINAL/` is tracked as a git submodule pinned to `1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7`. Clones must initialize submodules to restore the original source tree:
 
 ```text
 git submodule update --init --recursive
 ```
+

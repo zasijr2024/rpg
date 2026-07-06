@@ -1,4 +1,4 @@
-# Deferred Scope Contract
+﻿# Deferred Scope Contract
 
 Last updated: 2026-07-06
 
@@ -6,7 +6,7 @@ This file locks what is intentionally not part of the first remake target.
 
 ## First Remake Target
 
-The first remake target is gameplay/UI parity excluding deferred systems. It must be completable on desktop from a fresh save using original gameplay data and behavior as defined by `REMAKE/source-baseline.md`.
+The first remake target is gameplay/UI parity excluding deferred systems. It must be completable on desktop from a fresh save using original gameplay data and behavior as defined by `REMAKE/docs/source-baseline.md`.
 
 ## Deferred Until After Parity
 
@@ -99,7 +99,8 @@ Allowed during parity:
 No deferred system may enter the active target until:
 
 - gameplay/UI parity is accepted
-- `REMAKE/deviations.md` is complete
-- `REMAKE/parity-checklist.md` is complete
+- `REMAKE/docs/deviations.md` is complete
+- `REMAKE/docs/parity-checklist.md` is complete
 - Post-Parity Phase A save versioning is implemented if the change affects persisted state
+
 

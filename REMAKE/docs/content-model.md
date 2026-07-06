@@ -1,4 +1,4 @@
-# Content Model
+﻿# Content Model
 
 Last updated: 2026-07-06
 
@@ -23,7 +23,7 @@ src/content/expansions/
 - Original content keys must match the source baseline exactly.
 - Original content must not depend on expansion content.
 - Original content becomes immutable after parity except documented bug fixes.
-- Any original behavior change must be recorded in `REMAKE/deviations.md`.
+- Any original behavior change must be recorded in `REMAKE/docs/deviations.md`.
 
 ## Expansion Content Rules
 
@@ -76,4 +76,5 @@ Strict original mode must:
 - use original source-derived constants
 - produce parity-testable behavior
 - be the default mode until after parity completion
+
 

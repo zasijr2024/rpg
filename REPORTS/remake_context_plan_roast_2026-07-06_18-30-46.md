@@ -1,4 +1,4 @@
-# REMAKE Context and Plan Roast Audit
+﻿# REMAKE Context and Plan Roast Audit
 
 Audit timestamp: 2026-07-06 18:30:46 Europe/Berlin
 
@@ -6,8 +6,8 @@ Skill used: local `roasting-audit`
 
 Audited files:
 
-- `REMAKE/context.md`
-- `REMAKE/plan.md`
+- `REMAKE/docs/context.md`
+- `REMAKE/docs/plan.md`
 - `ANALYSE/authors_vision_and_success.md`
 - `DATA/00-extraction-index.md`
 - workspace repository state
@@ -26,8 +26,8 @@ This audit inspected documentation and repository state only. There is no remake
 
 Checks run:
 
-- Read `REMAKE/context.md`
-- Read `REMAKE/plan.md`
+- Read `REMAKE/docs/context.md`
+- Read `REMAKE/docs/plan.md`
 - Read `ANALYSE/authors_vision_and_success.md`
 - Read `DATA/00-extraction-index.md`
 - Listed workspace folders
@@ -83,10 +83,10 @@ Use git tags for milestones:
 
 Evidence:
 
-- `REMAKE/plan.md:21` says to keep exact original game data.
-- `REMAKE/plan.md:280` starts a data parity plan.
-- `REMAKE/plan.md:317` adds data verification.
-- `REMAKE/plan.md:726` lists data parity tests.
+- `REMAKE/docs/plan.md:21` says to keep exact original game data.
+- `REMAKE/docs/plan.md:280` starts a data parity plan.
+- `REMAKE/docs/plan.md:317` adds data verification.
+- `REMAKE/docs/plan.md:726` lists data parity tests.
 
 Why this is still weak:
 
@@ -108,16 +108,16 @@ Add a real parity contract before implementation:
 
 Evidence:
 
-- `REMAKE/context.md:1` says to recreate the latest web version while preserving vision.
-- `REMAKE/context.md:2` says to add improvements later.
+- `REMAKE/docs/context.md:1` says to recreate the latest web version while preserving vision.
+- `REMAKE/docs/context.md:2` says to add improvements later.
 
 Why this is bad:
 
-Those two bullets are true, but too small to serve as project context. The actual operating rules now live in `REMAKE/plan.md` and `ANALYSE/authors_vision_and_success.md`. If someone opens only `context.md`, they miss the real constraints: no audio/mobile/save migration yet, exact data parity, desktop 4K, and author-vision authority.
+Those two bullets are true, but too small to serve as project context. The actual operating rules now live in `REMAKE/docs/plan.md` and `ANALYSE/authors_vision_and_success.md`. If someone opens only `context.md`, they miss the real constraints: no audio/mobile/save migration yet, exact data parity, desktop 4K, and author-vision authority.
 
 Recommendation:
 
-Replace `REMAKE/context.md` with a short authoritative index:
+Replace `REMAKE/docs/context.md` with a short authoritative index:
 
 - project goal
 - current phase
@@ -131,7 +131,7 @@ Replace `REMAKE/context.md` with a short authoritative index:
 
 Evidence:
 
-- `REMAKE/plan.md:5` says latest web version.
+- `REMAKE/docs/plan.md:5` says latest web version.
 - `DATA/00-extraction-index.md` says extraction came from local `ORIGINAL`.
 - The plan does not name the upstream commit, archive hash, or local source checksum.
 
@@ -141,7 +141,7 @@ Why this is bad:
 
 Recommendation:
 
-Add a `Source Baseline` section to `REMAKE/plan.md`:
+Add a `Source Baseline` section to `REMAKE/docs/plan.md`:
 
 - upstream repository URL
 - commit hash
@@ -154,10 +154,10 @@ Add a `Source Baseline` section to `REMAKE/plan.md`:
 
 Evidence:
 
-- `REMAKE/plan.md:27` forbids save versioning/migration until after remake completion.
-- `REMAKE/plan.md:47` says a simple development save/load system is still needed.
-- `REMAKE/plan.md:115` includes save/load serialization for the parity build.
-- `REMAKE/plan.md:373` requires save/load round-trip.
+- `REMAKE/docs/plan.md:27` forbids save versioning/migration until after remake completion.
+- `REMAKE/docs/plan.md:47` says a simple development save/load system is still needed.
+- `REMAKE/docs/plan.md:115` includes save/load serialization for the parity build.
+- `REMAKE/docs/plan.md:373` requires save/load round-trip.
 
 Why this is risky:
 
@@ -179,8 +179,8 @@ Also add:
 
 Evidence:
 
-- `REMAKE/plan.md:810` lists documentation deliverables.
-- `REMAKE/plan.md:815` says `REMAKE/parity-checklist.md` should exist.
+- `REMAKE/docs/plan.md:810` lists documentation deliverables.
+- `REMAKE/docs/plan.md:815` says `REMAKE/docs/parity-checklist.md` should exist.
 - It does not exist yet.
 
 Why this matters:
@@ -189,7 +189,7 @@ The plan is 652 lines. That is fine as a strategy document, but implementation n
 
 Recommendation:
 
-Create `REMAKE/parity-checklist.md` before Phase 0 or during Phase 0. It should be generated from `DATA/18-canonical-catalogs.md` and original source manifests:
+Create `REMAKE/docs/parity-checklist.md` before Phase 0 or during Phase 0. It should be generated from `DATA/18-canonical-catalogs.md` and original source manifests:
 
 - every craftable
 - every trade good
@@ -209,8 +209,8 @@ Create `REMAKE/parity-checklist.md` before Phase 0 or during Phase 0. It should 
 Evidence:
 
 - `DATA/00-extraction-index.md` states the source data is preserved in markdown files.
-- `REMAKE/plan.md:286-301` uses those markdown files as working references.
-- `REMAKE/plan.md:303` correctly says original JavaScript remains final authority if ambiguous.
+- `REMAKE/docs/plan.md:286-301` uses those markdown files as working references.
+- `REMAKE/docs/plan.md:303` correctly says original JavaScript remains final authority if ambiguous.
 
 Why this is fragile:
 
@@ -224,8 +224,8 @@ Use Markdown as documentation, not the canonical machine source. Add a `TOOLS` e
 
 Evidence:
 
-- `REMAKE/plan.md:55-68` chooses TypeScript, Vite, React, Zustand, Vitest, Playwright.
-- `REMAKE/plan.md:823-825` recommends React plus a headless engine over Phaser.
+- `REMAKE/docs/plan.md:55-68` chooses TypeScript, Vite, React, Zustand, Vitest, Playwright.
+- `REMAKE/docs/plan.md:823-825` recommends React plus a headless engine over Phaser.
 
 Why this is incomplete:
 
@@ -247,9 +247,9 @@ Add a Phase 0.5 risk spike:
 
 Evidence:
 
-- `REMAKE/plan.md:29` says data-driven and easy to expand.
-- `REMAKE/plan.md:693-700` mentions expansion framework.
-- `REMAKE/plan.md:796-807` lists content expansion requirements.
+- `REMAKE/docs/plan.md:29` says data-driven and easy to expand.
+- `REMAKE/docs/plan.md:693-700` mentions expansion framework.
+- `REMAKE/docs/plan.md:796-807` lists content expansion requirements.
 
 Issue:
 
@@ -269,7 +269,7 @@ Define:
 
 Evidence:
 
-- `REMAKE/plan.md:393` mentions deterministic time/random seeds for events.
+- `REMAKE/docs/plan.md:393` mentions deterministic time/random seeds for events.
 - RNG is not promoted to a core architecture requirement.
 
 Issue:
@@ -284,7 +284,7 @@ Make deterministic RNG a Phase 1 deliverable, not a testing footnote.
 
 Evidence:
 
-- `REMAKE/plan.md:253-278` lists UI improvement rules.
+- `REMAKE/docs/plan.md:253-278` lists UI improvement rules.
 - It forbids many bad ideas, which is good.
 
 Issue:
@@ -293,7 +293,7 @@ Issue:
 
 Recommendation:
 
-Create `REMAKE/ui-spec.md` with reference states:
+Create `REMAKE/docs/ui-spec.md` with reference states:
 
 - first screen
 - room with stores
@@ -313,7 +313,7 @@ Use original screenshots if available, plus remake wireframes.
 Evidence:
 
 - The plan references `ORIGINAL/` as source authority.
-- The original repo is MPL-2.0, but `REMAKE/plan.md` does not mention license obligations.
+- The original repo is MPL-2.0, but `REMAKE/docs/plan.md` does not mention license obligations.
 
 Issue:
 
@@ -334,8 +334,8 @@ Add a `License and Attribution` section:
 Evidence:
 
 - `DATA/12-audio-data.md` exists.
-- `REMAKE/plan.md:27` defers audio.
-- `REMAKE/plan.md:156` stores audio/localization data but does not implement.
+- `REMAKE/docs/plan.md:27` defers audio.
+- `REMAKE/docs/plan.md:156` stores audio/localization data but does not implement.
 
 Issue:
 
@@ -347,11 +347,11 @@ Rename the first milestone from "full parity" to "gameplay/UI parity excluding d
 
 ## Low Findings
 
-### L1. `REMAKE/context.md` Has Typos and Weak Formatting
+### L1. `REMAKE/docs/context.md` Has Typos and Weak Formatting
 
 Evidence:
 
-- `REMAKE/context.md` uses "webversion" and two bare hyphen lines.
+- `REMAKE/docs/context.md` uses "webversion" and two bare hyphen lines.
 
 Issue:
 
@@ -365,7 +365,7 @@ Replace it with a compact project index.
 
 Evidence:
 
-- `REMAKE/plan.md:810-819` lists documentation deliverables.
+- `REMAKE/docs/plan.md:810-819` lists documentation deliverables.
 
 Issue:
 
@@ -385,8 +385,8 @@ Tie each doc to a phase:
 
 The plan is strongest where it defends the game's essence:
 
-- `REMAKE/plan.md:21-29` captures exact data, sparse text, moral ambiguity, hidden genre shifts, and desktop-first scope.
-- `REMAKE/plan.md:267-278` correctly bans tutorials, future previews, decorative effects, lore panels, and dashboard-style redesign.
+- `REMAKE/docs/plan.md:21-29` captures exact data, sparse text, moral ambiguity, hidden genre shifts, and desktop-first scope.
+- `REMAKE/docs/plan.md:267-278` correctly bans tutorials, future previews, decorative effects, lore panels, and dashboard-style redesign.
 - `ANALYSE/authors_vision_and_success.md` is a useful design authority and should stay active during implementation reviews.
 
 The roast:
@@ -401,8 +401,8 @@ Add "discovery parity tests." For each phase of progression, define what must no
 
 The desktop and 4K requirements are sensible:
 
-- `REMAKE/plan.md:224-246` covers 1366x768 through 3840x2160.
-- `REMAKE/plan.md:235-244` calls out line length, grid proportions, zoom, and keyboard input.
+- `REMAKE/docs/plan.md:224-246` covers 1366x768 through 3840x2160.
+- `REMAKE/docs/plan.md:235-244` calls out line length, grid proportions, zoom, and keyboard input.
 
 The roast:
 
@@ -431,7 +431,7 @@ The proposed architecture is sane:
 
 The roast:
 
-The plan correctly says "do not put gameplay logic in React components" at `REMAKE/plan.md:61` and `REMAKE/plan.md:201`. Good. But unless this becomes an enforced lint/test boundary, it is just a sentence waiting to be ignored under deadline pressure.
+The plan correctly says "do not put gameplay logic in React components" at `REMAKE/docs/plan.md:61` and `REMAKE/docs/plan.md:201`. Good. But unless this becomes an enforced lint/test boundary, it is just a sentence waiting to be ignored under deadline pressure.
 
 Concrete fix:
 
@@ -505,14 +505,14 @@ One warning: if `ORIGINAL` is tracked, preserve its license and avoid silently m
 ## Prioritized Next Actions
 
 1. Initialize git and make a baseline commit.
-2. Rewrite `REMAKE/context.md` as a project index.
-3. Add a pinned source baseline section to `REMAKE/plan.md`.
-4. Create `REMAKE/parity-checklist.md` from extracted data.
-5. Create `REMAKE/deferred.md` to lock audio/mobile/save migration scope.
+2. Rewrite `REMAKE/docs/context.md` as a project index.
+3. Add a pinned source baseline section to `REMAKE/docs/plan.md`.
+4. Create `REMAKE/docs/parity-checklist.md` from extracted data.
+5. Create `REMAKE/docs/deferred.md` to lock audio/mobile/save migration scope.
 6. Add a Phase 0.5 risk spike to the plan.
 7. Define deterministic RNG as a Phase 1 requirement.
 8. Define license/attribution handling.
-9. Create `REMAKE/ui-spec.md` before UI implementation.
+9. Create `REMAKE/docs/ui-spec.md` before UI implementation.
 10. Add architecture boundary rules before code grows.
 
 ## Residual Risk
@@ -528,4 +528,5 @@ Because there is no implementation yet, this audit could not verify:
 - data conversion correctness
 
 The plan is a strong starting document, but the project is not ready for implementation until the source baseline, git, parity checklist, and risk spike are in place.
+
 

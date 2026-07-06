@@ -1,6 +1,6 @@
 ﻿# Original Game Data Extraction Index
 
-This folder extracts the original A Dark Room web game data into separate markdown files for the remake effort described in `REMAKE/context.md`.
+This folder extracts the original A Dark Room web game data into separate markdown files for the remake effort described in `REMAKE/docs/context.md`.
 
 The source keeps much of its data as executable JavaScript object literals. These markdown files preserve the original definitions, including callback functions, so formulas, unlock conditions, side effects, and narrative scene flow are not lost during extraction.
 
@@ -86,4 +86,5 @@ Binary/non-text assets are covered by `14-assets-inventory.md` rather than embed
 - Event data is split by event file because the scene trees are large and internally cross-reference scene keys.
 - Localization is split per locale to avoid mixing translated strings with canonical English gameplay data.
 - Asset files are inventoried by path and size; binary audio/image payloads are not embedded in markdown.
+
 

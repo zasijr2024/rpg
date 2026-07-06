@@ -1,4 +1,4 @@
-# A Dark Room Remake Plan
+﻿# A Dark Room Remake Plan
 
 Last updated: 2026-07-06
 
@@ -10,30 +10,30 @@ Data authority: `DATA/00-extraction-index.md`
 
 Machine parity authority: `DATA/canonical-manifest.json`
 
-Pinned source baseline: `REMAKE/source-baseline.md`
+Pinned source baseline: `REMAKE/docs/source-baseline.md`
 
 Original source authority: `ORIGINAL/`
 
 Supporting control documents:
 
-- deferred scope: `REMAKE/deferred.md`
-- parity checklist: `REMAKE/parity-checklist.md`
-- technical decisions: `REMAKE/tech-decisions.md`
-- UI specification: `REMAKE/ui-spec.md`
-- content model: `REMAKE/content-model.md`
-- deviations log: `REMAKE/deviations.md`
-- license and attribution: `REMAKE/license-attribution.md`
+- deferred scope: `REMAKE/docs/deferred.md`
+- parity checklist: `REMAKE/docs/parity-checklist.md`
+- technical decisions: `REMAKE/docs/tech-decisions.md`
+- UI specification: `REMAKE/docs/ui-spec.md`
+- content model: `REMAKE/docs/content-model.md`
+- deviations log: `REMAKE/docs/deviations.md`
+- license and attribution: `REMAKE/docs/license-attribution.md`
 
 ## Source Baseline
 
-The first remake targets the local `ORIGINAL/` source pinned in `REMAKE/source-baseline.md`:
+The first remake targets the local `ORIGINAL/` source pinned in `REMAKE/docs/source-baseline.md`:
 
 - upstream repository: `https://github.com/doublespeakgames/adarkroom`
 - source commit: `1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7`
 - extraction date: 2026-07-06
 - validation source: `GUIDE/VALIDATION_REPORT.md`
 
-The phrase "latest web version" means this pinned baseline. It must not silently float to a newer upstream revision. Any upstream refresh requires updating `REMAKE/source-baseline.md`, regenerating `DATA/canonical-manifest.json`, and logging the change.
+The phrase "latest web version" means this pinned baseline. It must not silently float to a newer upstream revision. Any upstream refresh requires updating `REMAKE/docs/source-baseline.md`, regenerating `DATA/canonical-manifest.json`, and logging the change.
 
 ## North Star
 
@@ -45,7 +45,7 @@ Modernization is allowed only where it strengthens stability, clarity, maintaina
 
 The first completion target is gameplay/UI parity excluding explicitly deferred systems. Parity means original gameplay data, original progression, original scene flow, original formulas, and original player-facing text are represented and testable against the pinned source baseline.
 
-Parity does not include active audio playback, music playback, ambient audio, mobile support, durable save versioning, save migration, original save import, active localization, new content, or balance changes. Those are deferred by `REMAKE/deferred.md`.
+Parity does not include active audio playback, music playback, ambient audio, mobile support, durable save versioning, save migration, original save import, active localization, new content, or balance changes. Those are deferred by `REMAKE/docs/deferred.md`.
 
 During parity, save/load is development-only. Use the localStorage key `adr-remake-dev-save`; pre-parity saves are disposable and may be invalidated at any time. Do not promise save compatibility until Post-Parity Phase A.
 
@@ -307,7 +307,7 @@ Recommended layout approach:
 - keep letter spacing at 0
 - avoid decorative backgrounds and large hero layouts
 
-Initial measurable UI tokens are defined in `REMAKE/ui-spec.md`. Implementation must not rely on eyeballing "4K support"; each major screen needs screenshots at the required desktop resolutions.
+Initial measurable UI tokens are defined in `REMAKE/docs/ui-spec.md`. Implementation must not rely on eyeballing "4K support"; each major screen needs screenshots at the required desktop resolutions.
 
 ## UI Improvement Rules
 
@@ -335,7 +335,7 @@ Not allowed for parity:
 - large illustrative art
 - new resource categorization that changes the discovery curve
 
-Discovery parity is mandatory. For every progression stage, tests must verify which systems remain hidden. See `REMAKE/parity-checklist.md`.
+Discovery parity is mandatory. For every progression stage, tests must verify which systems remain hidden. See `REMAKE/docs/parity-checklist.md`.
 
 ## Data Parity Plan
 
@@ -457,7 +457,7 @@ Acceptance criteria:
 - timer/cooldown updates do not force full-app re-renders
 - event runtime model can be tested headlessly
 - keyboard focus behavior is workable before full UI build
-- Space implementation path is chosen with evidence in `REMAKE/tech-decisions.md`
+- Space implementation path is chosen with evidence in `REMAKE/docs/tech-decisions.md`
 
 ### Phase 1: Core Engine and State
 
@@ -762,7 +762,7 @@ Acceptance criteria:
 - no critical progression blockers
 - all extracted gameplay data is represented or documented as intentionally deferred
 - UI remains minimal, stable, and readable across target desktop resolutions
-- every open item in `REMAKE/parity-checklist.md` is complete, deferred, or linked to `REMAKE/deviations.md`
+- every open item in `REMAKE/docs/parity-checklist.md` is complete, deferred, or linked to `REMAKE/docs/deviations.md`
 
 ## Post-Parity Roadmap
 
@@ -966,7 +966,7 @@ Mandatory boundaries:
 - strict original mode disables all expansions and is the default through parity.
 - every content pack must include validation metadata.
 
-See `REMAKE/content-model.md`.
+See `REMAKE/docs/content-model.md`.
 
 ## License and Attribution
 
@@ -979,22 +979,22 @@ Phase 0 must verify:
 - remake license decision is recorded before public distribution
 - `ORIGINAL/` is treated as immutable reference source
 
-See `REMAKE/license-attribution.md`.
+See `REMAKE/docs/license-attribution.md`.
 
 ## Documentation Deliverables
 
 Create and maintain:
 
-- `REMAKE/plan.md` - this plan
-- `REMAKE/parity-checklist.md` - exact feature/data checklist
-- `REMAKE/tech-decisions.md` - accepted architecture decisions
-- `REMAKE/deferred.md` - deferred audio/mobile/save migration/new content notes
-- `REMAKE/deviations.md` - any difference from original behavior
-- `REMAKE/content-model.md` - how to add future data
-- `REMAKE/ui-spec.md` - visual and layout acceptance baseline
-- `REMAKE/source-baseline.md` - pinned original source target
-- `REMAKE/license-attribution.md` - licensing and attribution handling
-- `REMAKE/git-versioning.md` - repository and milestone versioning rules
+- `REMAKE/docs/plan.md` - this plan
+- `REMAKE/docs/parity-checklist.md` - exact feature/data checklist
+- `REMAKE/docs/tech-decisions.md` - accepted architecture decisions
+- `REMAKE/docs/deferred.md` - deferred audio/mobile/save migration/new content notes
+- `REMAKE/docs/deviations.md` - any difference from original behavior
+- `REMAKE/docs/content-model.md` - how to add future data
+- `REMAKE/docs/ui-spec.md` - visual and layout acceptance baseline
+- `REMAKE/docs/source-baseline.md` - pinned original source target
+- `REMAKE/docs/license-attribution.md` - licensing and attribution handling
+- `REMAKE/docs/git-versioning.md` - repository and milestone versioning rules
 
 Timing:
 
@@ -1047,7 +1047,7 @@ Recommendation: yes. The stated goal is the latest web version, and the extracte
 
 ### Q10: Should the remake preserve original bugs?
 
-Recommendation: preserve behavior that affects balance, progression, or player-facing outcomes unless it is clearly a technical defect that harms stability. Document every fixed bug in `REMAKE/deviations.md`.
+Recommendation: preserve behavior that affects balance, progression, or player-facing outcomes unless it is clearly a technical defect that harms stability. Document every fixed bug in `REMAKE/docs/deviations.md`.
 
 ## Definition of Done for the First Remake
 
@@ -1060,6 +1060,7 @@ The first remake means gameplay/UI parity excluding deferred systems. It is fini
 - no deferred systems have been prematurely introduced
 - parity test suite passes
 - known deviations are documented
-- `REMAKE/parity-checklist.md` is fully resolved
+- `REMAKE/docs/parity-checklist.md` is fully resolved
 - `DATA/canonical-manifest.json` matches the pinned source baseline
 - future content can be added through typed data registries without rewriting core systems
+

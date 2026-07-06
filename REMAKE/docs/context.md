@@ -1,4 +1,4 @@
-# A Dark Room Remake Context
+﻿# A Dark Room Remake Context
 
 Current phase: pre-implementation planning and parity hardening.
 
@@ -7,8 +7,8 @@ Goal: recreate the pinned latest web version of *A Dark Room* in a modern, stabl
 ## Authorities
 
 - Design authority: `ANALYSE/authors_vision_and_success.md`
-- Source baseline: `REMAKE/source-baseline.md`
-- Main plan: `REMAKE/plan.md`
+- Source baseline: `REMAKE/docs/source-baseline.md`
+- Main plan: `REMAKE/docs/plan.md`
 - Original extracted data index: `DATA/00-extraction-index.md`
 - Canonical generated manifest: `DATA/canonical-manifest.json`
 - Original source folder: `ORIGINAL/`
@@ -39,14 +39,15 @@ The following are intentionally deferred until after gameplay/UI parity:
 - balance changes
 - tutorialization
 
-See `REMAKE/deferred.md` for the locked deferred-scope contract.
+See `REMAKE/docs/deferred.md` for the locked deferred-scope contract.
 
 ## Required Before Implementation
 
 - Git repository initialized with baseline commits.
-- `REMAKE/parity-checklist.md` created and used as the implementation tracker.
-- `REMAKE/ui-spec.md` used as the visual acceptance baseline.
-- `REMAKE/tech-decisions.md` records accepted architecture decisions.
-- `REMAKE/deviations.md` starts empty and is updated whenever parity is intentionally broken.
+- `REMAKE/docs/parity-checklist.md` created and used as the implementation tracker.
+- `REMAKE/docs/ui-spec.md` used as the visual acceptance baseline.
+- `REMAKE/docs/tech-decisions.md` records accepted architecture decisions.
+- `REMAKE/docs/deviations.md` starts empty and is updated whenever parity is intentionally broken.
 - `TOOLS/extract_adr_canonical_manifests.ps1` can regenerate `DATA/canonical-manifest.json`.
+
 

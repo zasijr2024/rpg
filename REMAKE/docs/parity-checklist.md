@@ -1,4 +1,4 @@
-# Parity Checklist
+﻿# Parity Checklist
 
 Last updated: 2026-07-06
 
@@ -6,7 +6,7 @@ Purpose: implementation tracker for gameplay/UI parity excluding deferred system
 
 Authorities:
 
-- source baseline: `REMAKE/source-baseline.md`
+- source baseline: `REMAKE/docs/source-baseline.md`
 - machine manifest: `DATA/canonical-manifest.json`
 - extracted source index: `DATA/00-extraction-index.md`
 - original source: `ORIGINAL/`
@@ -16,7 +16,7 @@ Status legend:
 - `[ ]` not started
 - `[~]` in progress
 - `[x]` complete
-- `[!]` blocked or intentionally deviated; must link to `REMAKE/deviations.md`
+- `[!]` blocked or intentionally deviated; must link to `REMAKE/docs/deviations.md`
 
 ## Project Gates
 
@@ -24,7 +24,7 @@ Status legend:
 - [ ] Baseline source/reference commit created.
 - [ ] Planning/docs hardening commit created.
 - [ ] `DATA/canonical-manifest.json` generated from `ORIGINAL/`.
-- [ ] Source baseline pinned in `REMAKE/source-baseline.md`.
+- [ ] Source baseline pinned in `REMAKE/docs/source-baseline.md`.
 - [ ] License/attribution plan accepted.
 - [ ] Deferred scope accepted.
 - [ ] Phase 0.5 risk spike completed before gameplay implementation.
@@ -249,4 +249,5 @@ These tests protect the original reveal curve.
 - [ ] Blueprint redeems into fabricator availability.
 - [ ] Lift-off fails/succeeds under original hull rules.
 - [ ] Space escape triggers ending/prestige behavior.
+
 
