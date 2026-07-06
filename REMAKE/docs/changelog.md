@@ -4,6 +4,30 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 2 Original Outside Data Values
+
+- Added typed original outside data module.
+- Ported exact outside constants:
+  - store offset
+  - gather cooldown
+  - trap cooldown
+  - population timing bounds
+  - hut capacity
+  - gather wood amounts with and without cart
+- Ported exact worker income definitions for all original workers.
+- Ported exact trap drop thresholds and messages.
+- Ported exact worker unlock mapping from buildings and cleared mines.
+- Ported village title thresholds and population-arrival notification thresholds.
+- Added pure helper functions for original hut capacity, gather amount, trap drop count, bait consumption, village title lookup, and population message lookup.
+- Wired outside data into the original content registry.
+- Added outside data parity tests for constants, manifest worker keys, worker income, trap drops, unlocks, thresholds, helper formulas, and registry wiring.
+
+### Verified - Phase 2 Original Outside Data Values
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ### Added - Phase 2 Original World Data Values
 
 - Added typed original world data module.

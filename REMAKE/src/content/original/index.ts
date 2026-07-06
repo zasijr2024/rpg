@@ -20,6 +20,31 @@ export {
   originalPathWeightOverrides
 } from "./path/pathWeights";
 export {
+  OUTSIDE_CART_GATHER_WOOD_AMOUNT,
+  OUTSIDE_GATHER_DELAY,
+  OUTSIDE_GATHER_WOOD_AMOUNT,
+  OUTSIDE_HUT_ROOM,
+  OUTSIDE_POP_DELAY_MAX,
+  OUTSIDE_POP_DELAY_MIN,
+  OUTSIDE_STORES_OFFSET,
+  OUTSIDE_TRAPS_DELAY,
+  originalBaitUsedForTraps,
+  originalGatherWoodAmount,
+  originalMaxPopulation,
+  originalOutsideWorkerIncome,
+  originalOutsideWorkerUnlocks,
+  originalPopulationMessageForArrivals,
+  originalPopulationMessageThresholds,
+  originalTrapDropCount,
+  originalTrapDrops,
+  originalVillageTitleForHuts,
+  originalVillageTitleThresholds,
+  type OutsidePopulationMessageThreshold,
+  type OutsideTrapDropDefinition,
+  type OutsideVillageTitleThreshold,
+  type OutsideWorkerIncomeDefinition
+} from "./outside/outsideData";
+export {
   WORLD_BASE_HEALTH,
   WORLD_BASE_HIT_CHANCE,
   WORLD_BASE_WATER,

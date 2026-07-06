@@ -40,9 +40,9 @@ Status legend:
 - [ ] Room fire states represented.
 - [ ] Room craftables represented.
 - [ ] Room trade goods represented.
-- [ ] Outside constants represented.
-- [ ] Worker income definitions represented.
-- [ ] Trap drop table represented.
+- [x] Outside constants represented.
+- [x] Worker income definitions represented.
+- [x] Trap drop table represented.
 - [ ] Path constants represented.
 - [x] Item weight overrides represented.
 - [x] World constants represented.
@@ -80,16 +80,16 @@ Status legend:
 
 - [ ] Outside unlock condition matches original.
 - [ ] Outside tab/title progression matches original.
-- [ ] Gather cooldown matches original.
-- [ ] Trap checking cooldown matches original.
-- [ ] Trap drop probabilities match original.
-- [ ] Population growth timing matches original.
-- [ ] Hut capacity behavior matches original.
+- [~] Gather cooldown matches original.
+- [~] Trap checking cooldown matches original.
+- [~] Trap drop probabilities match original.
+- [~] Population growth timing matches original.
+- [~] Hut capacity behavior matches original.
 - [ ] Worker assignment controls match original behavior.
-- [ ] Every worker has matching name, delay, production, and consumption.
+- [~] Every worker has matching name, delay, production, and consumption.
 - [ ] Income collection timing matches original.
-- [ ] Worker unlocks from buildings/mines match original.
-- [ ] Village title thresholds match original.
+- [~] Worker unlocks from buildings/mines match original.
+- [~] Village title thresholds match original.
 - [ ] Hut destruction and villager death event side effects match original.
 
 ## Event Runtime Parity
