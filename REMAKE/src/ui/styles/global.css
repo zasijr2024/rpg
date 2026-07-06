@@ -37,16 +37,11 @@ select {
   padding: var(--page-padding);
 }
 
-.panel {
+.roomPanel {
   width: var(--reading-width);
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   padding: 2rem 0;
-}
-
-.eyebrow {
-  margin: 0 0 0.75rem;
-  color: #666;
 }
 
 h1 {
@@ -56,28 +51,48 @@ h1 {
   letter-spacing: 0;
 }
 
-.statusLine {
-  margin: 1rem 0 1.5rem;
-}
-
-.metaGrid {
+.roomStatus {
+  margin: 1.5rem 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: 1rem;
-  margin: 0;
+  gap: 0.25rem;
 }
 
-.metaGrid div {
-  min-width: 0;
+.roomStatus strong {
+  font-weight: 400;
 }
 
-.metaGrid dt {
-  color: #666;
+.actionRow {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.metaGrid dd {
-  margin: 0.25rem 0 0;
-  overflow-wrap: anywhere;
+.actionRow button {
+  min-width: 8rem;
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  padding: 0.4rem 0.65rem;
+}
+
+.actionRow button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.storesPanel,
+.notificationsPanel {
+  margin-top: 1.5rem;
+}
+
+.storeRow {
+  display: flex;
+  justify-content: space-between;
+  max-width: 18rem;
+}
+
+.notificationsPanel p {
+  margin: 0.4rem 0 0;
+  color: #333;
 }
 
 .spikeLab {

@@ -8,6 +8,7 @@ export {
   type GameNotification
 } from "./notifications/NotificationCenter";
 export { createDefaultRng, Mulberry32Rng, type Rng } from "./rng";
+export { RoomRuntime, type RoomStateSnapshot } from "./room/RoomRuntime";
 export { DEV_SAVE_KEY, MemoryDevSaveAdapter } from "./save/devSave";
 export { StateStore, type StateUpdate } from "./state/StateStore";
 export { createInitialState, ENGINE_VERSION, MAX_STORE } from "./state/types";

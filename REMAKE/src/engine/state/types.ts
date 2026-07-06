@@ -4,11 +4,14 @@ export interface GameState {
   stores: Record<string, unknown>;
   character: Record<string, unknown>;
   income: Record<string, unknown>;
+  timers: Record<string, unknown>;
   game: Record<string, unknown>;
   playStats: Record<string, unknown>;
   previous: Record<string, unknown>;
   outfit: Record<string, unknown>;
   config: Record<string, unknown>;
+  wait: Record<string, unknown>;
+  cooldown: Record<string, unknown>;
 }
 
 export const ENGINE_VERSION = 1.3;
@@ -21,11 +24,13 @@ export function createInitialState(): GameState {
     stores: {},
     character: {},
     income: {},
+    timers: {},
     game: {},
     playStats: {},
     previous: {},
     outfit: {},
-    config: {}
+    config: {},
+    wait: {},
+    cooldown: {}
   };
 }
-

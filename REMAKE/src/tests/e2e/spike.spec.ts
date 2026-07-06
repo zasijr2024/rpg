@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("renders the ASCII world viewport without horizontal overflow", async ({
   page
 }) => {
-  await page.goto("/");
+  await page.goto("/?spikes=1");
   await page.getByRole("tab", { name: "world" }).click();
 
   const viewport = page.getByLabel("61 by 61 ASCII world viewport");
@@ -20,7 +20,7 @@ test("renders the ASCII world viewport without horizontal overflow", async ({
 });
 
 test("supports keyboard focus and world movement probe", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?spikes=1");
   await page.getByRole("tab", { name: "world" }).click();
 
   const probe = page.getByRole("button", { name: /world keyboard probe/ });
@@ -31,10 +31,9 @@ test("supports keyboard focus and world movement probe", async ({ page }) => {
 });
 
 test("renders both space prototypes", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?spikes=1");
   await page.getByRole("tab", { name: "space" }).click();
 
   await expect(page.getByLabel("Canvas space prototype")).toBeVisible();
   await expect(page.getByLabel("DOM space prototype")).toBeVisible();
 });
-

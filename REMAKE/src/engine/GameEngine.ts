@@ -1,3 +1,4 @@
+import { SOURCE_BASELINE_COMMIT } from "../content/original/manifest/canonicalManifest";
 import { ManualClock } from "./clock";
 import { CommandBus, type Command } from "./commands/CommandBus";
 import { CooldownManager } from "./cooldowns/CooldownManager";
@@ -7,8 +8,6 @@ import { createDefaultRng, type Rng } from "./rng";
 import type { DevSaveAdapter } from "./save/devSave";
 import { StateStore } from "./state/StateStore";
 import { createInitialState } from "./state/types";
-
-const SOURCE_COMMIT = "1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7";
 
 export interface GameEngineSnapshot {
   sourceCommit: string;
@@ -57,7 +56,7 @@ export class GameEngine {
 
   getSnapshot(): GameEngineSnapshot {
     return {
-      sourceCommit: SOURCE_COMMIT,
+      sourceCommit: SOURCE_BASELINE_COMMIT,
       saveScope: "dev-only disposable save",
       rngKind: "seeded deterministic",
       nowMs: this.clock.now()

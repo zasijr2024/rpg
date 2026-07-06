@@ -26,7 +26,7 @@ export class StateStore {
   }
 
   set(path: string, value: unknown, noEvent = false): void {
-    setPath(this.state, path, value);
+    setPath(this.state, path, this.clampValue(path, value));
     if (!noEvent) this.fire(path);
   }
 
@@ -36,11 +36,7 @@ export class StateStore {
       throw new Error(`Cannot add to non-number state path: ${path}`);
     }
 
-    let next = current + amount;
-    if (path.startsWith("stores.")) {
-      next = Math.max(0, Math.min(MAX_STORE, next));
-    }
-    this.set(path, next, noEvent);
+    this.set(path, current + amount, noEvent);
   }
 
   setM(parent: string, values: Record<string, unknown>, noEvent = false): void {
@@ -63,14 +59,22 @@ export class StateStore {
   }
 
   private fire(path: string): void {
-    const [category, ...rest] = parseStatePath(path);
+    const [category] = parseStatePath(path);
     const update: StateUpdate = {
       category,
-      stateName: rest.join(".")
+      stateName: path
     };
     for (const listener of this.listeners) {
       listener(update);
     }
   }
-}
 
+  private clampValue(path: string, value: unknown): unknown {
+    if (typeof value !== "number") return value;
+
+    const [category] = parseStatePath(path);
+    if (category !== "stores") return value;
+
+    return Math.max(0, Math.min(MAX_STORE, value));
+  }
+}

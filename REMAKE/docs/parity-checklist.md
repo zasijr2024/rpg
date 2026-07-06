@@ -59,37 +59,37 @@ Status legend:
 
 ## Room Parity
 
-- [ ] Fresh start shows only original starting information.
-- [ ] Future tabs are not visible at start.
-- [ ] Fire can be lit.
-- [ ] Fire can be stoked.
+- [x] Fresh start shows only original starting information.
+- [x] Future tabs are not visible at start.
+- [x] Fire can be lit.
+- [x] Fire can be stoked.
 - [ ] Fire cooldown matches original.
-- [ ] Fire state/title progression matches original.
+- [~] Fire state/title progression matches original.
 - [ ] Room temperature timing matches original.
 - [ ] Builder arrival timing matches original.
 - [ ] Need-wood timing matches original.
 - [ ] Gather wood behavior matches original.
 - [ ] Stores panel appears at original trigger point.
 - [ ] Build/craft/buy sections unlock at original trigger points.
-- [~] Every room craftable has matching key, name, type, max, messages, cost function, and side effect.
-- [~] Every trade good has matching cost and behavior.
+- [ ] Every room craftable has matching key, name, type, max, messages, cost function, and side effect.
+- [ ] Every trade good has matching cost and behavior.
 - [ ] Original disabled/max behavior is preserved.
-- [ ] Original room notifications are preserved.
+- [~] Original room notifications are preserved.
 
 ## Outside and Village Parity
 
 - [ ] Outside unlock condition matches original.
 - [ ] Outside tab/title progression matches original.
-- [~] Gather cooldown matches original.
-- [~] Trap checking cooldown matches original.
-- [~] Trap drop probabilities match original.
-- [~] Population growth timing matches original.
-- [~] Hut capacity behavior matches original.
+- [ ] Gather cooldown matches original.
+- [ ] Trap checking cooldown matches original.
+- [ ] Trap drop probabilities match original.
+- [ ] Population growth timing matches original.
+- [ ] Hut capacity behavior matches original.
 - [ ] Worker assignment controls match original behavior.
-- [~] Every worker has matching name, delay, production, and consumption.
+- [ ] Every worker has matching name, delay, production, and consumption.
 - [ ] Income collection timing matches original.
-- [~] Worker unlocks from buildings/mines match original.
-- [~] Village title thresholds match original.
+- [ ] Worker unlocks from buildings/mines match original.
+- [ ] Village title thresholds match original.
 - [ ] Hut destruction and villager death event side effects match original.
 
 ## Event Runtime Parity
@@ -140,7 +140,7 @@ Status legend:
 - [ ] Path unlock condition matches original.
 - [ ] Compass behavior matches original.
 - [ ] Bag base capacity matches original.
-- [~] Capacity upgrades match original.
+- [ ] Capacity upgrades match original.
 - [ ] Weight overrides match original.
 - [ ] Default item weight behavior matches original.
 - [ ] Outfit add/remove behavior matches original.
@@ -172,17 +172,17 @@ Status legend:
 ## Ship, Fabricator, Space, Ending Parity
 
 - [ ] Ship unlock matches original.
-- [~] Hull reinforcement cost matches original.
-- [~] Engine upgrade cost matches original.
+- [ ] Hull reinforcement cost matches original.
+- [ ] Engine upgrade cost matches original.
 - [ ] Lift-off gating matches original.
 - [ ] Fabricator unlock matches original.
-- [~] Every fabricator craftable has matching cost, type, quantity, blueprint gate, and message.
+- [ ] Every fabricator craftable has matching cost, type, quantity, blueprint gate, and message.
 - [ ] Blueprint redemption matches original.
-- [~] Space ship movement speed formula matches original.
-- [~] Asteroid spawn timing matches original.
-- [~] Asteroid speed/randomness matches original.
+- [ ] Space ship movement speed formula matches original.
+- [ ] Asteroid spawn timing matches original.
+- [ ] Asteroid speed/randomness matches original.
 - [ ] Collision/hull loss matches original.
-- [~] Altitude progression and title changes match original.
+- [ ] Altitude progression and title changes match original.
 - [ ] Crash behavior matches original.
 - [ ] Escape threshold and win flow match original.
 - [ ] Score calculation matches original.
@@ -192,7 +192,7 @@ Status legend:
 
 These tests protect the original reveal curve.
 
-- [ ] Start: no outside/path/world/ship/fabricator/space UI visible.
+- [x] Start: no outside/path/world/ship/fabricator/space UI visible.
 - [ ] Before wood: no stores panel if original does not show it.
 - [ ] Before builder state: no craft/build economy visible.
 - [ ] Before outside unlock: no village/worker UI visible.
@@ -206,7 +206,7 @@ These tests protect the original reveal curve.
 
 ## UI and 4K Parity
 
-- [ ] First screen matches minimalist intent.
+- [~] First screen matches minimalist intent.
 - [ ] Room state readable at 1366x768, 1920x1080, 2560x1440, 3840x2160.
 - [ ] Outside worker table readable at all target resolutions.
 - [ ] Path outfitting readable at all target resolutions.

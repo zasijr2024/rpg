@@ -4,6 +4,53 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 3 Initial Room Runtime Vertical Slice
+
+- Added headless `RoomRuntime` owned by the engine layer.
+- Added original fresh-room initialization:
+  - room feature enabled
+  - builder level `-1`
+  - fire `dead`
+  - temperature `freezing`
+- Added original-compatible `light fire` behavior for the initial no-wood state.
+- Added `stoke fire` behavior with original no-wood semantics.
+- Added fire title/state snapshot rendering for `A Dark Room` and `A Firelit Room`.
+- Added temperature adjustment helper moving room temperature toward fire level.
+- Added first builder progression helper and original fire/builder notifications.
+- Replaced default scaffold UI with a minimal Room view.
+- Kept Phase 0.5 spike UI available only via `?spikes=1`.
+- Added Room runtime unit tests and Room E2E smoke tests at desktop and 4K projects.
+
+### Verified - Phase 3 Initial Room Runtime Vertical Slice
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
+### Changed - Audit Hardening After Full Roast
+
+- Fixed `StateStore` update events to emit the original-style full `stateName` path while keeping category separate.
+- Fixed store clamping so both dot and bracket `stores` paths clamp through `set()` and `add()`.
+- Added missing original state categories to the initial state shape:
+  - `timers`
+  - `wait`
+  - `cooldown`
+- Replaced duplicated engine source commit metadata with the canonical source baseline export.
+- Quarantined Phase 0.5 spike UI behind `?spikes=1` so the default entry no longer exposes future `world` or `space` affordances.
+- Added E2E coverage that default entry hides spike-only future systems.
+- Expanded architecture-boundary tests for:
+  - original content independence from UI and expansion content
+  - UI not importing low-level state mutation modules directly
+- Added source-derived snapshot parity tests that evaluate selected original JavaScript files directly and compare normalized original data against ported TypeScript data.
+- Updated `REMAKE/docs/context.md` to reflect the current Phase 2 completion and Phase 3 readiness state.
+- Tightened `REMAKE/docs/parity-checklist.md` so data-only coverage does not mark runtime parity as in progress.
+
+### Verified - Audit Hardening After Full Roast
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ### Added - Phase 2 Remaining Original Source Data Values
 
 - Added typed original core engine/state/scoring data module.

@@ -1,35 +1,22 @@
-import { useMemo } from "react";
-import { createGameEngine } from "../engine";
+import { useMemo, useReducer } from "react";
+import { RoomRuntime, createGameEngine } from "../engine";
+import { RoomView } from "./RoomView";
 import { SpikeLab } from "./SpikeLab";
 
 export function App() {
   const engine = useMemo(() => createGameEngine(), []);
-  const snapshot = engine.getSnapshot();
+  const room = useMemo(() => new RoomRuntime(engine), [engine]);
+  const [, refresh] = useReducer((count: number) => count + 1, 0);
+  const showSpikes = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return new URLSearchParams(window.location.search).get("spikes") === "1";
+  }, []);
+  const snapshot = room.snapshot();
 
   return (
-    <main className="appShell" aria-label="A Dark Room remake scaffold">
-      <section className="panel" aria-labelledby="title">
-        <p className="eyebrow">implementation scaffold</p>
-        <h1 id="title">A Dark Room</h1>
-        <p className="statusLine">
-          Headless engine online. Gameplay is not implemented yet.
-        </p>
-        <dl className="metaGrid">
-          <div>
-            <dt>source baseline</dt>
-            <dd>{snapshot.sourceCommit}</dd>
-          </div>
-          <div>
-            <dt>save scope</dt>
-            <dd>{snapshot.saveScope}</dd>
-          </div>
-          <div>
-            <dt>rng</dt>
-            <dd>{snapshot.rngKind}</dd>
-          </div>
-        </dl>
-      </section>
-      <SpikeLab />
+    <main className="appShell" aria-label="A Dark Room">
+      <RoomView room={room} snapshot={snapshot} onAction={refresh} />
+      {showSpikes && <SpikeLab />}
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -6,6 +6,7 @@ const projectRoot = process.cwd();
 const srcRoot = join(projectRoot, "src");
 
 function listSourceFiles(dir: string): string[] {
+  if (!existsSync(dir)) return [];
   const files: string[] = [];
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
@@ -40,6 +41,42 @@ describe("architecture boundaries", () => {
             source === "react-dom" ||
             source.includes("/ui/") ||
             source.endsWith("/ui")
+        )
+        .map((source) => `${relative(projectRoot, file)} imports ${source}`)
+    );
+
+    expect(violations).toEqual([]);
+  });
+
+  it("keeps original content independent from UI and expansion content", () => {
+    const originalContentFiles = listSourceFiles(
+      join(srcRoot, "content", "original")
+    );
+    const violations = originalContentFiles.flatMap((file) =>
+      importsOf(file)
+        .filter(
+          (source) =>
+            source.includes("/ui/") ||
+            source.endsWith("/ui") ||
+            source.includes("content/expansions") ||
+            source.includes("../expansions") ||
+            source.includes("./expansions")
+        )
+        .map((source) => `${relative(projectRoot, file)} imports ${source}`)
+    );
+
+    expect(violations).toEqual([]);
+  });
+
+  it("prevents UI from importing low-level state mutation modules directly", () => {
+    const uiFiles = listSourceFiles(join(srcRoot, "ui"));
+    const violations = uiFiles.flatMap((file) =>
+      importsOf(file)
+        .filter(
+          (source) =>
+            source.includes("/engine/state") ||
+            source.includes("../engine/state") ||
+            source.includes("StateStore")
         )
         .map((source) => `${relative(projectRoot, file)} imports ${source}`)
     );
