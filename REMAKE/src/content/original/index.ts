@@ -20,6 +20,33 @@ export {
   originalPathWeightOverrides
 } from "./path/pathWeights";
 export {
+  ROOM_BUILDER_INCOME_DELAY,
+  ROOM_BUILDER_STATE_DELAY,
+  ROOM_BUILDER_WOOD_INCOME,
+  ROOM_FIRE_COOL_DELAY,
+  ROOM_LIGHT_FIRE_WOOD_COST,
+  ROOM_NEED_WOOD_DELAY,
+  ROOM_STOKE_COOLDOWN,
+  ROOM_STOKE_FIRE_WOOD_COST,
+  ROOM_WARM_DELAY,
+  originalRoomCost,
+  originalRoomCraftables,
+  originalRoomFireStates,
+  originalRoomMiscItems,
+  originalRoomNeedsWorkshop,
+  originalRoomTemperatures,
+  originalRoomTradeGoods,
+  type RoomCostContext,
+  type RoomCraftableDefinition,
+  type RoomCraftableType,
+  type RoomDynamicCost,
+  type RoomItemType,
+  type RoomMiscItemDefinition,
+  type RoomStateDefinition,
+  type RoomTradeGoodDefinition,
+  type RoomTradeGoodType
+} from "./room/roomData";
+export {
   OUTSIDE_CART_GATHER_WOOD_AMOUNT,
   OUTSIDE_GATHER_DELAY,
   OUTSIDE_GATHER_WOOD_AMOUNT,

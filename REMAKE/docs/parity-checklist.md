@@ -36,10 +36,10 @@ Status legend:
 - [ ] State migration behavior reviewed.
 - [ ] Scoring formula represented.
 - [x] Prestige store map represented.
-- [ ] Room constants represented.
-- [ ] Room fire states represented.
-- [ ] Room craftables represented.
-- [ ] Room trade goods represented.
+- [x] Room constants represented.
+- [x] Room fire states represented.
+- [x] Room craftables represented.
+- [x] Room trade goods represented.
 - [x] Outside constants represented.
 - [x] Worker income definitions represented.
 - [x] Trap drop table represented.
@@ -71,8 +71,8 @@ Status legend:
 - [ ] Gather wood behavior matches original.
 - [ ] Stores panel appears at original trigger point.
 - [ ] Build/craft/buy sections unlock at original trigger points.
-- [ ] Every room craftable has matching key, name, type, max, messages, cost function, and side effect.
-- [ ] Every trade good has matching cost and behavior.
+- [~] Every room craftable has matching key, name, type, max, messages, cost function, and side effect.
+- [~] Every trade good has matching cost and behavior.
 - [ ] Original disabled/max behavior is preserved.
 - [ ] Original room notifications are preserved.
 

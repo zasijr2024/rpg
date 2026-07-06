@@ -4,6 +4,32 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 2 Original Room Data Values
+
+- Added typed original room data module.
+- Ported exact room timing constants:
+  - fire cooling delay
+  - room warming delay
+  - builder state delay
+  - stoke cooldown
+  - need-wood delay
+  - light/stoke wood costs
+  - builder income timing and wood income
+- Ported exact room temperature enum values and labels.
+- Ported exact fire enum values and labels.
+- Ported all original room craftables, including type, maximum, messages, base costs, dynamic cost formula metadata, and deferred audio identifiers.
+- Ported all original trade goods, including type, maximum where present, costs, and deferred audio identifiers.
+- Ported room misc item classification for `laser rifle`.
+- Added pure helpers for original room cost evaluation and workshop gating.
+- Wired room data into the original content registry.
+- Added room data parity tests for constants, enums, manifest keys, representative craftables, dynamic costs, trade goods, misc classification, workshop gating, and registry wiring.
+
+### Verified - Phase 2 Original Room Data Values
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ### Added - Phase 2 Original Outside Data Values
 
 - Added typed original outside data module.

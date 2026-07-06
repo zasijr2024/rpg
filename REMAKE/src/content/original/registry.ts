@@ -7,12 +7,24 @@ import {
   originalTrapDrops,
   originalVillageTitleThresholds
 } from "./outside/outsideData";
+import {
+  originalRoomCraftables,
+  originalRoomFireStates,
+  originalRoomMiscItems,
+  originalRoomTemperatures,
+  originalRoomTradeGoods
+} from "./room/roomData";
 import { originalWorldLandmarks, originalWorldWeapons } from "./world/worldData";
 
 export const originalContentRegistry = {
   perks: originalPerks,
   prestigeStores: originalPrestigeStores,
   pathWeightOverrides: originalPathWeightOverrides,
+  roomTemperatures: originalRoomTemperatures,
+  roomFireStates: originalRoomFireStates,
+  roomCraftables: originalRoomCraftables,
+  roomTradeGoods: originalRoomTradeGoods,
+  roomMiscItems: originalRoomMiscItems,
   outsideWorkerIncome: originalOutsideWorkerIncome,
   outsideWorkerUnlocks: originalOutsideWorkerUnlocks,
   trapDrops: originalTrapDrops,
