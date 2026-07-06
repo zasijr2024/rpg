@@ -23,3 +23,19 @@ export class LocalStorageDevSaveAdapter implements DevSaveAdapter {
   }
 }
 
+export class MemoryDevSaveAdapter implements DevSaveAdapter {
+  private raw: string | null = null;
+
+  load(): GameState | null {
+    return this.raw ? (JSON.parse(this.raw) as GameState) : null;
+  }
+
+  save(state: GameState): void {
+    this.raw = JSON.stringify(state);
+  }
+
+  clear(): void {
+    this.raw = null;
+  }
+}
+

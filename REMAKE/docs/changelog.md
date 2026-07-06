@@ -4,6 +4,27 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 1 Engine Services
+
+- Added typed `EventBus`.
+- Added typed `CommandBus`.
+- Added `NotificationCenter`.
+- Added `CooldownManager` with renderable progress snapshots.
+- Added memory-backed dev save adapter for deterministic save/load tests.
+- Integrated core commands into `GameEngine`:
+  - `state.set`
+  - `state.add`
+  - `notify`
+  - `cooldown.start`
+- Added dev-save round-trip support through the configured save adapter.
+- Added unit tests for command dispatch, event publish/subscribe, notification recording, cooldown expiry/progress, engine command integration, and dev-save round trips.
+
+### Verified - Phase 1 Engine Services
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ### Added - Phase 0.5 Risk Spike
 
 - Added separated spike modules under `src/spikes`.

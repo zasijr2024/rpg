@@ -223,6 +223,11 @@ These tests protect the original reveal curve.
 - [x] Deterministic RNG tests.
 - [x] Timer scheduler tests.
 - [x] Resource mutation tests.
+- [x] Command dispatcher tests.
+- [x] Event bus tests.
+- [x] Notification model tests.
+- [x] Button cooldown model tests.
+- [x] Dev save round-trip tests.
 - [ ] Data key parity tests.
 - [ ] Data constant parity tests.
 - [ ] Behavior scenario tests.
