@@ -4,6 +4,33 @@ All notable remake implementation changes are recorded here.
 
 ## 2026-07-06
 
+### Added - Phase 2 Remaining Original Source Data Values
+
+- Added typed original core engine/state/scoring data module.
+- Ported exact engine constants:
+  - site URL and encoded share URL
+  - version
+  - max store cap
+  - save notification display timing
+  - initial game-over flag
+  - income tick and hyper-mode timing factor
+- Ported exact engine option defaults.
+- Ported exact StateManager categories.
+- Documented original save migration steps from `1.0` to `1.3`.
+- Ported exact score factor list and score bonuses for alien alloy, fleet beacon, and ship hull.
+- Added pure helper for original score calculation.
+- Completed Path constants with store offset, capacity upgrade priority, armour priority, non-craftable carryables, and capacity helper.
+- Added deferred original audio manifest, including audio engine constants, every audio library key, asset path, and category.
+- Added deferred localization inventory, including source template metadata, language registry path, locale data paths, and msgid counts.
+- Wired core, path, audio, and localization data into the original content registry.
+- Added parity tests for engine constants, state categories, migrations, scoring, Path constants, audio manifest, and localization inventory.
+
+### Verified - Phase 2 Remaining Original Source Data Values
+
+- `npm test`
+- `npm run build`
+- `npm run test:e2e`
+
 ### Added - Phase 2 Original Late-Game Data Values
 
 - Added typed original late-game data module for Ship, Space, and Fabricator.

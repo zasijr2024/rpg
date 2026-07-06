@@ -1,6 +1,23 @@
-import { originalPathWeightOverrides } from "./path/pathWeights";
+import {
+  originalPathArmourPriority,
+  originalPathBaseCarryables,
+  originalPathCapacityUpgrades,
+  originalPathWeightOverrides
+} from "./path/pathWeights";
+import {
+  originalEngineOptionDefaults,
+  originalScoreBonuses,
+  originalScoreFactors,
+  originalStateCategories,
+  originalStateMigrationSteps
+} from "./core/engineData";
 import { originalPerks } from "./core/perks";
 import { originalPrestigeStores } from "./core/prestige";
+import { originalAudioManifest } from "./audio/audioManifest";
+import {
+  originalLanguageCodes,
+  originalLocaleInventory
+} from "./localization/localizationManifest";
 import {
   originalOutsideWorkerIncome,
   originalOutsideWorkerUnlocks,
@@ -26,7 +43,18 @@ import { originalWorldLandmarks, originalWorldWeapons } from "./world/worldData"
 export const originalContentRegistry = {
   perks: originalPerks,
   prestigeStores: originalPrestigeStores,
+  engineOptionDefaults: originalEngineOptionDefaults,
+  stateCategories: originalStateCategories,
+  stateMigrationSteps: originalStateMigrationSteps,
+  scoreFactors: originalScoreFactors,
+  scoreBonuses: originalScoreBonuses,
+  audioManifest: originalAudioManifest,
+  languageCodes: originalLanguageCodes,
+  localeInventory: originalLocaleInventory,
   pathWeightOverrides: originalPathWeightOverrides,
+  pathCapacityUpgrades: originalPathCapacityUpgrades,
+  pathArmourPriority: originalPathArmourPriority,
+  pathBaseCarryables: originalPathBaseCarryables,
   roomTemperatures: originalRoomTemperatures,
   roomFireStates: originalRoomFireStates,
   roomCraftables: originalRoomCraftables,

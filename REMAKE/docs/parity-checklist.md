@@ -31,10 +31,10 @@ Status legend:
 
 ## Source Data Coverage
 
-- [ ] Core engine constants represented.
-- [ ] State categories represented.
-- [ ] State migration behavior reviewed.
-- [ ] Scoring formula represented.
+- [x] Core engine constants represented.
+- [x] State categories represented.
+- [x] State migration behavior reviewed.
+- [x] Scoring formula represented.
 - [x] Prestige store map represented.
 - [x] Room constants represented.
 - [x] Room fire states represented.
@@ -43,7 +43,7 @@ Status legend:
 - [x] Outside constants represented.
 - [x] Worker income definitions represented.
 - [x] Trap drop table represented.
-- [ ] Path constants represented.
+- [x] Path constants represented.
 - [x] Item weight overrides represented.
 - [x] World constants represented.
 - [x] World tile constants represented.
@@ -54,8 +54,8 @@ Status legend:
 - [x] Space constants represented.
 - [x] Fabricator craftables represented.
 - [x] Perk definitions represented.
-- [ ] Audio manifest stored as deferred data.
-- [ ] Localization files stored as deferred data.
+- [x] Audio manifest stored as deferred data.
+- [x] Localization files stored as deferred data.
 
 ## Room Parity
 
@@ -140,7 +140,7 @@ Status legend:
 - [ ] Path unlock condition matches original.
 - [ ] Compass behavior matches original.
 - [ ] Bag base capacity matches original.
-- [ ] Capacity upgrades match original.
+- [~] Capacity upgrades match original.
 - [ ] Weight overrides match original.
 - [ ] Default item weight behavior matches original.
 - [ ] Outfit add/remove behavior matches original.

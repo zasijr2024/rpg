@@ -4,7 +4,12 @@ import {
   DEFAULT_BAG_SPACE,
   DEFAULT_ITEM_WEIGHT,
   originalContentRegistry,
+  originalPathArmourPriority,
+  originalPathBaseCarryables,
+  originalPathCapacity,
+  originalPathCapacityUpgrades,
   originalPathWeightFor,
+  PATH_STORES_OFFSET,
   SOURCE_BASELINE_COMMIT
 } from "../../content/original";
 
@@ -118,6 +123,7 @@ describe("canonical manifest", () => {
   it("ports exact path weight values and default behavior", () => {
     expect(DEFAULT_BAG_SPACE).toBe(10);
     expect(DEFAULT_ITEM_WEIGHT).toBe(1);
+    expect(PATH_STORES_OFFSET).toBe(0);
     expect(originalPathWeightFor("bone spear")).toBe(2);
     expect(originalPathWeightFor("iron sword")).toBe(3);
     expect(originalPathWeightFor("steel sword")).toBe(5);
@@ -128,5 +134,43 @@ describe("canonical manifest", () => {
     expect(originalPathWeightFor("plasma rifle")).toBe(5);
     expect(originalPathWeightFor("bolas")).toBe(0.5);
     expect(originalPathWeightFor("wood")).toBe(1);
+  });
+
+  it("ports exact path capacity and carryable metadata", () => {
+    expect(originalPathCapacityUpgrades).toEqual([
+      { key: "cargo drone", bonus: 100 },
+      { key: "convoy", bonus: 60 },
+      { key: "wagon", bonus: 30 },
+      { key: "rucksack", bonus: 10 }
+    ]);
+    expect(originalPathCapacity({})).toBe(10);
+    expect(originalPathCapacity({ rucksack: 1 })).toBe(20);
+    expect(originalPathCapacity({ wagon: 1, rucksack: 1 })).toBe(40);
+    expect(originalPathCapacity({ "cargo drone": 1, convoy: 1 })).toBe(110);
+    expect(originalPathArmourPriority).toEqual([
+      "kinetic armour",
+      "s armour",
+      "i armour",
+      "l armour"
+    ]);
+    expect(originalPathBaseCarryables).toContainEqual({
+      key: "cured meat",
+      type: "tool",
+      desc: "cured meat heal"
+    });
+    expect(originalPathBaseCarryables).toContainEqual({
+      key: "medicine",
+      type: "tool",
+      desc: "medicine heal"
+    });
+    expect(originalContentRegistry.pathCapacityUpgrades).toBe(
+      originalPathCapacityUpgrades
+    );
+    expect(originalContentRegistry.pathArmourPriority).toBe(
+      originalPathArmourPriority
+    );
+    expect(originalContentRegistry.pathBaseCarryables).toBe(
+      originalPathBaseCarryables
+    );
   });
 });

@@ -14,10 +14,61 @@ export {
   type OriginalPrestigeStoreType
 } from "./core/prestige";
 export {
+  ENGINE_GAME_OVER_INITIAL,
+  ENGINE_HYPER_MODE_FACTOR,
+  ENGINE_INCOME_TICK_MS,
+  ENGINE_MAX_STORE,
+  ENGINE_SAVE_DISPLAY,
+  ENGINE_SITE_URL,
+  ENGINE_SITE_URL_ENCODED,
+  ENGINE_VERSION,
+  STATE_MANAGER_MAX_STORE,
+  originalCalculateScore,
+  originalEngineOptionDefaults,
+  originalScoreBonuses,
+  originalScoreFactors,
+  originalStateCategories,
+  originalStateMigrationSteps,
+  type EngineOptionsDefaults,
+  type ScoringBonus,
+  type StateMigrationStep
+} from "./core/engineData";
+export {
+  AUDIO_EVENT_DUCK_VOLUME,
+  AUDIO_EVENT_FADE_MULTIPLIER,
+  AUDIO_FADE_TIME,
+  AUDIO_MISSING_BUFFER_CHANNELS,
+  AUDIO_MISSING_BUFFER_GAIN_DIVISOR,
+  AUDIO_MISSING_BUFFER_SECONDS,
+  AUDIO_MISSING_BUFFER_SINE_STEP,
+  AUDIO_SAFARI_DECODE_POLL_MS,
+  originalAudioManifest,
+  type OriginalAudioDefinition,
+  type OriginalAudioKind
+} from "./audio/audioManifest";
+export {
+  LOCALIZATION_BABEL_CONFIG_PATH,
+  LOCALIZATION_LANGS_PATH,
+  LOCALIZATION_MAIN_CSS_PATH,
+  LOCALIZATION_TEMPLATE_MSGID_ENTRIES,
+  LOCALIZATION_TEMPLATE_PATH,
+  originalDeferredLocalizationScope,
+  originalLanguageCodes,
+  originalLocaleInventory,
+  type OriginalLocaleInventoryEntry
+} from "./localization/localizationManifest";
+export {
   DEFAULT_BAG_SPACE,
   DEFAULT_ITEM_WEIGHT,
+  PATH_STORES_OFFSET,
+  originalPathArmourPriority,
+  originalPathBaseCarryables,
+  originalPathCapacity,
+  originalPathCapacityUpgrades,
   originalPathWeightFor,
-  originalPathWeightOverrides
+  originalPathWeightOverrides,
+  type OriginalPathCapacityUpgrade,
+  type OriginalPathCarryable
 } from "./path/pathWeights";
 export {
   ROOM_BUILDER_INCOME_DELAY,
