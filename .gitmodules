@@ -1,0 +1,4 @@
+[submodule "ORIGINAL"]
+	path = ORIGINAL
+	url = https://github.com/doublespeakgames/adarkroom.git
+
