@@ -27,7 +27,7 @@ export function createAsciiViewport(size = SPIKE_VIEWPORT_SIZE): AsciiViewport {
   return {
     rows,
     width: size,
-    height: size
+    height: size,
   };
 }
 
@@ -44,4 +44,3 @@ function tileAt(x: number, y: number, center: number): AsciiTile {
   if ((x * 3 + y * 5) % 17 === 0) return ",";
   return ".";
 }
-

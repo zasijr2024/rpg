@@ -2,43 +2,47 @@ import {
   originalPathArmourPriority,
   originalPathBaseCarryables,
   originalPathCapacityUpgrades,
-  originalPathWeightOverrides
+  originalPathWeightOverrides,
 } from "./path/pathWeights";
 import {
   originalEngineOptionDefaults,
   originalScoreBonuses,
   originalScoreFactors,
   originalStateCategories,
-  originalStateMigrationSteps
+  originalStateMigrationSteps,
 } from "./core/engineData";
 import { originalPerks } from "./core/perks";
 import { originalPrestigeStores } from "./core/prestige";
 import { originalAudioManifest } from "./audio/audioManifest";
 import {
   originalLanguageCodes,
-  originalLocaleInventory
+  originalLocaleInventory,
 } from "./localization/localizationManifest";
+import { originalEventDefinitions } from "./events/eventData";
 import {
   originalOutsideWorkerIncome,
   originalOutsideWorkerUnlocks,
   originalTrapDrops,
-  originalVillageTitleThresholds
+  originalVillageTitleThresholds,
 } from "./outside/outsideData";
 import {
   originalRoomCraftables,
   originalRoomFireStates,
   originalRoomMiscItems,
   originalRoomTemperatures,
-  originalRoomTradeGoods
+  originalRoomTradeGoods,
 } from "./room/roomData";
 import {
   originalFabricatorCraftables,
   originalSpaceAsteroids,
   originalSpaceAsteroidWaveThresholds,
   originalSpaceHitAudioTiers,
-  originalSpaceTitleThresholds
+  originalSpaceTitleThresholds,
 } from "./lateGame/lateGameData";
-import { originalWorldLandmarks, originalWorldWeapons } from "./world/worldData";
+import {
+  originalWorldLandmarks,
+  originalWorldWeapons,
+} from "./world/worldData";
 
 export const originalContentRegistry = {
   perks: originalPerks,
@@ -51,6 +55,7 @@ export const originalContentRegistry = {
   audioManifest: originalAudioManifest,
   languageCodes: originalLanguageCodes,
   localeInventory: originalLocaleInventory,
+  eventDefinitions: originalEventDefinitions,
   pathWeightOverrides: originalPathWeightOverrides,
   pathCapacityUpgrades: originalPathCapacityUpgrades,
   pathArmourPriority: originalPathArmourPriority,
@@ -70,7 +75,7 @@ export const originalContentRegistry = {
   trapDrops: originalTrapDrops,
   villageTitleThresholds: originalVillageTitleThresholds,
   worldWeapons: originalWorldWeapons,
-  worldLandmarks: originalWorldLandmarks
+  worldLandmarks: originalWorldLandmarks,
 } as const;
 
 export type OriginalContentRegistry = typeof originalContentRegistry;

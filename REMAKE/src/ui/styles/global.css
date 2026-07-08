@@ -1,24 +1,36 @@
 :root {
   color-scheme: light;
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-family: "Times New Roman", Times, serif;
   font-size: 16px;
-  line-height: 1.45;
+  line-height: normal;
   color: #111;
-  background: #f7f7f4;
-  --page-padding: clamp(1rem, 2vw, 3rem);
-  --reading-width: min(72ch, calc(100vw - (var(--page-padding) * 2)));
-  --rule: #d8d8d2;
+  background: #fff;
+  --page-padding: 20px;
+  --notification-width: 220px;
+  --location-width: 700px;
+  --stores-width: 220px;
+  --wrapper-width: 920px;
+  --reading-width: min(72ch, calc(100vw - 2rem));
+  --rule: #111;
+  --rule-muted: #8a8a8a;
+  --rule-disabled-border: #c4c4c4;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 button,
@@ -29,32 +41,100 @@ select {
 }
 
 .appShell {
+  position: relative;
   min-height: 100vh;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 2rem;
-  padding: var(--page-padding);
+  width: min(var(--wrapper-width), calc(100vw - 2rem));
+  margin: 0 auto;
+  padding: var(--page-padding) 0 0 var(--notification-width);
 }
 
-.roomPanel {
-  width: var(--reading-width);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  padding: 2rem 0;
+.locationTabs {
+  display: flex;
+  gap: 0;
+  width: min(var(--location-width), 100%);
+  height: 40px;
+  padding-bottom: 20px;
+  border-bottom: 0;
 }
 
-h1 {
-  margin: 0;
-  font-size: clamp(1.5rem, 1.1rem + 0.8vw, 2rem);
-  font-weight: 400;
-  letter-spacing: 0;
+.locationTabs button {
+  border: 0;
+  border-left: 1px solid var(--rule);
+  background: transparent;
+  color: #111;
+  min-height: 20px;
+  padding: 0 0 0 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.locationTabs button[aria-selected="true"] {
+  text-decoration: underline;
+  cursor: default;
+}
+
+.locationTabs button:first-child {
+  border-left: 0;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.locationTabs button:hover {
+  text-decoration: underline;
+}
+
+.locationTabs button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.roomPanel,
+.outsidePanel,
+.pathPanel,
+.settingsPanel {
+  position: relative;
+  width: min(var(--location-width), 100%);
+  min-height: 700px;
+  padding: 0;
+}
+
+.roomPanel,
+.outsidePanel,
+.pathPanel {
+  display: block;
+}
+
+.playColumn,
+.sideColumn {
+  min-width: 0;
+}
+
+.playColumn {
+  position: relative;
+  width: min(470px, 100%);
+  min-height: 700px;
+}
+
+.pathPanel .playColumn {
+  max-height: 700px;
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+}
+
+.sideColumn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--stores-width);
 }
 
 .roomStatus {
-  margin: 1.5rem 0;
+  margin: 0 0 20px;
   display: grid;
-  gap: 0.25rem;
+  gap: 8px;
+  width: 230px;
 }
 
 .roomStatus strong {
@@ -63,15 +143,39 @@ h1 {
 
 .actionRow {
   display: flex;
-  gap: 0.5rem;
+  gap: 5px;
+  margin: 0 0 20px;
 }
 
 .actionRow button {
-  min-width: 8rem;
+  position: relative;
+  width: 150px;
+  height: 31px;
+  min-height: 31px;
+  max-height: 31px;
   border: 1px solid var(--rule);
   background: #fff;
   color: #111;
-  padding: 0.4rem 0.65rem;
+  padding: 5px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.actionRow button > span:first-child {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actionRow button:hover {
+  text-decoration: underline;
 }
 
 .actionRow button:focus-visible {
@@ -79,20 +183,852 @@ h1 {
   outline-offset: 2px;
 }
 
+.storesStack,
 .storesPanel,
+.actionPanel,
 .notificationsPanel {
-  margin-top: 1.5rem;
+  margin-top: 0;
+}
+
+.storesStack {
+  display: grid;
+  gap: 15px;
+  margin-top: 0;
+}
+
+.storesStack .storesPanel {
+  margin-top: 0;
+}
+
+.storesPanel,
+.villagePanel,
+.workersPanel,
+.outfitPanel,
+.perksPanel,
+.worldStatus,
+.landmarkPanel {
+  position: relative;
+  border: 1px solid var(--rule);
+  background: #fff;
+  padding: 5px 10px;
+  width: var(--stores-width);
+  max-width: var(--stores-width);
+  cursor: default;
+}
+
+.storesPanel::before,
+.villagePanel::before,
+.workersPanel::before,
+.outfitPanel::before,
+.perksPanel::before,
+.worldStatus::before,
+.landmarkPanel::before {
+  content: attr(aria-label);
+  position: absolute;
+  top: -13px;
+  left: 8px;
+  background: #fff;
+  color: #555;
+  padding: 0 3px;
+  font-size: 16px;
+}
+
+.villagePanel {
+  margin: 0;
+}
+
+.workersPanel {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  width: 160px;
+  max-width: 160px;
+}
+
+.outsidePanel .playColumn {
+  width: min(470px, 100%);
+  display: grid;
+  grid-template-columns: 150px 160px;
+  grid-template-areas:
+    "actions workers"
+    "village workers";
+  column-gap: 40px;
+  row-gap: 22px;
+  align-items: start;
+  align-content: start;
+  padding-top: 36px;
+}
+
+.outsidePanel .villagePanel {
+  position: relative;
+  grid-area: village;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: 150px;
+  max-width: 150px;
+}
+
+.outsidePanel .workersPanel {
+  position: relative;
+  grid-area: workers;
+  top: auto;
+  left: auto;
+  border: 0;
+  padding: 0;
+}
+
+.outsidePanel .workersPanel::before {
+  display: none;
+}
+
+.outsidePanel .actionRow {
+  position: relative;
+  grid-area: actions;
+  top: auto;
+  left: auto;
+  display: grid;
+  gap: 5px;
+  width: 150px;
+  margin: 0;
+}
+
+.workerRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px 42px;
+  align-items: center;
+  gap: 4px;
+  min-height: 30px;
+  margin: 0;
+  position: relative;
+}
+
+.workerName,
+.workerCount {
+  min-width: 0;
+}
+
+.workerName {
+  overflow-wrap: anywhere;
+}
+
+.workerCount {
+  text-align: right;
+}
+
+.workerControls {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 32px;
+}
+
+.outfitPanel {
+  width: 320px;
+  max-width: 100%;
+  display: grid;
+  gap: 6px;
+}
+
+.bagSpace {
+  margin-bottom: 4px;
+}
+
+.outfitMeta,
+.outfitRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px 34px;
+  align-items: center;
+  gap: 6px;
+  min-height: 31px;
+}
+
+.outfitMeta {
+  grid-template-columns: minmax(0, 1fr) 52px;
+}
+
+.outfitName,
+.outfitCount {
+  min-width: 0;
+}
+
+.outfitName {
+  overflow-wrap: anywhere;
+}
+
+.outfitCount {
+  text-align: right;
+}
+
+.outfitControls {
+  position: relative;
+  display: block;
+  width: 34px;
+  height: 22px;
+}
+
+.outfitControls button {
+  position: absolute;
+  width: 14px;
+  height: 12px;
+  border: 0;
+  background: #fff;
+  color: #111;
+  padding: 0;
+  font-size: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.outfitControls .upBtn,
+.outfitControls .dnBtn {
+  right: 15px;
+}
+
+.outfitControls .upManyBtn,
+.outfitControls .dnManyBtn {
+  right: 0;
+}
+
+.outfitControls .upBtn,
+.outfitControls .upManyBtn {
+  top: -1px;
+}
+
+.outfitControls .dnBtn,
+.outfitControls .dnManyBtn {
+  bottom: -1px;
+}
+
+.outfitControls button::before,
+.outfitControls button::after {
+  position: absolute;
+  content: "";
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.outfitControls .upBtn::before,
+.outfitControls .upManyBtn::before {
+  bottom: 2px;
+  margin-left: -6px;
+  border-width: 6px;
+  border-color: transparent transparent #111 transparent;
+}
+
+.outfitControls .upBtn::after {
+  bottom: 2px;
+  margin-left: -4px;
+  border-width: 4px;
+  border-color: transparent transparent #fff transparent;
+}
+
+.outfitControls .upManyBtn::after {
+  bottom: 2px;
+  margin-left: -3px;
+  border-width: 3px;
+  border-color: transparent transparent #fff transparent;
+}
+
+.outfitControls .dnBtn::before,
+.outfitControls .dnManyBtn::before {
+  top: 2px;
+  margin-left: -6px;
+  border-width: 6px;
+  border-color: #111 transparent transparent transparent;
+}
+
+.outfitControls .dnBtn::after {
+  top: 2px;
+  margin-left: -4px;
+  border-width: 4px;
+  border-color: #fff transparent transparent transparent;
+}
+
+.outfitControls .dnManyBtn::after {
+  top: 2px;
+  margin-left: -3px;
+  border-width: 3px;
+  border-color: #fff transparent transparent transparent;
+}
+
+.outfitControls button:disabled {
+  color: var(--rule-muted);
+  cursor: default;
+}
+
+.outfitControls .upBtn:disabled::before,
+.outfitControls .upManyBtn:disabled::before {
+  border-color: transparent transparent #999 transparent;
+}
+
+.outfitControls .dnBtn:disabled::before,
+.outfitControls .dnManyBtn:disabled::before {
+  border-color: #999 transparent transparent transparent;
+}
+
+.outfitControls button:disabled::after {
+  display: none;
+}
+
+.perksPanel {
+  width: 220px;
+  max-width: 100%;
+  margin-top: 22px;
+}
+
+.worldPanel {
+  width: min(var(--location-width), 100%);
+  min-height: 700px;
+  outline: none;
+}
+
+.worldPanel:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.worldStatus {
+  width: 260px;
+  display: grid;
+  gap: 3px;
+  margin-bottom: 16px;
+}
+
+.worldStatus div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.worldMap {
+  width: max-content;
+  max-width: 100%;
+  margin: 0 0 14px;
+  overflow: auto;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: 0;
+  background: #fff;
+  color: #111;
+}
+
+.landmarkPanel {
+  width: 260px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.landmarkPanel button,
+.worldControls button {
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  min-height: 31px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.worldControls {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-areas:
+    ". north ."
+    "west . east"
+    ". south .";
+  gap: 5px;
+  width: 250px;
+  margin-bottom: 14px;
+}
+
+.worldControls button[aria-label="north"] {
+  grid-area: north;
+}
+
+.worldControls button[aria-label="west"] {
+  grid-area: west;
+}
+
+.worldControls button[aria-label="east"] {
+  grid-area: east;
+}
+
+.worldControls button[aria-label="south"] {
+  grid-area: south;
+}
+
+.workerControls button {
+  position: absolute;
+  width: 18px;
+  height: 14px;
+  border: 0;
+  background: transparent;
+  color: #111;
+  padding: 0;
+  font-size: 0;
+  cursor: pointer;
+}
+
+.workerControls button:hover:not(:disabled) {
+  background: #f2f2ee;
+}
+
+.workerControls button::before,
+.workerControls button::after {
+  position: absolute;
+  content: "";
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.workerControls button:nth-child(1),
+.workerControls button:nth-child(3) {
+  top: 1px;
+}
+
+.workerControls button:nth-child(2),
+.workerControls button:nth-child(4) {
+  bottom: 2px;
+}
+
+.workerControls button:nth-child(1),
+.workerControls button:nth-child(2) {
+  right: 20px;
+}
+
+.workerControls button:nth-child(3),
+.workerControls button:nth-child(4) {
+  right: 0;
+}
+
+.workerControls button:nth-child(1)::before,
+.workerControls button:nth-child(3)::before {
+  bottom: 2px;
+  margin-left: -6px;
+  border-width: 6px;
+  border-color: transparent transparent #111 transparent;
+}
+
+.workerControls button:nth-child(1)::after,
+.workerControls button:nth-child(3)::after {
+  bottom: 2px;
+  margin-left: -4px;
+  border-width: 4px;
+  border-color: transparent transparent #fff transparent;
+}
+
+.workerControls button:nth-child(2)::before,
+.workerControls button:nth-child(4)::before {
+  top: 2px;
+  margin-left: -6px;
+  border-width: 6px;
+  border-color: #111 transparent transparent transparent;
+}
+
+.workerControls button:nth-child(2)::after,
+.workerControls button:nth-child(4)::after {
+  top: 2px;
+  margin-left: -4px;
+  border-width: 4px;
+  border-color: #fff transparent transparent transparent;
+}
+
+.workerControls button:nth-child(3)::after,
+.workerControls button:nth-child(4)::after {
+  margin-left: -3px;
+  border-width: 3px;
+}
+
+.workerControls button:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.workerControls button:disabled::after {
+  display: none;
+}
+
+.workerControls button:nth-child(1):disabled::before,
+.workerControls button:nth-child(3):disabled::before {
+  border-color: transparent transparent #999 transparent;
+}
+
+.workerControls button:nth-child(2):disabled::before,
+.workerControls button:nth-child(4):disabled::before {
+  border-color: #999 transparent transparent transparent;
+}
+
+.workerControls button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
 }
 
 .storeRow {
   display: flex;
   justify-content: space-between;
-  max-width: 18rem;
+  gap: 1rem;
+  max-width: 100%;
+}
+
+.incomeRow {
+  display: grid;
+  grid-template-columns: minmax(60px, 0.45fr) minmax(0, 1fr);
+  gap: 0.5rem;
+  max-width: 100%;
+  color: #555;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.incomeBlock {
+  display: grid;
+  gap: 2px;
+  margin-top: 4px;
+  padding-top: 3px;
+  border-top: 1px solid #777;
+}
+
+.incomeSource,
+.incomeText {
+  min-width: 0;
+}
+
+.incomeText {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.notificationsPanel {
+  position: absolute;
+  top: 0;
+  left: -220px;
+  width: 200px;
+  height: 700px;
+  max-height: 700px;
+  overflow: hidden;
+}
+
+.notificationsPanel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 80px;
+  pointer-events: none;
+  background: linear-gradient(rgba(255, 255, 255, 0), #fff);
 }
 
 .notificationsPanel p {
-  margin: 0.4rem 0 0;
+  margin: 0 0 10px;
   color: #333;
+  font-size: 16px;
+  opacity: max(0.25, calc(1 - (var(--notification-age, 0) * 0.12)));
+}
+
+.actionPanel p {
+  margin: 0 0 5px;
+}
+
+.roomActions {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.roomActions .actionPanel {
+  width: 140px;
+}
+
+.roomActions .buttonGrid {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 3px;
+  scrollbar-width: thin;
+}
+
+.buttonGrid {
+  display: grid;
+  gap: 5px;
+}
+
+.buttonGrid button {
+  position: relative;
+  width: 120px;
+  min-height: 31px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  padding: 5px 10px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.actionRow button:disabled,
+.buttonGrid button:disabled {
+  color: var(--rule-muted);
+  border-color: var(--rule-disabled-border);
+  background: #fff;
+  cursor: default;
+  text-decoration: none;
+}
+
+.buttonGrid button:hover {
+  text-decoration: underline;
+}
+
+.actionRow button.cooldownButton {
+  padding-right: 48px;
+  background: linear-gradient(
+    90deg,
+    #e5e5df var(--cooldown-progress, 0%),
+    #f2f2ee 0
+  );
+}
+
+.cooldownText {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 32px;
+  text-align: center;
+  color: inherit;
+  font: inherit;
+  pointer-events: none;
+}
+
+.buttonLabel,
+.costText {
+  max-width: 100%;
+}
+
+.costText {
+  color: #555;
+  font-size: 14px;
+  white-space: normal;
+}
+
+.buttonGrid button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.settingsColumn {
+  max-width: 540px;
+  display: grid;
+  gap: 24px;
+}
+
+.settingsGroup {
+  position: relative;
+  border: 1px solid var(--rule);
+  background: #fff;
+  padding: 14px 16px 12px;
+}
+
+.settingsGroup::before {
+  content: attr(aria-label);
+  position: absolute;
+  top: -13px;
+  left: 8px;
+  background: #fff;
+  color: #555;
+  padding: 0 3px;
+  font-size: 16px;
+}
+
+.toggleRow,
+.debugRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.settingsButtons {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.settingsButtons button,
+.eventButtons button {
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  min-height: 31px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.settingsButtons button:focus-visible,
+.eventButtons button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.eventPanel {
+  position: absolute;
+  top: 90px;
+  left: var(--notification-width);
+  z-index: 10;
+  width: min(470px, calc(100vw - 2rem));
+  max-height: min(520px, calc(100vh - 140px));
+  overflow: auto;
+  border: 1px solid var(--rule);
+  background: #fff;
+  padding: 16px 20px;
+}
+
+.eventPanel h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.eventText p {
+  margin: 0 0 8px;
+}
+
+.combatMeters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(90px, 1fr));
+  gap: 8px;
+  width: min(260px, 100%);
+  margin: 10px 0;
+}
+
+.combatMeters div {
+  border: 1px solid var(--rule);
+  padding: 4px 8px;
+  min-height: 29px;
+}
+
+.combatLoot {
+  width: min(330px, 100%);
+  margin-top: 10px;
+}
+
+.combatLoot p {
+  margin: 0 0 4px;
+}
+
+.combatLootRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 31px;
+  margin-bottom: 4px;
+}
+
+.combatLootRow > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.combatLootRow button {
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  min-height: 27px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.combatLootRow button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.combatLootRow button:disabled {
+  color: var(--rule-muted);
+  border-color: var(--rule-disabled-border);
+  cursor: default;
+}
+
+.lootDropMenu {
+  position: relative;
+  display: flex;
+}
+
+.lootDropList {
+  position: absolute;
+  top: calc(100% + 3px);
+  right: 0;
+  z-index: 12;
+  display: grid;
+  gap: 3px;
+  min-width: 190px;
+  max-width: min(260px, calc(100vw - 3rem));
+  padding: 5px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+  visibility: hidden;
+}
+
+.lootDropMenu[data-open="true"] .lootDropList {
+  visibility: visible;
+}
+
+.lootDropList button {
+  width: 100%;
+  text-align: left;
+  white-space: normal;
+}
+
+.eventButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.eventButtons button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+}
+
+.eventButtons button:disabled {
+  color: var(--rule-muted);
+  border-color: var(--rule-disabled-border);
+  cursor: default;
+}
+
+.toggleRow {
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 24px;
+}
+
+.toggleRow input {
+  margin: 0;
+}
+
+.debugRow {
+  color: #555;
+}
+
+.debugRow + .debugRow,
+.toggleRow + .toggleRow {
+  margin-top: 0.2rem;
 }
 
 .spikeLab {
@@ -179,4 +1115,99 @@ h1 {
 .spaceAsteroid {
   position: absolute;
   transform: translate(-50%, -50%);
+}
+
+@media (max-width: 760px) {
+  .locationTabs,
+  .roomPanel,
+  .outsidePanel,
+  .pathPanel,
+  .settingsPanel,
+  .spikeLab {
+    width: 100%;
+  }
+
+  .appShell {
+    width: calc(100vw - 2rem);
+    padding: var(--page-padding) 0;
+  }
+
+  .eventPanel {
+    position: fixed;
+    top: 76px;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+    max-height: calc(100vh - 100px);
+  }
+
+  .playColumn,
+  .sideColumn {
+    position: static;
+    width: 100%;
+  }
+
+  .roomPanel,
+  .outsidePanel,
+  .pathPanel,
+  .playColumn {
+    min-height: auto;
+  }
+
+  .pathPanel .playColumn {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
+  .outsidePanel .playColumn {
+    display: block;
+    padding-top: 0;
+  }
+
+  .notificationsPanel,
+  .outsidePanel .villagePanel,
+  .outsidePanel .workersPanel,
+  .outsidePanel .actionRow {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .storesPanel,
+  .villagePanel,
+  .workersPanel,
+  .outfitPanel,
+  .perksPanel,
+  .worldStatus,
+  .landmarkPanel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .worldControls {
+    width: min(250px, 100%);
+  }
+
+  .roomActions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .roomActions .buttonGrid {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .notificationsPanel {
+    height: auto;
+    max-height: 160px;
+  }
+
+  .notificationsPanel::after {
+    display: none;
+  }
 }

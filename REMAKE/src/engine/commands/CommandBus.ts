@@ -4,7 +4,7 @@ export interface Command<TType extends string = string, TPayload = unknown> {
 }
 
 export type CommandHandler<TCommand extends Command> = (
-  command: TCommand
+  command: TCommand,
 ) => void;
 
 export class CommandBus<TCommand extends Command> {
@@ -12,7 +12,7 @@ export class CommandBus<TCommand extends Command> {
 
   register<TType extends TCommand["type"]>(
     type: TType,
-    handler: CommandHandler<Extract<TCommand, { type: TType }>>
+    handler: CommandHandler<Extract<TCommand, { type: TType }>>,
   ): () => void {
     const existing = this.handlers.get(type) ?? [];
     existing.push(handler as CommandHandler<TCommand>);
@@ -39,4 +39,3 @@ export class CommandBus<TCommand extends Command> {
     }
   }
 }
-

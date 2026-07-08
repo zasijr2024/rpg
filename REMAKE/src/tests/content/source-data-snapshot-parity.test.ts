@@ -11,7 +11,7 @@ import {
   originalRoomTradeGoods,
   originalTrapDrops,
   PATH_STORES_OFFSET,
-  DEFAULT_BAG_SPACE
+  DEFAULT_BAG_SPACE,
 } from "../../content/original";
 
 const workspaceRoot = resolve(process.cwd(), "..");
@@ -20,22 +20,22 @@ function audioLibraryProxy(): Record<string, string> {
   return new Proxy(
     {},
     {
-      get: (_target, property) => String(property)
-    }
+      get: (_target, property) => String(property),
+    },
   ) as Record<string, string>;
 }
 
 function evaluateOriginal<T>(
   relativePath: string,
   exposeScript: string,
-  extras: Record<string, unknown> = {}
+  extras: Record<string, unknown> = {},
 ): T {
   const source = readFileSync(join(workspaceRoot, relativePath), "utf8");
   const context = {
     _: (text: string) => text,
     AudioLibrary: audioLibraryProxy(),
     console,
-    ...extras
+    ...extras,
   };
 
   runInNewContext(`${source}\n${exposeScript}`, context);
@@ -51,15 +51,17 @@ describe("source-derived data snapshot parity", () => {
     }>("ORIGINAL/script/room.js", "globalThis.__export = Room;", {
       $SM: {
         get: (path: string) => {
-          if (path === 'game.buildings["trap"]') return contextState.buildings.trap;
-          if (path === 'game.buildings["hut"]') return contextState.buildings.hut;
+          if (path === 'game.buildings["trap"]')
+            return contextState.buildings.trap;
+          if (path === 'game.buildings["hut"]')
+            return contextState.buildings.hut;
           return 0;
-        }
-      }
+        },
+      },
     });
 
     expect(originalRoomCraftables.map((item) => item.key)).toEqual(
-      Object.keys(originalRoom.Craftables)
+      Object.keys(originalRoom.Craftables),
     );
     for (const ported of originalRoomCraftables) {
       const source = originalRoom.Craftables[ported.key];
@@ -74,18 +76,18 @@ describe("source-derived data snapshot parity", () => {
 
       contextState.buildings.trap = 0;
       contextState.buildings.hut = 0;
-      expect(originalRoomCost(ported, { buildings: { trap: 0, hut: 0 } })).toEqual(
-        source.cost()
-      );
+      expect(
+        originalRoomCost(ported, { buildings: { trap: 0, hut: 0 } }),
+      ).toEqual(source.cost());
       contextState.buildings.trap = 4;
       contextState.buildings.hut = 4;
-      expect(originalRoomCost(ported, { buildings: { trap: 4, hut: 4 } })).toEqual(
-        source.cost()
-      );
+      expect(
+        originalRoomCost(ported, { buildings: { trap: 4, hut: 4 } }),
+      ).toEqual(source.cost());
     }
 
     expect(originalRoomTradeGoods.map((item) => item.key)).toEqual(
-      Object.keys(originalRoom.TradeGoods)
+      Object.keys(originalRoom.TradeGoods),
     );
     for (const ported of originalRoomTradeGoods) {
       const source = originalRoom.TradeGoods[ported.key];
@@ -102,7 +104,7 @@ describe("source-derived data snapshot parity", () => {
       _INCOME: Record<string, any>;
       TrapDrops: any[];
     }>("ORIGINAL/script/outside.js", "globalThis.__export = Outside;", {
-      $: { extend: Object.assign }
+      $: { extend: Object.assign },
     });
 
     expect(originalOutsideWorkerIncome).toEqual(
@@ -110,8 +112,8 @@ describe("source-derived data snapshot parity", () => {
         key,
         name: value.name,
         delay: value.delay,
-        stores: value.stores
-      }))
+        stores: value.stores,
+      })),
     );
     expect(originalTrapDrops).toEqual(originalOutside.TrapDrops);
   });
@@ -126,7 +128,10 @@ describe("source-derived data snapshot parity", () => {
     expect(DEFAULT_BAG_SPACE).toBe(originalPath.DEFAULT_BAG_SPACE);
     expect(PATH_STORES_OFFSET).toBe(originalPath._STORES_OFFSET);
     expect(originalPathWeightOverrides).toEqual(
-      Object.entries(originalPath.Weight).map(([key, weight]) => ({ key, weight }))
+      Object.entries(originalPath.Weight).map(([key, weight]) => ({
+        key,
+        weight,
+      })),
     );
   });
 
@@ -136,7 +141,7 @@ describe("source-derived data snapshot parity", () => {
     }>("ORIGINAL/script/fabricator.js", "globalThis.__export = Fabricator;");
 
     expect(originalFabricatorCraftables.map((item) => item.key)).toEqual(
-      Object.keys(originalFabricator.Craftables)
+      Object.keys(originalFabricator.Craftables),
     );
     for (const ported of originalFabricatorCraftables) {
       const source = originalFabricator.Craftables[ported.key];

@@ -1,11 +1,14 @@
 export type EventHandler<TPayload> = (payload: TPayload) => void;
 
 export class EventBus<TEvents extends object> {
-  private handlers = new Map<keyof TEvents, Set<EventHandler<TEvents[keyof TEvents]>>>();
+  private handlers = new Map<
+    keyof TEvents,
+    Set<EventHandler<TEvents[keyof TEvents]>>
+  >();
 
   subscribe<TKey extends keyof TEvents>(
     eventName: TKey,
-    handler: EventHandler<TEvents[TKey]>
+    handler: EventHandler<TEvents[TKey]>,
   ): () => void {
     const existing = this.handlers.get(eventName) ?? new Set();
     existing.add(handler as EventHandler<TEvents[keyof TEvents]>);
@@ -19,7 +22,10 @@ export class EventBus<TEvents extends object> {
     };
   }
 
-  publish<TKey extends keyof TEvents>(eventName: TKey, payload: TEvents[TKey]): void {
+  publish<TKey extends keyof TEvents>(
+    eventName: TKey,
+    payload: TEvents[TKey],
+  ): void {
     const existing = this.handlers.get(eventName);
     if (!existing) return;
     for (const handler of [...existing]) {

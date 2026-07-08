@@ -29,21 +29,21 @@ export const originalPathWeightOverrides: OriginalPathWeightOverride[] = [
   { key: "energy cell", weight: 0.2 },
   { key: "laser rifle", weight: 5 },
   { key: "plasma rifle", weight: 5 },
-  { key: "bolas", weight: 0.5 }
+  { key: "bolas", weight: 0.5 },
 ];
 
 export const originalPathCapacityUpgrades: OriginalPathCapacityUpgrade[] = [
   { key: "cargo drone", bonus: 100 },
   { key: "convoy", bonus: 60 },
   { key: "wagon", bonus: 30 },
-  { key: "rucksack", bonus: 10 }
+  { key: "rucksack", bonus: 10 },
 ];
 
 export const originalPathArmourPriority = [
   "kinetic armour",
   "s armour",
   "i armour",
-  "l armour"
+  "l armour",
 ] as const;
 
 export const originalPathBaseCarryables: OriginalPathCarryable[] = [
@@ -56,19 +56,21 @@ export const originalPathBaseCarryables: OriginalPathCarryable[] = [
   { key: "bayonet", type: "weapon" },
   { key: "charm", type: "tool" },
   { key: "alien alloy", type: "tool" },
-  { key: "medicine", type: "tool", desc: "medicine heal" }
+  { key: "medicine", type: "tool", desc: "medicine heal" },
 ];
 
 export function originalPathWeightFor(itemKey: string): number {
   return (
-    originalPathWeightOverrides.find((entry) => entry.key === itemKey)?.weight ??
-    DEFAULT_ITEM_WEIGHT
+    originalPathWeightOverrides.find((entry) => entry.key === itemKey)
+      ?.weight ?? DEFAULT_ITEM_WEIGHT
   );
 }
 
-export function originalPathCapacity(stores: Partial<Record<string, number>>): number {
+export function originalPathCapacity(
+  stores: Partial<Record<string, number>>,
+): number {
   const upgrade = originalPathCapacityUpgrades.find(
-    (entry) => (stores[entry.key] ?? 0) > 0
+    (entry) => (stores[entry.key] ?? 0) > 0,
   );
   return DEFAULT_BAG_SPACE + (upgrade?.bonus ?? 0);
 }
@@ -81,6 +83,8 @@ function assertKeysMatchManifest(): void {
     keys.join("\u0000") !==
     canonicalManifest.keys.pathWeightOverrides.join("\u0000")
   ) {
-    throw new Error("Original path weight keys do not match canonical manifest");
+    throw new Error(
+      "Original path weight keys do not match canonical manifest",
+    );
   }
 }

@@ -69,7 +69,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     name: "energy blade",
     type: "weapon",
     buildMsg: "the blade hums, charged particles sparking and fizzing.",
-    cost: { "alien alloy": 1 }
+    cost: { "alien alloy": 1 },
   },
   {
     key: "fluid recycler",
@@ -77,7 +77,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     type: "upgrade",
     maximum: 1,
     buildMsg: "water out, water in. waste not, want not.",
-    cost: { "alien alloy": 2 }
+    cost: { "alien alloy": 2 },
   },
   {
     key: "cargo drone",
@@ -85,7 +85,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     type: "upgrade",
     maximum: 1,
     buildMsg: "the workhorse of the wanderer fleet.",
-    cost: { "alien alloy": 2 }
+    cost: { "alien alloy": 2 },
   },
   {
     key: "kinetic armour",
@@ -94,7 +94,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     maximum: 1,
     blueprintRequired: true,
     buildMsg: "wanderer soldiers succeed by subverting the enemy's rage.",
-    cost: { "alien alloy": 2 }
+    cost: { "alien alloy": 2 },
   },
   {
     key: "disruptor",
@@ -102,7 +102,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     type: "weapon",
     blueprintRequired: true,
     buildMsg: "somtimes it is best not to fight.",
-    cost: { "alien alloy": 1 }
+    cost: { "alien alloy": 1 },
   },
   {
     key: "hypo",
@@ -111,7 +111,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     blueprintRequired: true,
     buildMsg: "a handful of hypos. life in a vial.",
     cost: { "alien alloy": 1 },
-    quantity: 5
+    quantity: 5,
   },
   {
     key: "stim",
@@ -119,7 +119,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     type: "tool",
     blueprintRequired: true,
     buildMsg: "sometimes it is best to fight without restraint.",
-    cost: { "alien alloy": 1 }
+    cost: { "alien alloy": 1 },
   },
   {
     key: "plasma rifle",
@@ -127,7 +127,7 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     type: "weapon",
     blueprintRequired: true,
     buildMsg: "the peak of wanderer weapons technology, sleek and deadly.",
-    cost: { "alien alloy": 1 }
+    cost: { "alien alloy": 1 },
   },
   {
     key: "glowstone",
@@ -135,8 +135,8 @@ export const originalFabricatorCraftables: FabricatorCraftableDefinition[] = [
     type: "tool",
     blueprintRequired: true,
     buildMsg: "a smooth, perfect sphere. its light is inextinguishable.",
-    cost: { "alien alloy": 1 }
-  }
+    cost: { "alien alloy": 1 },
+  },
 ];
 
 export const originalSpaceTitleThresholds: SpaceTitleThreshold[] = [
@@ -145,7 +145,7 @@ export const originalSpaceTitleThresholds: SpaceTitleThreshold[] = [
   { minAltitude: 20, title: "Mesosphere" },
   { minAltitude: 30, title: "Thermosphere" },
   { minAltitude: 45, title: "Exosphere" },
-  { minAltitude: 60, title: "Space" }
+  { minAltitude: 60, title: "Space" },
 ];
 
 export const originalSpaceAsteroids: SpaceAsteroidDefinition[] = [
@@ -153,26 +153,27 @@ export const originalSpaceAsteroids: SpaceAsteroidDefinition[] = [
   { rollUnder: 0.4, glyph: "$" },
   { rollUnder: 0.6, glyph: "%" },
   { rollUnder: 0.8, glyph: "&" },
-  { rollUnder: 1, glyph: "H" }
+  { rollUnder: 1, glyph: "H" },
 ];
 
-export const originalSpaceAsteroidWaveThresholds: SpaceAsteroidWaveThreshold[] = [
-  { minAltitudeExclusive: 10, extraAsteroids: 1 },
-  { minAltitudeExclusive: 20, extraAsteroids: 2 },
-  { minAltitudeExclusive: 40, extraAsteroids: 2 }
-];
+export const originalSpaceAsteroidWaveThresholds: SpaceAsteroidWaveThreshold[] =
+  [
+    { minAltitudeExclusive: 10, extraAsteroids: 1 },
+    { minAltitudeExclusive: 20, extraAsteroids: 2 },
+    { minAltitudeExclusive: 40, extraAsteroids: 2 },
+  ];
 
 export const originalSpaceHitAudioTiers: SpaceHitAudioTier[] = [
   { minAltitudeExclusive: 40, offset: 6 },
   { minAltitudeExclusive: 20, offset: 4 },
-  { minAltitudeExclusive: -Infinity, offset: 1 }
+  { minAltitudeExclusive: -Infinity, offset: 1 },
 ];
 
 export const originalSpaceKeyBindings = {
   up: [38, 87],
   down: [40, 83],
   left: [37, 65],
-  right: [39, 68]
+  right: [39, 68],
 } as const;
 
 export function originalSpaceShipSpeed(thrusters: number): number {
@@ -182,7 +183,9 @@ export function originalSpaceShipSpeed(thrusters: number): number {
 export function originalSpaceAsteroidDuration(roll: number): number {
   return (
     SPACE_BASE_ASTEROID_SPEED -
-    Math.floor(roll * (SPACE_BASE_ASTEROID_SPEED * SPACE_ASTEROID_SPEED_RANDOM_FACTOR))
+    Math.floor(
+      roll * (SPACE_BASE_ASTEROID_SPEED * SPACE_ASTEROID_SPEED_RANDOM_FACTOR),
+    )
   );
 }
 
@@ -190,7 +193,9 @@ export function originalSpaceNextAsteroidDelay(altitude: number): number {
   return 1000 - altitude * 10;
 }
 
-export function originalSpaceAsteroidCountForAltitude(altitude: number): number {
+export function originalSpaceAsteroidCountForAltitude(
+  altitude: number,
+): number {
   return (
     1 +
     originalSpaceAsteroidWaveThresholds.reduce(
@@ -198,7 +203,7 @@ export function originalSpaceAsteroidCountForAltitude(altitude: number): number 
         altitude > threshold.minAltitudeExclusive
           ? count + threshold.extraAsteroids
           : count,
-      0
+      0,
     )
   );
 }
@@ -214,7 +219,7 @@ export function originalSpaceTitleForAltitude(altitude: number): string {
 export function originalSpaceHitAudioOffset(altitude: number): number {
   return (
     originalSpaceHitAudioTiers.find(
-      (tier) => altitude > tier.minAltitudeExclusive
+      (tier) => altitude > tier.minAltitudeExclusive,
     )?.offset ?? 1
   );
 }
@@ -227,14 +232,14 @@ assertKeysMatchManifest();
 
 function assertKeysMatchManifest(): void {
   const craftableKeys = originalFabricatorCraftables.map(
-    (craftable) => craftable.key
+    (craftable) => craftable.key,
   );
   if (
     craftableKeys.join("\u0000") !==
     canonicalManifest.keys.fabricatorCraftables.join("\u0000")
   ) {
     throw new Error(
-      "Original fabricator craftable keys do not match canonical manifest"
+      "Original fabricator craftable keys do not match canonical manifest",
     );
   }
 }

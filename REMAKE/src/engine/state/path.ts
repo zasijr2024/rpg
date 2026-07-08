@@ -38,3 +38,14 @@ export function setPath(root: unknown, path: string, value: unknown): void {
   current[tokens[tokens.length - 1]] = value;
 }
 
+export function deletePath(root: unknown, path: string): void {
+  const tokens = parseStatePath(path);
+  let current = root as Record<string, unknown>;
+  for (let i = 0; i < tokens.length - 1; i++) {
+    const token = tokens[i];
+    const next = current[token];
+    if (next === null || typeof next !== "object") return;
+    current = next as Record<string, unknown>;
+  }
+  delete current[tokens[tokens.length - 1]];
+}

@@ -29,7 +29,7 @@ export class MiniEventRuntime {
   constructor(
     private readonly definition: MiniEventDefinition,
     private readonly state: StateStore,
-    private readonly rng: Rng
+    private readonly rng: Rng,
   ) {
     this.activeScene = definition.startScene;
   }
@@ -51,7 +51,7 @@ export class MiniEventRuntime {
     return {
       scene: this.activeScene,
       appliedCost: button.cost ?? {},
-      appliedReward: button.reward ?? {}
+      appliedReward: button.reward ?? {},
     };
   }
 
@@ -101,20 +101,19 @@ export function createMiniEventFixture(): MiniEventDefinition {
             reward: { fur: 2 },
             nextScene: {
               0.5: "quiet",
-              1: "noise"
-            }
-          }
-        }
+              1: "noise",
+            },
+          },
+        },
       },
       quiet: {
         text: ["nothing answers."],
-        buttons: {}
+        buttons: {},
       },
       noise: {
         text: ["something moves."],
-        buttons: {}
-      }
-    }
+        buttons: {},
+      },
+    },
   };
 }
-

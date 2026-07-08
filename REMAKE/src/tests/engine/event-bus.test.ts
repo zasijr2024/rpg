@@ -20,7 +20,7 @@ describe("EventBus", () => {
     const bus = new EventBus<TestEvents>();
     const values: number[] = [];
     const unsubscribe = bus.subscribe("ping", (payload) =>
-      values.push(payload.value)
+      values.push(payload.value),
     );
 
     unsubscribe();
@@ -29,4 +29,3 @@ describe("EventBus", () => {
     expect(values).toEqual([]);
   });
 });
-

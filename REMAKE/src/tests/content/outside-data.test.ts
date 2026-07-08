@@ -7,6 +7,8 @@ import {
   originalMaxPopulation,
   originalOutsideWorkerIncome,
   originalOutsideWorkerUnlocks,
+  originalPopulationDelayMinutes,
+  originalPopulationIncrease,
   originalPopulationMessageForArrivals,
   originalPopulationMessageThresholds,
   originalTrapDropCount,
@@ -20,7 +22,7 @@ import {
   OUTSIDE_POP_DELAY_MAX,
   OUTSIDE_POP_DELAY_MIN,
   OUTSIDE_STORES_OFFSET,
-  OUTSIDE_TRAPS_DELAY
+  OUTSIDE_TRAPS_DELAY,
 } from "../../content/original";
 
 describe("original outside data", () => {
@@ -37,7 +39,7 @@ describe("original outside data", () => {
 
   it("matches worker manifest keys", () => {
     expect(originalOutsideWorkerIncome.map((worker) => worker.key)).toEqual(
-      canonicalManifest.keys.workers
+      canonicalManifest.keys.workers,
     );
   });
 
@@ -46,25 +48,25 @@ describe("original outside data", () => {
       key: "gatherer",
       name: "gatherer",
       delay: 10,
-      stores: { wood: 1 }
+      stores: { wood: 1 },
     });
     expect(originalOutsideWorkerIncome).toContainEqual({
       key: "hunter",
       name: "hunter",
       delay: 10,
-      stores: { fur: 0.5, meat: 0.5 }
+      stores: { fur: 0.5, meat: 0.5 },
     });
     expect(originalOutsideWorkerIncome).toContainEqual({
       key: "charcutier",
       name: "charcutier",
       delay: 10,
-      stores: { meat: -5, wood: -5, "cured meat": 1 }
+      stores: { meat: -5, wood: -5, "cured meat": 1 },
     });
     expect(originalOutsideWorkerIncome).toContainEqual({
       key: "armourer",
       name: "armourer",
       delay: 10,
-      stores: { steel: -1, sulphur: -1, bullets: 1 }
+      stores: { steel: -1, sulphur: -1, bullets: 1 },
     });
   });
 
@@ -75,7 +77,7 @@ describe("original outside data", () => {
       { rollUnder: 0.85, name: "scales", message: "strange scales" },
       { rollUnder: 0.93, name: "teeth", message: "scattered teeth" },
       { rollUnder: 0.995, name: "cloth", message: "tattered cloth" },
-      { rollUnder: 1, name: "charm", message: "a crudely made charm" }
+      { rollUnder: 1, name: "charm", message: "a crudely made charm" },
     ]);
   });
 
@@ -88,7 +90,7 @@ describe("original outside data", () => {
       "coal mine": ["coal miner"],
       "sulphur mine": ["sulphur miner"],
       steelworks: ["steelworker"],
-      armoury: ["armourer"]
+      armoury: ["armourer"],
     });
   });
 
@@ -99,20 +101,23 @@ describe("original outside data", () => {
       { maxHuts: 4, title: "A Tiny Village" },
       { maxHuts: 8, title: "A Modest Village" },
       { maxHuts: 14, title: "A Large Village" },
-      { maxHuts: Infinity, title: "A Raucous Village" }
+      { maxHuts: Infinity, title: "A Raucous Village" },
     ]);
     expect(originalPopulationMessageThresholds).toEqual([
       { maxArrivals: 1, message: "a stranger arrives in the night" },
       {
         maxArrivals: 4,
-        message: "a weathered family takes up in one of the huts."
+        message: "a weathered family takes up in one of the huts.",
       },
       { maxArrivals: 9, message: "a small group arrives, all dust and bones." },
       {
         maxArrivals: 29,
-        message: "a convoy lurches in, equal parts worry and hope."
+        message: "a convoy lurches in, equal parts worry and hope.",
       },
-      { maxArrivals: Infinity, message: "the town's booming. word does get around." }
+      {
+        maxArrivals: Infinity,
+        message: "the town's booming. word does get around.",
+      },
     ]);
   });
 
@@ -126,6 +131,12 @@ describe("original outside data", () => {
     expect(originalTrapDropCount(4, 10)).toBe(8);
     expect(originalBaitUsedForTraps(4, 2)).toBe(2);
     expect(originalBaitUsedForTraps(4, 10)).toBe(4);
+    expect(originalPopulationIncrease(8, 0)).toBe(4);
+    expect(originalPopulationIncrease(8, 0.5)).toBe(6);
+    expect(originalPopulationIncrease(1, 0)).toBe(1);
+    expect(originalPopulationDelayMinutes(0)).toBe(0.5);
+    expect(originalPopulationDelayMinutes(0.4)).toBe(1.5);
+    expect(originalPopulationDelayMinutes(0.99)).toBe(2.5);
   });
 
   it("resolves original title and population message thresholds", () => {
@@ -137,32 +148,32 @@ describe("original outside data", () => {
     expect(originalVillageTitleForHuts(15)).toBe("A Raucous Village");
 
     expect(originalPopulationMessageForArrivals(1)).toBe(
-      "a stranger arrives in the night"
+      "a stranger arrives in the night",
     );
     expect(originalPopulationMessageForArrivals(4)).toBe(
-      "a weathered family takes up in one of the huts."
+      "a weathered family takes up in one of the huts.",
     );
     expect(originalPopulationMessageForArrivals(9)).toBe(
-      "a small group arrives, all dust and bones."
+      "a small group arrives, all dust and bones.",
     );
     expect(originalPopulationMessageForArrivals(29)).toBe(
-      "a convoy lurches in, equal parts worry and hope."
+      "a convoy lurches in, equal parts worry and hope.",
     );
     expect(originalPopulationMessageForArrivals(30)).toBe(
-      "the town's booming. word does get around."
+      "the town's booming. word does get around.",
     );
   });
 
   it("feeds the original content registry", () => {
     expect(originalContentRegistry.outsideWorkerIncome).toBe(
-      originalOutsideWorkerIncome
+      originalOutsideWorkerIncome,
     );
     expect(originalContentRegistry.outsideWorkerUnlocks).toBe(
-      originalOutsideWorkerUnlocks
+      originalOutsideWorkerUnlocks,
     );
     expect(originalContentRegistry.trapDrops).toBe(originalTrapDrops);
     expect(originalContentRegistry.villageTitleThresholds).toBe(
-      originalVillageTitleThresholds
+      originalVillageTitleThresholds,
     );
   });
 });

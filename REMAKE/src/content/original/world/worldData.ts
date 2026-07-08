@@ -24,6 +24,32 @@ export interface WorldLandmarkDefinition {
   conditional?: "previous.stores";
 }
 
+export type WorldMapGrid = string[][];
+export type WorldMaskGrid = boolean[][];
+
+export interface WorldRandomSource {
+  next(): number;
+}
+
+export interface WorldMapGenerationOptions {
+  includeCache?: boolean;
+}
+
+export interface WorldMapSearchResult {
+  x: number;
+  y: number;
+}
+
+export type WorldCompassDirection =
+  | "north"
+  | "south"
+  | "east"
+  | "west"
+  | "northeast"
+  | "northwest"
+  | "southeast"
+  | "southwest";
+
 export const WORLD_RADIUS = 30;
 export const WORLD_VILLAGE_POS: WorldDirection = [30, 30];
 export const WORLD_STICKINESS = 0.5;
@@ -44,7 +70,7 @@ export const WORLD_DIRECTIONS = {
   NORTH: [0, -1],
   SOUTH: [0, 1],
   WEST: [-1, 0],
-  EAST: [1, 0]
+  EAST: [1, 0],
 } as const satisfies Record<string, WorldDirection>;
 
 export const WORLD_TILE = {
@@ -66,14 +92,20 @@ export const WORLD_TILE = {
   BATTLEFIELD: "F",
   SWAMP: "M",
   CACHE: "U",
-  EXECUTIONER: "X"
+  EXECUTIONER: "X",
 } as const;
 
 export const WORLD_TILE_PROBS = {
   [WORLD_TILE.FOREST]: 0.15,
   [WORLD_TILE.FIELD]: 0.35,
-  [WORLD_TILE.BARRENS]: 0.5
+  [WORLD_TILE.BARRENS]: 0.5,
 } as const;
+
+const WORLD_TERRAIN_TILES = [
+  WORLD_TILE.FOREST,
+  WORLD_TILE.FIELD,
+  WORLD_TILE.BARRENS,
+] as const;
 
 export const originalWorldWeapons: WorldWeaponDefinition[] = [
   { key: "fists", verb: "punch", type: "unarmed", damage: 1, cooldown: 2 },
@@ -87,7 +119,7 @@ export const originalWorldWeapons: WorldWeaponDefinition[] = [
     type: "ranged",
     damage: 5,
     cooldown: 1,
-    cost: { bullets: 1 }
+    cost: { bullets: 1 },
   },
   {
     key: "laser rifle",
@@ -95,7 +127,7 @@ export const originalWorldWeapons: WorldWeaponDefinition[] = [
     type: "ranged",
     damage: 8,
     cooldown: 1,
-    cost: { "energy cell": 1 }
+    cost: { "energy cell": 1 },
   },
   {
     key: "grenade",
@@ -103,7 +135,7 @@ export const originalWorldWeapons: WorldWeaponDefinition[] = [
     type: "ranged",
     damage: 15,
     cooldown: 5,
-    cost: { grenade: 1 }
+    cost: { grenade: 1 },
   },
   {
     key: "bolas",
@@ -111,7 +143,7 @@ export const originalWorldWeapons: WorldWeaponDefinition[] = [
     type: "ranged",
     damage: "stun",
     cooldown: 15,
-    cost: { bolas: 1 }
+    cost: { bolas: 1 },
   },
   {
     key: "plasma rifle",
@@ -119,22 +151,22 @@ export const originalWorldWeapons: WorldWeaponDefinition[] = [
     type: "ranged",
     damage: 12,
     cooldown: 1,
-    cost: { "energy cell": 1 }
+    cost: { "energy cell": 1 },
   },
   {
     key: "energy blade",
     verb: "slice",
     type: "melee",
     damage: 10,
-    cooldown: 2
+    cooldown: 2,
   },
   {
     key: "disruptor",
     verb: "stun",
     type: "ranged",
     damage: "stun",
-    cooldown: 15
-  }
+    cooldown: 15,
+  },
 ];
 
 export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
@@ -145,7 +177,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 0,
     maxRadius: 0,
     scene: "outpost",
-    label: "An&nbsp;Outpost"
+    label: "An&nbsp;Outpost",
   },
   {
     tileKey: "IRON_MINE",
@@ -154,7 +186,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 5,
     maxRadius: 5,
     scene: "ironmine",
-    label: "Iron&nbsp;Mine"
+    label: "Iron&nbsp;Mine",
   },
   {
     tileKey: "COAL_MINE",
@@ -163,7 +195,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 10,
     maxRadius: 10,
     scene: "coalmine",
-    label: "Coal&nbsp;Mine"
+    label: "Coal&nbsp;Mine",
   },
   {
     tileKey: "SULPHUR_MINE",
@@ -172,7 +204,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 20,
     maxRadius: 20,
     scene: "sulphurmine",
-    label: "Sulphur&nbsp;Mine"
+    label: "Sulphur&nbsp;Mine",
   },
   {
     tileKey: "HOUSE",
@@ -181,7 +213,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 0,
     maxRadius: WORLD_RADIUS * 1.5,
     scene: "house",
-    label: "An&nbsp;Old&nbsp;House"
+    label: "An&nbsp;Old&nbsp;House",
   },
   {
     tileKey: "CAVE",
@@ -190,7 +222,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 3,
     maxRadius: 10,
     scene: "cave",
-    label: "A&nbsp;Damp&nbsp;Cave"
+    label: "A&nbsp;Damp&nbsp;Cave",
   },
   {
     tileKey: "TOWN",
@@ -199,7 +231,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 10,
     maxRadius: 20,
     scene: "town",
-    label: "An&nbsp;Abandoned&nbsp;Town"
+    label: "An&nbsp;Abandoned&nbsp;Town",
   },
   {
     tileKey: "CITY",
@@ -208,7 +240,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 20,
     maxRadius: WORLD_RADIUS * 1.5,
     scene: "city",
-    label: "A&nbsp;Ruined&nbsp;City"
+    label: "A&nbsp;Ruined&nbsp;City",
   },
   {
     tileKey: "SHIP",
@@ -217,7 +249,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 28,
     maxRadius: 28,
     scene: "ship",
-    label: "A&nbsp;Crashed&nbsp;Starship"
+    label: "A&nbsp;Crashed&nbsp;Starship",
   },
   {
     tileKey: "BOREHOLE",
@@ -226,7 +258,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 15,
     maxRadius: WORLD_RADIUS * 1.5,
     scene: "borehole",
-    label: "A&nbsp;Borehole"
+    label: "A&nbsp;Borehole",
   },
   {
     tileKey: "BATTLEFIELD",
@@ -235,7 +267,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 18,
     maxRadius: WORLD_RADIUS * 1.5,
     scene: "battlefield",
-    label: "A&nbsp;Battlefield"
+    label: "A&nbsp;Battlefield",
   },
   {
     tileKey: "SWAMP",
@@ -244,7 +276,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 15,
     maxRadius: WORLD_RADIUS * 1.5,
     scene: "swamp",
-    label: "A&nbsp;Murky&nbsp;Swamp"
+    label: "A&nbsp;Murky&nbsp;Swamp",
   },
   {
     tileKey: "EXECUTIONER",
@@ -253,7 +285,7 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     minRadius: 28,
     maxRadius: 28,
     scene: "executioner",
-    label: "A&nbsp;Ravaged&nbsp;Battleship"
+    label: "A&nbsp;Ravaged&nbsp;Battleship",
   },
   {
     tileKey: "CACHE",
@@ -263,9 +295,277 @@ export const originalWorldLandmarks: WorldLandmarkDefinition[] = [
     maxRadius: WORLD_RADIUS * 1.5,
     scene: "cache",
     label: "A&nbsp;Destroyed&nbsp;Village",
-    conditional: "previous.stores"
-  }
+    conditional: "previous.stores",
+  },
 ];
+
+export function originalWorldCompassDirection(pos: {
+  x: number;
+  y: number;
+}): WorldCompassDirection {
+  const horz = pos.x < 0 ? "west" : "east";
+  const vert = pos.y < 0 ? "north" : "south";
+  if (Math.abs(pos.x) / 2 > Math.abs(pos.y)) return horz;
+  if (Math.abs(pos.y) / 2 > Math.abs(pos.x)) return vert;
+  return `${vert}${horz}`;
+}
+
+export function originalWorldGenerateMap(
+  rng: WorldRandomSource,
+  options: WorldMapGenerationOptions = {},
+): WorldMapGrid {
+  const size = WORLD_RADIUS * 2 + 1;
+  const map: WorldMapGrid = Array.from({ length: size }, () =>
+    Array<string>(size),
+  );
+
+  map[WORLD_RADIUS][WORLD_RADIUS] = WORLD_TILE.VILLAGE;
+
+  for (let radius = 1; radius <= WORLD_RADIUS; radius += 1) {
+    for (let step = 0; step < radius * 8; step += 1) {
+      let x: number;
+      let y: number;
+      if (step < 2 * radius) {
+        x = WORLD_RADIUS - radius + step;
+        y = WORLD_RADIUS - radius;
+      } else if (step < 4 * radius) {
+        x = WORLD_RADIUS + radius;
+        y = WORLD_RADIUS - 3 * radius + step;
+      } else if (step < 6 * radius) {
+        x = WORLD_RADIUS + 5 * radius - step;
+        y = WORLD_RADIUS + radius;
+      } else {
+        x = WORLD_RADIUS - radius;
+        y = WORLD_RADIUS + 7 * radius - step;
+      }
+
+      map[x][y] = originalWorldChooseTile(x, y, map, rng);
+    }
+  }
+
+  for (const landmark of originalWorldLandmarks) {
+    if (landmark.conditional === "previous.stores" && !options.includeCache) {
+      continue;
+    }
+    for (let index = 0; index < landmark.num; index += 1) {
+      originalWorldPlaceLandmark(
+        landmark.minRadius,
+        landmark.maxRadius,
+        landmark.tile,
+        map,
+        rng,
+      );
+    }
+  }
+
+  return map;
+}
+
+export function originalWorldNewMask(scout = false): WorldMaskGrid {
+  const size = WORLD_RADIUS * 2 + 1;
+  const mask: WorldMaskGrid = Array.from({ length: size }, () =>
+    Array<boolean>(size).fill(false),
+  );
+  return originalWorldLightMap(WORLD_RADIUS, WORLD_RADIUS, mask, scout);
+}
+
+export function originalWorldLightMap(
+  x: number,
+  y: number,
+  mask: WorldMaskGrid,
+  scout = false,
+): WorldMaskGrid {
+  return originalWorldUncoverMap(
+    x,
+    y,
+    WORLD_LIGHT_RADIUS * (scout ? 2 : 1),
+    mask,
+  );
+}
+
+export function originalWorldUncoverMap(
+  x: number,
+  y: number,
+  radius: number,
+  mask: WorldMaskGrid,
+): WorldMaskGrid {
+  if (mask[x]) mask[x][y] = true;
+  for (let dx = -radius; dx <= radius; dx += 1) {
+    for (
+      let dy = -radius + Math.abs(dx);
+      dy <= radius - Math.abs(dx);
+      dy += 1
+    ) {
+      const nextX = x + dx;
+      const nextY = y + dy;
+      if (
+        nextY >= 0 &&
+        nextY <= WORLD_RADIUS * 2 &&
+        nextX >= 0 &&
+        nextX <= WORLD_RADIUS * 2
+      ) {
+        mask[nextX][nextY] = true;
+      }
+    }
+  }
+  return mask;
+}
+
+export function originalWorldMapSearch(
+  target: string,
+  map: WorldMapGrid,
+  required?: number,
+): WorldMapSearchResult[] | null {
+  const maxLandmarks = originalWorldLandmarks.find(
+    (landmark) => landmark.tile === target,
+  )?.num;
+  if (!maxLandmarks) return null;
+
+  const max = required ? Math.min(required, maxLandmarks) : maxLandmarks;
+  const targets: WorldMapSearchResult[] = [];
+
+  for (let x = 0; x <= WORLD_RADIUS * 2; x += 1) {
+    for (let y = 0; y <= WORLD_RADIUS * 2; y += 1) {
+      if (map[x][y]?.charAt(0) === target) {
+        targets.push({ x: x - WORLD_RADIUS, y: y - WORLD_RADIUS });
+        if (targets.length === max) return targets;
+      }
+    }
+  }
+
+  return targets;
+}
+
+export function originalWorldIsTerrain(tile: string | undefined): boolean {
+  return (
+    tile === WORLD_TILE.FOREST ||
+    tile === WORLD_TILE.FIELD ||
+    tile === WORLD_TILE.BARRENS
+  );
+}
+
+export function originalWorldDisplayLabel(label: string): string {
+  return label.replaceAll("&nbsp;", " ");
+}
+
+function originalWorldPlaceLandmark(
+  minRadius: number,
+  maxRadius: number,
+  landmark: string,
+  map: WorldMapGrid,
+  rng: WorldRandomSource,
+): readonly [number, number] {
+  const maxAttempts = (WORLD_RADIUS * 2 + 1) ** 2;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    const radius = Math.floor(rng.next() * (maxRadius - minRadius)) + minRadius;
+    let xDistance = Math.floor(rng.next() * radius);
+    let yDistance = radius - xDistance;
+    if (rng.next() < 0.5) xDistance = -xDistance;
+    if (rng.next() < 0.5) yDistance = -yDistance;
+    const x = clampWorldCoordinate(WORLD_RADIUS + xDistance);
+    const y = clampWorldCoordinate(WORLD_RADIUS + yDistance);
+    if (originalWorldIsTerrain(map[x][y])) {
+      map[x][y] = landmark;
+      return [x, y] as const;
+    }
+  }
+  return originalWorldPlaceLandmarkFallback(
+    minRadius,
+    maxRadius,
+    landmark,
+    map,
+  );
+}
+
+function originalWorldPlaceLandmarkFallback(
+  minRadius: number,
+  maxRadius: number,
+  landmark: string,
+  map: WorldMapGrid,
+): readonly [number, number] {
+  const min = Math.floor(minRadius);
+  const max =
+    minRadius === maxRadius ? Math.floor(maxRadius) : Math.ceil(maxRadius) - 1;
+
+  for (let radius = min; radius <= max; radius += 1) {
+    for (let dx = -radius; dx <= radius; dx += 1) {
+      const dy = radius - Math.abs(dx);
+      const candidates =
+        dy === 0
+          ? ([[dx, 0]] as const)
+          : ([
+              [dx, dy],
+              [dx, -dy],
+            ] as const);
+      for (const [candidateX, candidateY] of candidates) {
+        const x = clampWorldCoordinate(WORLD_RADIUS + candidateX);
+        const y = clampWorldCoordinate(WORLD_RADIUS + candidateY);
+        if (originalWorldIsTerrain(map[x][y])) {
+          map[x][y] = landmark;
+          return [x, y] as const;
+        }
+      }
+    }
+  }
+
+  for (let x = 0; x <= WORLD_RADIUS * 2; x += 1) {
+    for (let y = 0; y <= WORLD_RADIUS * 2; y += 1) {
+      if (originalWorldIsTerrain(map[x][y])) {
+        map[x][y] = landmark;
+        return [x, y] as const;
+      }
+    }
+  }
+
+  throw new Error(`Unable to place world landmark ${landmark}`);
+}
+
+function originalWorldChooseTile(
+  x: number,
+  y: number,
+  map: WorldMapGrid,
+  rng: WorldRandomSource,
+): string {
+  const adjacent = [
+    y > 0 ? map[x][y - 1] : undefined,
+    y < WORLD_RADIUS * 2 ? map[x][y + 1] : undefined,
+    x < WORLD_RADIUS * 2 ? map[x + 1][y] : undefined,
+    x > 0 ? map[x - 1][y] : undefined,
+  ];
+
+  const chances: Record<string, number> = {};
+  let nonSticky = 1;
+
+  for (const tile of adjacent) {
+    if (tile === WORLD_TILE.VILLAGE) {
+      return WORLD_TILE.FOREST;
+    }
+    if (typeof tile === "string") {
+      chances[tile] = (chances[tile] ?? 0) + WORLD_STICKINESS;
+      nonSticky -= WORLD_STICKINESS;
+    }
+  }
+
+  for (const tile of WORLD_TERRAIN_TILES) {
+    chances[tile] = (chances[tile] ?? 0) + WORLD_TILE_PROBS[tile] * nonSticky;
+  }
+
+  const sorted = Object.entries(chances).sort(
+    ([, left], [, right]) => right - left,
+  );
+  let cumulative = 0;
+  const roll = rng.next();
+  for (const [tile, chance] of sorted) {
+    cumulative += chance;
+    if (roll < cumulative) return tile;
+  }
+
+  return WORLD_TILE.BARRENS;
+}
+
+function clampWorldCoordinate(value: number): number {
+  return Math.max(0, Math.min(WORLD_RADIUS * 2, value));
+}
 
 assertKeysMatchManifest();
 
@@ -279,16 +579,23 @@ function assertKeysMatchManifest(): void {
   }
 
   const weaponKeys = originalWorldWeapons.map((weapon) => weapon.key);
-  if (weaponKeys.join("\u0000") !== canonicalManifest.keys.weapons.join("\u0000")) {
-    throw new Error("Original world weapon keys do not match canonical manifest");
+  if (
+    weaponKeys.join("\u0000") !== canonicalManifest.keys.weapons.join("\u0000")
+  ) {
+    throw new Error(
+      "Original world weapon keys do not match canonical manifest",
+    );
   }
 
-  const landmarkKeys = originalWorldLandmarks.map((landmark) => landmark.tileKey);
+  const landmarkKeys = originalWorldLandmarks.map(
+    (landmark) => landmark.tileKey,
+  );
   if (
     landmarkKeys.join("\u0000") !==
     canonicalManifest.keys.worldLandmarkAssignments.join("\u0000")
   ) {
-    throw new Error("Original world landmark keys do not match canonical manifest");
+    throw new Error(
+      "Original world landmark keys do not match canonical manifest",
+    );
   }
 }
-

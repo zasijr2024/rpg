@@ -7,28 +7,31 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"*.{js,json,ts,html}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"*.{js,json,ts,html}\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "check:architecture": "vitest run src/tests/architecture-boundaries.test.ts"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "typescript": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "zustand": "latest"
+    "@vitejs/plugin-react": "6.0.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "typescript": "6.0.3",
+    "vite": "8.1.3"
   },
   "devDependencies": {
-    "@playwright/test": "latest",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "eslint": "latest",
-    "prettier": "latest",
-    "vitest": "latest",
-    "jsdom": "latest"
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.61.1",
+    "@types/node": "26.1.0",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "eslint": "10.6.0",
+    "jsdom": "29.1.1",
+    "prettier": "3.9.4",
+    "typescript-eslint": "8.63.0",
+    "vitest": "4.1.10"
   }
 }
-

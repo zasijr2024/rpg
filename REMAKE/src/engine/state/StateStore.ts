@@ -1,4 +1,4 @@
-import { getPath, parseStatePath, setPath } from "./path";
+import { deletePath, getPath, parseStatePath, setPath } from "./path";
 import { createInitialState, type GameState, MAX_STORE } from "./types";
 
 export interface StateUpdate {
@@ -39,6 +39,11 @@ export class StateStore {
     this.set(path, current + amount, noEvent);
   }
 
+  remove(path: string, noEvent = false): void {
+    deletePath(this.state, path);
+    if (!noEvent) this.fire(path);
+  }
+
   setM(parent: string, values: Record<string, unknown>, noEvent = false): void {
     for (const [key, value] of Object.entries(values)) {
       this.set(`${parent}["${key}"]`, value, true);
@@ -62,7 +67,7 @@ export class StateStore {
     const [category] = parseStatePath(path);
     const update: StateUpdate = {
       category,
-      stateName: path
+      stateName: path,
     };
     for (const listener of this.listeners) {
       listener(update);

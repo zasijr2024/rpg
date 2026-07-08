@@ -18,10 +18,10 @@ describe("source baseline drift", () => {
       "ORIGINAL/script/outside.js",
       "ORIGINAL/script/path.js",
       "ORIGINAL/script/world.js",
-      "ORIGINAL/script/events/setpieces.js"
+      "ORIGINAL/script/events/setpieces.js",
     ];
     const manifestFiles = new Map(
-      canonicalManifest.files.map((file) => [file.path, file.sha256])
+      canonicalManifest.files.map((file) => [file.path, file.sha256]),
     );
 
     for (const relativePath of required) {
@@ -31,4 +31,3 @@ describe("source baseline drift", () => {
     }
   });
 });
-

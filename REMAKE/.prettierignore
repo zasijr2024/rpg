@@ -1,0 +1,5 @@
+dist
+node_modules
+test-results
+src/generated
+src/tests/e2e/room-visual.spec.ts-snapshots

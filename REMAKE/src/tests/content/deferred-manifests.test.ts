@@ -18,7 +18,7 @@ import {
   originalContentRegistry,
   originalDeferredLocalizationScope,
   originalLanguageCodes,
-  originalLocaleInventory
+  originalLocaleInventory,
 } from "../../content/original";
 
 describe("original deferred audio and localization manifests", () => {
@@ -35,22 +35,22 @@ describe("original deferred audio and localization manifests", () => {
 
   it("matches audio constants from the canonical manifest", () => {
     expect(originalAudioManifest.map((audio) => audio.key)).toEqual(
-      canonicalManifest.keys.audioConstants
+      canonicalManifest.keys.audioConstants,
     );
     expect(originalAudioManifest).toContainEqual({
       key: "MUSIC_FIRE_ROARING",
       path: "audio/fire-roaring.flac",
-      kind: "music"
+      kind: "music",
     });
     expect(originalAudioManifest).toContainEqual({
       key: "LANDMARK_CRASHED_SHIP",
       path: "audio/landmark-crashed-ship.flac",
-      kind: "landmark"
+      kind: "landmark",
     });
     expect(originalAudioManifest).toContainEqual({
       key: "ASTEROID_HIT_8",
       path: "audio/asteroid-hit-8.flac",
-      kind: "space"
+      kind: "space",
     });
   });
 
@@ -86,7 +86,7 @@ describe("original deferred audio and localization manifests", () => {
       "uk",
       "vi",
       "zh_cn",
-      "zh_tw"
+      "zh_tw",
     ]);
   });
 
@@ -98,7 +98,7 @@ describe("original deferred audio and localization manifests", () => {
       msgidEntries: 805,
       hasJs: true,
       hasPo: true,
-      hasCss: true
+      hasCss: true,
     });
     expect(originalLocaleInventory).toContainEqual({
       code: "zh_cn",
@@ -106,18 +106,20 @@ describe("original deferred audio and localization manifests", () => {
       msgidEntries: 793,
       hasJs: true,
       hasPo: true,
-      hasCss: true
+      hasCss: true,
     });
     expect(originalDeferredLocalizationScope).toEqual({
       implementationDeferredUntil: "post-remake parity",
       reason:
-        "Localization switching is preserved as inventory now and implemented after the desktop-only parity remake is complete."
+        "Localization switching is preserved as inventory now and implemented after the desktop-only parity remake is complete.",
     });
   });
 
   it("feeds the original content registry", () => {
     expect(originalContentRegistry.audioManifest).toBe(originalAudioManifest);
     expect(originalContentRegistry.languageCodes).toBe(originalLanguageCodes);
-    expect(originalContentRegistry.localeInventory).toBe(originalLocaleInventory);
+    expect(originalContentRegistry.localeInventory).toBe(
+      originalLocaleInventory,
+    );
   });
 });

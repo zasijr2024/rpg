@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   createInitialSpaceState,
-  hasPrototypeCollision
+  hasPrototypeCollision,
 } from "../../spikes/space/spacePrototype";
 
 describe("space prototype spike", () => {
@@ -13,9 +13,8 @@ describe("space prototype spike", () => {
       hasPrototypeCollision({
         ...state,
         asteroidX: state.shipX,
-        asteroidY: state.shipY
-      })
+        asteroidY: state.shipY,
+      }),
     ).toBe(true);
   });
 });
-

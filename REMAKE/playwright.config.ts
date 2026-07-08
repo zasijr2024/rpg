@@ -5,27 +5,41 @@ export default defineConfig({
   timeout: 30_000,
   use: {
     baseURL: "http://127.0.0.1:41730",
-    trace: "on-first-retry"
+    trace: "on-first-retry",
   },
   webServer: {
     command: "npm run dev -- --host 127.0.0.1 --port 41730 --strictPort",
     url: "http://127.0.0.1:41730",
-    reuseExistingServer: !process.env.CI
+    reuseExistingServer: !process.env.CI,
   },
   projects: [
     {
-      name: "chromium-desktop",
+      name: "chromium-1366",
       use: {
         ...devices["Desktop Chrome"],
-        viewport: { width: 1920, height: 1080 }
-      }
+        viewport: { width: 1366, height: 768 },
+      },
     },
     {
-      name: "chromium-4k",
+      name: "chromium-1920",
       use: {
         ...devices["Desktop Chrome"],
-        viewport: { width: 3840, height: 2160 }
-      }
-    }
-  ]
+        viewport: { width: 1920, height: 1080 },
+      },
+    },
+    {
+      name: "chromium-2560",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 2560, height: 1440 },
+      },
+    },
+    {
+      name: "chromium-3840",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 3840, height: 2160 },
+      },
+    },
+  ],
 });

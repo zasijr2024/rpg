@@ -15,6 +15,12 @@ interface CooldownEntry {
   durationMs: number;
 }
 
+export interface CooldownEntrySnapshot {
+  key: string;
+  startedAt: number;
+  durationMs: number;
+}
+
 export class CooldownManager {
   private cooldowns = new Map<string, CooldownEntry>();
 
@@ -28,7 +34,7 @@ export class CooldownManager {
     const entry: CooldownEntry = {
       key,
       startedAt: this.clock.now(),
-      durationMs
+      durationMs,
     };
     this.cooldowns.set(key, entry);
     return this.snapshot(key);
@@ -47,7 +53,7 @@ export class CooldownManager {
         durationMs: 0,
         remainingMs: 0,
         progress: 1,
-        active: false
+        active: false,
       };
     }
 
@@ -57,22 +63,39 @@ export class CooldownManager {
       entry.durationMs === 0 ? 1 : Math.min(1, elapsed / entry.durationMs);
     const active = remainingMs > 0;
 
-    if (!active) {
-      this.cooldowns.delete(key);
-    }
-
     return {
       key,
       startedAt: entry.startedAt,
       durationMs: entry.durationMs,
       remainingMs,
       progress,
-      active
+      active,
     };
   }
 
   snapshots(): CooldownSnapshot[] {
-    return [...this.cooldowns.keys()].map((key) => this.snapshot(key));
+    return [...this.cooldowns.keys()]
+      .map((key) => this.snapshot(key))
+      .filter((snapshot) => snapshot.active);
+  }
+
+  lifecycleSnapshot(): CooldownEntrySnapshot[] {
+    return [...this.cooldowns.values()].map((entry) => ({ ...entry }));
+  }
+
+  restore(entries: CooldownEntrySnapshot[]): void {
+    this.cooldowns.clear();
+    for (const entry of entries) {
+      this.cooldowns.set(entry.key, { ...entry });
+    }
+    this.expireCompleted();
+  }
+
+  expireCompleted(): void {
+    for (const key of [...this.cooldowns.keys()]) {
+      if (!this.snapshot(key).active) {
+        this.cooldowns.delete(key);
+      }
+    }
   }
 }
-

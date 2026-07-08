@@ -9,7 +9,7 @@ export const SOURCE_BASELINE_COMMIT =
 export function assertCanonicalManifest(manifest: CanonicalManifest): void {
   if (manifest.source.commit !== SOURCE_BASELINE_COMMIT) {
     throw new Error(
-      `Unexpected source commit ${manifest.source.commit}; expected ${SOURCE_BASELINE_COMMIT}`
+      `Unexpected source commit ${manifest.source.commit}; expected ${SOURCE_BASELINE_COMMIT}`,
     );
   }
 
@@ -19,16 +19,17 @@ export function assertCanonicalManifest(manifest: CanonicalManifest): void {
     "ORIGINAL/script/outside.js",
     "ORIGINAL/script/path.js",
     "ORIGINAL/script/world.js",
-    "ORIGINAL/script/events/setpieces.js"
+    "ORIGINAL/script/events/setpieces.js",
   ];
 
   const filePaths = new Set(manifest.files.map((file) => file.path));
   for (const file of requiredFiles) {
     if (!filePaths.has(file)) {
-      throw new Error(`Canonical manifest missing required source file: ${file}`);
+      throw new Error(
+        `Canonical manifest missing required source file: ${file}`,
+      );
     }
   }
 }
 
 assertCanonicalManifest(canonicalManifest);
-

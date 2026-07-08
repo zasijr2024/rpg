@@ -24,6 +24,8 @@ describe("CooldownManager", () => {
 
     expect(cooldowns.snapshot("stoke").active).toBe(false);
     expect(cooldowns.snapshots()).toEqual([]);
+    expect(cooldowns.snapshot("stoke").active).toBe(false);
+    cooldowns.expireCompleted();
+    expect(cooldowns.snapshot("stoke").active).toBe(false);
   });
 });
-

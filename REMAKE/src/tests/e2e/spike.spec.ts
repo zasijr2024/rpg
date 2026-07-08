@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("renders the ASCII world viewport without horizontal overflow", async ({
-  page
+  page,
 }) => {
   await page.goto("/?spikes=1");
   await page.getByRole("tab", { name: "world" }).click();
@@ -12,7 +12,7 @@ test("renders the ASCII world viewport without horizontal overflow", async ({
   const metrics = await viewport.evaluate((node) => ({
     textLines: node.textContent?.trimEnd().split("\n").length,
     clientWidth: (node as HTMLElement).clientWidth,
-    scrollWidth: (node as HTMLElement).scrollWidth
+    scrollWidth: (node as HTMLElement).scrollWidth,
   }));
 
   expect(metrics.textLines).toBe(61);

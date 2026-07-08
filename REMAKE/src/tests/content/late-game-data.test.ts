@@ -42,7 +42,7 @@ import {
   SPACE_STAR_HEIGHT,
   SPACE_STAR_SPEED,
   SPACE_STAR_WIDTH,
-  SPACE_VOLUME_TIMER_INTERVAL
+  SPACE_VOLUME_TIMER_INTERVAL,
 } from "../../content/original";
 
 describe("original late-game data", () => {
@@ -81,9 +81,9 @@ describe("original late-game data", () => {
   });
 
   it("matches fabricator manifest keys", () => {
-    expect(originalFabricatorCraftables.map((craftable) => craftable.key)).toEqual(
-      canonicalManifest.keys.fabricatorCraftables
-    );
+    expect(
+      originalFabricatorCraftables.map((craftable) => craftable.key),
+    ).toEqual(canonicalManifest.keys.fabricatorCraftables);
   });
 
   it("ports exact fabricator craftables", () => {
@@ -92,7 +92,7 @@ describe("original late-game data", () => {
       name: "energy blade",
       type: "weapon",
       buildMsg: "the blade hums, charged particles sparking and fizzing.",
-      cost: { "alien alloy": 1 }
+      cost: { "alien alloy": 1 },
     });
     expect(originalFabricatorCraftables).toContainEqual({
       key: "kinetic armour",
@@ -101,7 +101,7 @@ describe("original late-game data", () => {
       maximum: 1,
       blueprintRequired: true,
       buildMsg: "wanderer soldiers succeed by subverting the enemy's rage.",
-      cost: { "alien alloy": 2 }
+      cost: { "alien alloy": 2 },
     });
     expect(originalFabricatorCraftables).toContainEqual({
       key: "hypo",
@@ -110,7 +110,7 @@ describe("original late-game data", () => {
       blueprintRequired: true,
       buildMsg: "a handful of hypos. life in a vial.",
       cost: { "alien alloy": 1 },
-      quantity: 5
+      quantity: 5,
     });
     expect(originalFabricatorCraftables).toContainEqual({
       key: "glowstone",
@@ -118,7 +118,7 @@ describe("original late-game data", () => {
       type: "tool",
       blueprintRequired: true,
       buildMsg: "a smooth, perfect sphere. its light is inextinguishable.",
-      cost: { "alien alloy": 1 }
+      cost: { "alien alloy": 1 },
     });
   });
 
@@ -129,30 +129,30 @@ describe("original late-game data", () => {
       { minAltitude: 20, title: "Mesosphere" },
       { minAltitude: 30, title: "Thermosphere" },
       { minAltitude: 45, title: "Exosphere" },
-      { minAltitude: 60, title: "Space" }
+      { minAltitude: 60, title: "Space" },
     ]);
     expect(originalSpaceAsteroids).toEqual([
       { rollUnder: 0.2, glyph: "#" },
       { rollUnder: 0.4, glyph: "$" },
       { rollUnder: 0.6, glyph: "%" },
       { rollUnder: 0.8, glyph: "&" },
-      { rollUnder: 1, glyph: "H" }
+      { rollUnder: 1, glyph: "H" },
     ]);
     expect(originalSpaceAsteroidWaveThresholds).toEqual([
       { minAltitudeExclusive: 10, extraAsteroids: 1 },
       { minAltitudeExclusive: 20, extraAsteroids: 2 },
-      { minAltitudeExclusive: 40, extraAsteroids: 2 }
+      { minAltitudeExclusive: 40, extraAsteroids: 2 },
     ]);
     expect(originalSpaceHitAudioTiers).toEqual([
       { minAltitudeExclusive: 40, offset: 6 },
       { minAltitudeExclusive: 20, offset: 4 },
-      { minAltitudeExclusive: -Infinity, offset: 1 }
+      { minAltitudeExclusive: -Infinity, offset: 1 },
     ]);
     expect(originalSpaceKeyBindings).toEqual({
       up: [38, 87],
       down: [40, 83],
       left: [37, 65],
-      right: [39, 68]
+      right: [39, 68],
     });
   });
 
@@ -181,17 +181,17 @@ describe("original late-game data", () => {
 
   it("feeds the original content registry", () => {
     expect(originalContentRegistry.fabricatorCraftables).toBe(
-      originalFabricatorCraftables
+      originalFabricatorCraftables,
     );
     expect(originalContentRegistry.spaceTitleThresholds).toBe(
-      originalSpaceTitleThresholds
+      originalSpaceTitleThresholds,
     );
     expect(originalContentRegistry.spaceAsteroids).toBe(originalSpaceAsteroids);
     expect(originalContentRegistry.spaceAsteroidWaveThresholds).toBe(
-      originalSpaceAsteroidWaveThresholds
+      originalSpaceAsteroidWaveThresholds,
     );
     expect(originalContentRegistry.spaceHitAudioTiers).toBe(
-      originalSpaceHitAudioTiers
+      originalSpaceHitAudioTiers,
     );
   });
 });

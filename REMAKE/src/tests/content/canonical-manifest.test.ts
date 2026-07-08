@@ -10,7 +10,7 @@ import {
   originalPathCapacityUpgrades,
   originalPathWeightFor,
   PATH_STORES_OFFSET,
-  SOURCE_BASELINE_COMMIT
+  SOURCE_BASELINE_COMMIT,
 } from "../../content/original";
 
 describe("canonical manifest", () => {
@@ -20,14 +20,14 @@ describe("canonical manifest", () => {
 
   it("tracks required source files with checksums", () => {
     const files = new Map(
-      canonicalManifest.files.map((file) => [file.path, file.sha256])
+      canonicalManifest.files.map((file) => [file.path, file.sha256]),
     );
 
     expect(files.get("ORIGINAL/script/engine.js")).toMatch(/^[a-f0-9]{64}$/);
     expect(files.get("ORIGINAL/script/room.js")).toMatch(/^[a-f0-9]{64}$/);
     expect(files.get("ORIGINAL/script/world.js")).toMatch(/^[a-f0-9]{64}$/);
     expect(files.get("ORIGINAL/script/events/setpieces.js")).toMatch(
-      /^[a-f0-9]{64}$/
+      /^[a-f0-9]{64}$/,
     );
   });
 
@@ -43,12 +43,14 @@ describe("canonical manifest", () => {
       "precise",
       "scout",
       "stealthy",
-      "gastronome"
+      "gastronome",
     ]);
 
     expect(canonicalManifest.keys.prestigeStores).toContain("wood");
     expect(canonicalManifest.keys.prestigeStores).toContain("bolas");
-    expect(canonicalManifest.keys.pathWeightOverrides).toContain("plasma rifle");
+    expect(canonicalManifest.keys.pathWeightOverrides).toContain(
+      "plasma rifle",
+    );
   });
 
   it("contains gameplay registry key groups that later phases must port", () => {
@@ -68,7 +70,7 @@ describe("canonical manifest", () => {
       "ORIGINAL/script/events/marketing.js",
       "ORIGINAL/script/events/outside.js",
       "ORIGINAL/script/events/room.js",
-      "ORIGINAL/script/events/setpieces.js"
+      "ORIGINAL/script/events/setpieces.js",
     ]);
 
     const titles = canonicalManifest.events.titles.map((event) => event.title);
@@ -80,13 +82,13 @@ describe("canonical manifest", () => {
 
   it("feeds the initial original content registry", () => {
     expect(originalContentRegistry.perks.map((perk) => perk.key)).toEqual(
-      canonicalManifest.keys.perks
+      canonicalManifest.keys.perks,
     );
     expect(
-      originalContentRegistry.prestigeStores.map((store) => store.key)
+      originalContentRegistry.prestigeStores.map((store) => store.key),
     ).toEqual(canonicalManifest.keys.prestigeStores);
     expect(
-      originalContentRegistry.pathWeightOverrides.map((weight) => weight.key)
+      originalContentRegistry.pathWeightOverrides.map((weight) => weight.key),
     ).toEqual(canonicalManifest.keys.pathWeightOverrides);
   });
 
@@ -95,13 +97,13 @@ describe("canonical manifest", () => {
       key: "evasive",
       name: "evasive",
       desc: "dodge attacks more effectively",
-      notify: "learned to be where they're not"
+      notify: "learned to be where they're not",
     });
     expect(originalContentRegistry.perks).toContainEqual({
       key: "martial artist",
       name: "martial artist",
       desc: "punches do even more damage.",
-      notify: "learned to fight quite effectively without weapons"
+      notify: "learned to fight quite effectively without weapons",
     });
   });
 
@@ -110,13 +112,13 @@ describe("canonical manifest", () => {
       { key: "wood", type: "g" },
       { key: "fur", type: "g" },
       { key: "meat", type: "g" },
-      { key: "iron", type: "g" }
+      { key: "iron", type: "g" },
     ]);
     expect(originalContentRegistry.prestigeStores.slice(-4)).toEqual([
       { key: "bullets", type: "a" },
       { key: "energy cell", type: "a" },
       { key: "grenade", type: "a" },
-      { key: "bolas", type: "a" }
+      { key: "bolas", type: "a" },
     ]);
   });
 
@@ -141,7 +143,7 @@ describe("canonical manifest", () => {
       { key: "cargo drone", bonus: 100 },
       { key: "convoy", bonus: 60 },
       { key: "wagon", bonus: 30 },
-      { key: "rucksack", bonus: 10 }
+      { key: "rucksack", bonus: 10 },
     ]);
     expect(originalPathCapacity({})).toBe(10);
     expect(originalPathCapacity({ rucksack: 1 })).toBe(20);
@@ -151,26 +153,26 @@ describe("canonical manifest", () => {
       "kinetic armour",
       "s armour",
       "i armour",
-      "l armour"
+      "l armour",
     ]);
     expect(originalPathBaseCarryables).toContainEqual({
       key: "cured meat",
       type: "tool",
-      desc: "cured meat heal"
+      desc: "cured meat heal",
     });
     expect(originalPathBaseCarryables).toContainEqual({
       key: "medicine",
       type: "tool",
-      desc: "medicine heal"
+      desc: "medicine heal",
     });
     expect(originalContentRegistry.pathCapacityUpgrades).toBe(
-      originalPathCapacityUpgrades
+      originalPathCapacityUpgrades,
     );
     expect(originalContentRegistry.pathArmourPriority).toBe(
-      originalPathArmourPriority
+      originalPathArmourPriority,
     );
     expect(originalContentRegistry.pathBaseCarryables).toBe(
-      originalPathBaseCarryables
+      originalPathBaseCarryables,
     );
   });
 });

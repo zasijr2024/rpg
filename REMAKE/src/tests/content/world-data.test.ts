@@ -3,6 +3,10 @@ import {
   canonicalManifest,
   originalContentRegistry,
   originalWorldLandmarks,
+  originalWorldCompassDirection,
+  originalWorldGenerateMap,
+  originalWorldMapSearch,
+  originalWorldNewMask,
   originalWorldWeapons,
   WORLD_BASE_HEALTH,
   WORLD_BASE_HIT_CHANCE,
@@ -21,8 +25,18 @@ import {
   WORLD_STICKINESS,
   WORLD_TILE,
   WORLD_TILE_PROBS,
-  WORLD_VILLAGE_POS
+  WORLD_VILLAGE_POS,
 } from "../../content/original";
+
+function seededRng(seed: number) {
+  let state = seed >>> 0;
+  return {
+    next: () => {
+      state = (1664525 * state + 1013904223) >>> 0;
+      return state / 4294967296;
+    },
+  };
+}
 
 describe("original world data", () => {
   it("ports exact world constants", () => {
@@ -45,7 +59,7 @@ describe("original world data", () => {
       NORTH: [0, -1],
       SOUTH: [0, 1],
       WEST: [-1, 0],
-      EAST: [1, 0]
+      EAST: [1, 0],
     });
   });
 
@@ -69,24 +83,24 @@ describe("original world data", () => {
       BATTLEFIELD: "F",
       SWAMP: "M",
       CACHE: "U",
-      EXECUTIONER: "X"
+      EXECUTIONER: "X",
     });
     expect(WORLD_TILE_PROBS).toEqual({
       ";": 0.15,
       ",": 0.35,
-      ".": 0.5
+      ".": 0.5,
     });
   });
 
   it("matches world manifest keys", () => {
     expect(Object.keys(WORLD_TILE)).toEqual(
-      canonicalManifest.keys.worldTileConstants
+      canonicalManifest.keys.worldTileConstants,
     );
     expect(originalWorldWeapons.map((weapon) => weapon.key)).toEqual(
-      canonicalManifest.keys.weapons
+      canonicalManifest.keys.weapons,
     );
     expect(originalWorldLandmarks.map((landmark) => landmark.tileKey)).toEqual(
-      canonicalManifest.keys.worldLandmarkAssignments
+      canonicalManifest.keys.worldLandmarkAssignments,
     );
   });
 
@@ -96,7 +110,7 @@ describe("original world data", () => {
       verb: "punch",
       type: "unarmed",
       damage: 1,
-      cooldown: 2
+      cooldown: 2,
     });
     expect(originalWorldWeapons).toContainEqual({
       key: "rifle",
@@ -104,7 +118,7 @@ describe("original world data", () => {
       type: "ranged",
       damage: 5,
       cooldown: 1,
-      cost: { bullets: 1 }
+      cost: { bullets: 1 },
     });
     expect(originalWorldWeapons).toContainEqual({
       key: "bolas",
@@ -112,14 +126,14 @@ describe("original world data", () => {
       type: "ranged",
       damage: "stun",
       cooldown: 15,
-      cost: { bolas: 1 }
+      cost: { bolas: 1 },
     });
     expect(originalWorldWeapons).toContainEqual({
       key: "disruptor",
       verb: "stun",
       type: "ranged",
       damage: "stun",
-      cooldown: 15
+      cooldown: 15,
     });
   });
 
@@ -131,7 +145,7 @@ describe("original world data", () => {
       minRadius: 5,
       maxRadius: 5,
       scene: "ironmine",
-      label: "Iron&nbsp;Mine"
+      label: "Iron&nbsp;Mine",
     });
     expect(originalWorldLandmarks).toContainEqual({
       tileKey: "CITY",
@@ -140,7 +154,7 @@ describe("original world data", () => {
       minRadius: 20,
       maxRadius: 45,
       scene: "city",
-      label: "A&nbsp;Ruined&nbsp;City"
+      label: "A&nbsp;Ruined&nbsp;City",
     });
     expect(originalWorldLandmarks).toContainEqual({
       tileKey: "CACHE",
@@ -150,8 +164,56 @@ describe("original world data", () => {
       maxRadius: 45,
       scene: "cache",
       label: "A&nbsp;Destroyed&nbsp;Village",
-      conditional: "previous.stores"
+      conditional: "previous.stores",
     });
+  });
+
+  it("matches original compass direction thresholds", () => {
+    expect(originalWorldCompassDirection({ x: 28, y: -1 })).toBe("east");
+    expect(originalWorldCompassDirection({ x: -28, y: 1 })).toBe("west");
+    expect(originalWorldCompassDirection({ x: 1, y: -28 })).toBe("north");
+    expect(originalWorldCompassDirection({ x: -1, y: 28 })).toBe("south");
+    expect(originalWorldCompassDirection({ x: 28, y: -20 })).toBe("northeast");
+    expect(originalWorldCompassDirection({ x: -28, y: -20 })).toBe("northwest");
+    expect(originalWorldCompassDirection({ x: 28, y: 20 })).toBe("southeast");
+    expect(originalWorldCompassDirection({ x: -28, y: 20 })).toBe("southwest");
+  });
+
+  it("generates an original-shaped world map with landmark counts", () => {
+    const map = originalWorldGenerateMap(seededRng(0x1fada462), {
+      includeCache: true,
+    });
+
+    expect(map).toHaveLength(WORLD_RADIUS * 2 + 1);
+    expect(map.every((column) => column.length === WORLD_RADIUS * 2 + 1)).toBe(
+      true,
+    );
+    expect(map[WORLD_RADIUS][WORLD_RADIUS]).toBe(WORLD_TILE.VILLAGE);
+    expect(map[WORLD_RADIUS - 1][WORLD_RADIUS]).toBe(WORLD_TILE.FOREST);
+    expect(map[WORLD_RADIUS + 1][WORLD_RADIUS]).toBe(WORLD_TILE.FOREST);
+
+    for (const landmark of originalWorldLandmarks) {
+      const count = map.flat().filter((tile) => tile === landmark.tile).length;
+      expect(count, landmark.tileKey).toBe(landmark.num);
+    }
+
+    const ship = originalWorldMapSearch(WORLD_TILE.SHIP, map, 1)?.[0];
+    expect(ship).toEqual(expect.objectContaining({ x: expect.any(Number) }));
+  });
+
+  it("creates the original diamond visibility mask", () => {
+    const mask = originalWorldNewMask();
+    const visible = mask.flat().filter(Boolean).length;
+
+    expect(mask[WORLD_RADIUS][WORLD_RADIUS]).toBe(true);
+    expect(mask[WORLD_RADIUS][WORLD_RADIUS - WORLD_LIGHT_RADIUS]).toBe(true);
+    expect(mask[WORLD_RADIUS + WORLD_LIGHT_RADIUS][WORLD_RADIUS]).toBe(true);
+    expect(mask[WORLD_RADIUS + WORLD_LIGHT_RADIUS][WORLD_RADIUS + 1]).toBe(
+      false,
+    );
+    expect(visible).toBe(13);
+
+    expect(originalWorldNewMask(true).flat().filter(Boolean)).toHaveLength(41);
   });
 
   it("feeds the original content registry", () => {
@@ -159,4 +221,3 @@ describe("original world data", () => {
     expect(originalContentRegistry.worldLandmarks).toBe(originalWorldLandmarks);
   });
 });
-

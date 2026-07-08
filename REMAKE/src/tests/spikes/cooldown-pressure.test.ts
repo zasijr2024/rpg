@@ -15,4 +15,3 @@ describe("cooldown pressure spike", () => {
     expect(notifications.at(-1)).toBe(100);
   });
 });
-

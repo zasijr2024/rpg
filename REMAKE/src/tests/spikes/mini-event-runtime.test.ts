@@ -2,14 +2,14 @@ import { describe, expect, it } from "vitest";
 import { StateStore, type Rng } from "../../engine";
 import {
   createMiniEventFixture,
-  MiniEventRuntime
+  MiniEventRuntime,
 } from "../../spikes/events/miniEventRuntime";
 
 function fixedRng(value: number): Rng {
   return {
     next: () => value,
     nextInt: (maxExclusive) => Math.floor(value * maxExclusive),
-    fork: () => fixedRng(value)
+    fork: () => fixedRng(value),
   };
 }
 
@@ -21,7 +21,7 @@ describe("mini event runtime spike", () => {
     const runtime = new MiniEventRuntime(
       createMiniEventFixture(),
       state,
-      fixedRng(0.25)
+      fixedRng(0.25),
     );
     const result = runtime.choose("search");
 
@@ -37,10 +37,9 @@ describe("mini event runtime spike", () => {
     const runtime = new MiniEventRuntime(
       createMiniEventFixture(),
       state,
-      fixedRng(0.75)
+      fixedRng(0.75),
     );
 
     expect(runtime.choose("search").scene).toBe("noise");
   });
 });
-

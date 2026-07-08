@@ -31,7 +31,7 @@ export const originalPrestigeStores: OriginalPrestigeStoreDefinition[] = [
   { key: "bullets", type: "a" },
   { key: "energy cell", type: "a" },
   { key: "grenade", type: "a" },
-  { key: "bolas", type: "a" }
+  { key: "bolas", type: "a" },
 ];
 
 assertKeysMatchManifest();
@@ -41,6 +41,8 @@ function assertKeysMatchManifest(): void {
   if (
     keys.join("\u0000") !== canonicalManifest.keys.prestigeStores.join("\u0000")
   ) {
-    throw new Error("Original prestige store keys do not match canonical manifest");
+    throw new Error(
+      "Original prestige store keys do not match canonical manifest",
+    );
   }
 }

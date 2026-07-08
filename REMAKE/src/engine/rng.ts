@@ -34,4 +34,3 @@ export class Mulberry32Rng implements Rng {
 export function createDefaultRng(seed = 0x1fada462): Rng {
   return new Mulberry32Rng(seed);
 }
-

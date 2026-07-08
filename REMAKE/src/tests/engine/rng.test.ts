@@ -9,7 +9,7 @@ describe("Mulberry32Rng", () => {
     expect([a.next(), a.next(), a.next()]).toEqual([
       b.next(),
       b.next(),
-      b.next()
+      b.next(),
     ]);
   });
 
@@ -22,4 +22,3 @@ describe("Mulberry32Rng", () => {
     }
   });
 });
-

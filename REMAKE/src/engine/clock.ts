@@ -8,6 +8,12 @@ interface TimerEntry {
   task: ScheduledTask;
 }
 
+export interface TimerSnapshot {
+  id: TimerId;
+  dueAt: number;
+  intervalMs: number | null;
+}
+
 export class ManualClock {
   private nowMs = 0;
   private nextId = 1;
@@ -15,6 +21,14 @@ export class ManualClock {
 
   now(): number {
     return this.nowMs;
+  }
+
+  restoreNow(nowMs: number): void {
+    if (nowMs < 0) {
+      throw new Error("nowMs must be non-negative");
+    }
+    this.nowMs = nowMs;
+    this.timers.clear();
   }
 
   setTimeout(task: ScheduledTask, delayMs: number): TimerId {
@@ -30,6 +44,21 @@ export class ManualClock {
 
   clearTimer(id: TimerId): void {
     this.timers.delete(id);
+  }
+
+  clearAll(): void {
+    this.timers.clear();
+  }
+
+  timerSnapshot(id: TimerId | null): TimerSnapshot | null {
+    if (id === null) return null;
+    const timer = this.timers.get(id);
+    if (!timer) return null;
+    return {
+      id: timer.id,
+      dueAt: timer.dueAt,
+      intervalMs: timer.intervalMs,
+    };
   }
 
   advanceBy(ms: number): void {
@@ -55,7 +84,7 @@ export class ManualClock {
   private schedule(
     task: ScheduledTask,
     delayMs: number,
-    intervalMs: number | null
+    intervalMs: number | null,
   ): TimerId {
     if (delayMs < 0) {
       throw new Error("delayMs must be non-negative");
@@ -65,7 +94,7 @@ export class ManualClock {
       id,
       dueAt: this.nowMs + delayMs,
       intervalMs,
-      task
+      task,
     });
     return id;
   }
@@ -81,3 +110,57 @@ export class ManualClock {
   }
 }
 
+export interface RealtimeClockDriverOptions {
+  intervalMs?: number;
+  maxCatchUpMs?: number;
+  now?: () => number;
+  timeScale?: () => number;
+}
+
+export class RealtimeClockDriver {
+  private timer: ReturnType<typeof setInterval> | null = null;
+  private lastNow = 0;
+  private readonly intervalMs: number;
+  private readonly maxCatchUpMs: number;
+  private readonly now: () => number;
+  private readonly timeScale: () => number;
+
+  constructor(
+    private readonly clock: ManualClock,
+    options: RealtimeClockDriverOptions = {},
+  ) {
+    this.intervalMs = options.intervalMs ?? 250;
+    this.maxCatchUpMs = options.maxCatchUpMs ?? 5 * 60 * 1000;
+    this.timeScale = options.timeScale ?? (() => 1);
+    this.now =
+      options.now ??
+      (() =>
+        typeof performance !== "undefined" &&
+        typeof performance.now === "function"
+          ? performance.now()
+          : Date.now());
+  }
+
+  start(onTick: () => void): void {
+    if (this.timer !== null) return;
+    this.lastNow = this.now();
+    this.timer = setInterval(() => {
+      const currentNow = this.now();
+      const elapsed = Math.min(
+        Math.max(0, currentNow - this.lastNow),
+        this.maxCatchUpMs,
+      );
+      this.lastNow = currentNow;
+      if (elapsed > 0) {
+        this.clock.advanceBy(elapsed * Math.max(0, this.timeScale()));
+      }
+      onTick();
+    }, this.intervalMs);
+  }
+
+  stop(): void {
+    if (this.timer === null) return;
+    clearInterval(this.timer);
+    this.timer = null;
+  }
+}

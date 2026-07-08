@@ -1,8 +1,8 @@
-﻿# A Dark Room Remake Plan
+# A Dark Room Remake Plan
 
-Last updated: 2026-07-06
+Last updated: 2026-07-08
 
-Primary goal: recreate the latest web version of *A Dark Room* in a modern, stable engine and tech stack while preserving the original vision intact. After the remake reaches full parity, add optimizations, improvements, new features, and expansions step by step.
+Primary goal: recreate the latest web version of _A Dark Room_ in a modern, stable engine and tech stack while preserving the original vision intact. After the remake reaches full parity, add optimizations, improvements, new features, and expansions step by step.
 
 Design authority: `ANALYSE/authors_vision_and_success.md`
 
@@ -574,8 +574,65 @@ Acceptance criteria:
 
 ### Phase 6: Combat Event Runtime
 
+Current status:
+
+Phase 6 is finalized for the pragmatic Combat Event Runtime slice, not full event/setpiece/executioner parity. `CombatRuntime` owns combat resolution, the event runtime covers all original wilderness encounter definitions, focused setpiece and executioner catalogs are represented and audited, World-selected encounter/setpiece bridges route into focused event slices, session-level combat return markers are consumed into visible room/path recovery, and the final verification matrix passed on 2026-07-08. The finalized focused catalog surface is 38 audited executioner keys and 49 audited setpiece keys. Exhaustive original branch parity for every remaining setpiece/battleship route remains a later-scope parity target and would be a separate 15+ slice effort.
+
+Explicit remaining Phase 6 closure slices:
+
+None for the pragmatic Phase 6 scope.
+
+Latest finalization pass fixed stale World city landmark routes, locked the focused 49-key setpiece catalog in content coverage, ran the full verification matrix, and finalized Phase 6 on 2026-07-08.
+
+Latest setpiece audit locks the focused 49-key setpiece catalog in content coverage and fixes stale World city landmark routes for the old-man cache and medicine variants.
+
+Latest executioner audit locks the focused 38-key Ravaged Battleship catalog in content coverage and defers exhaustive battleship scene parity outside pragmatic Phase 6 closure.
+
+Latest Engineering R&D continuation adds the original alien-alloy healing machine, max-health restoration, workbench fork traversal, hypo-blueprint loot, unstable-prototype combat, kinetic-armour-blueprint loot, and Engineering deck-cleared flag.
+
+Latest runtime continuation adds organic World event selection for original terrain/distance encounter bands, original landmark scene names, executioner first-visit/return routing, session/test-harness commands, and browser coverage for a World-selected combat flow.
+
+Latest Path/World remediation consumes combat `returnLocation` markers into room death recovery or visible Path recovery, adds a player-facing `A Dusty Path` location, outfitting rows, capacity/free-space display, perk display, embark, original-shaped World map/mask generation, food/water consumption, generated landmark scene routing, player-facing World return, organic fresh-room-to-World-return browser coverage, and Path/World visual baselines.
+
+Latest executioner hub continuation chance-maps the antechamber Engineering elevator into assembly, engine-room, and fire-junction focused entry branches, and chance-maps the Martial elevator into the armory, right-corridor, and scrap focused entry branches.
+
+Latest executioner continuation adds the original Engineering engine-room quiet branch, including defence-turret combat, alien-alloy salvage, destroyed-engine text, and R&D handoff.
+
+Latest executioner continuation adds the original Martial training-complex regenerative machine, including alien-alloy cost, max-health restoration, and murderous-robot handoff.
+
+Latest executioner continuation adds the original Medical checkpoint post-turret automated-guardians branch, including quiet-corridor branch selection and gurneys handoff.
+
+Latest executioner continuation adds the original Medical checkpoint gurneys-to-strategy-room branch, including secure-locker loot, noisy-medic combat, quiet-move option, and quadruped rejoin.
+
+Latest executioner continuation adds the original Medical checkpoint post-medic friends/frozen-robots branch before dispatch-bay loot.
+
+Latest runtime continuation adds chance-mapped `nextEvent` support and wires the Medical checkpoint handoff into guarded cold-storage, guarded surgical-tools, and slipped cold-storage focused slices.
+
+Latest executioner continuation adds the original Engineering quiet assembly branch, including assembly-line energy-cell/laser-rifle loot, decrepit-machinery text, mechanical-guard combat, and R&D handoff.
+
+Latest setpiece continuation adds the original City subway beast-rubble route, including lizard combat, beast combat, rubble loot, scavenged torch/cured-meat loot, and a focused subway-beast-rubble clear marker.
+
+Latest Phase 6 continuation connects all focused Medical containment scenes into malformed-experiment cleanup. Guarded-surgical, cold-guard, surgical-explosives, surgical-medic, and cold-storage now hand off to the malformed-experiment event, with cold-storage and surgical-explosives runtime coverage through stim-blueprint loot, Medical deck completion, cleanup text, and exit.
+
+Latest Medical automaton continuation connects automated-guardians, gurneys/friends, strategy-room locker, and frozen-robots checkpoint scenes into the cold-storage route, with frozen-robots runtime coverage through unstable-automaton glowstone-blueprint loot, cold-storage medic fights, malformed-experiment combat, stim-blueprint loot, Medical deck completion, cleanup text, and exit.
+
+Latest Medical checkpoint continuation adds dispatch-bay weapon loot and unstable-automaton combat to the base checkpoint route, then hands off into the cold-storage route after glowstone-blueprint loot.
+
+Latest Engineering continuation connects assembly, assembly-loot, engine-room, and fire/guard-post R&D doorway scenes into the R&D/prototype event, with fire/guard-post runtime coverage through guard-post loot, hypo-blueprint loot, unstable-prototype combat, kinetic-armour-blueprint loot, Engineering deck completion, cleanup text, and exit.
+
+Readiness-audit constraint:
+
+Phase 6 starts with the combat runtime boundary. Do not expand encounter coverage by adding special cases directly to `EventRuntime`.
+
+Ownership boundary:
+
+- `EventRuntime` owns random event scheduling, scene loading, modal lifecycle, scene text, non-combat event buttons, scene rewards, scene-level effects, and non-combat scene loot lifecycle.
+- The combat boundary owns combat phase, player/enemy health, available combat actions, weapon cost/cooldown interpretation, hit/miss/stun logic, enemy attack timers, healing, combat loot rolling/taking, player death, and outfit/return semantics.
+- Event scenes may mount combat definitions and receive combat outcomes, but encounter-specific rules should live behind the combat boundary.
+
 Deliverables:
 
+- combat runtime boundary or extracted combat service with headless tests
 - combat panel
 - player health
 - enemy health
@@ -588,15 +645,33 @@ Deliverables:
 - healing actions
 - loot after victory
 - player death handling
+- original outfit/drop/return semantics for death and victory
+- lifecycle snapshot/restore for combat state through the boundary
+- regression preservation for the existing representative `A Snarling Beast` slice
 
 Acceptance criteria:
 
-- encounter data from `DATA/09-events-encounters.md` works
+- representative encounter data from `DATA/09-events-encounters.md` works through the combat boundary before broad encounter coverage is added
 - damage, hit chance, cooldown, and loot rules match original
 - all original weapons work
+- death/outfit handling matches original or any deviation is documented before additional enemy families are added
+- combat lifecycle restore is testable without stale timers or duplicate loot/death effects
 - combat is testable without UI
+- at least one browser scenario exercises the Phase 6 combat flow through the UI; pure `triggerEventByKey` coverage alone is not sufficient for completion
+- `EventRuntime` does not become the permanent home for encounter-specific special cases
 
 ### Phase 7: Path and Outfitting
+
+Current status:
+
+Phase 7 is finalized for the Path/outfitting scope as of 2026-07-08. Buying Compass reveals `A Dusty Path`, emits the original `the compass points ...` message, exposes the Compass store tooltip, supplies can be added/removed with original weight/capacity helpers and original-style arrow controls, Cured Meat gates embark, perks render from original perk data, and embark opens the active World slice. Full original World arrival, map generation, ship placement, landmark distribution, and home-return world-state consequences remain Phase 8 scope.
+
+Phase 7 kickoff position:
+
+- Phase 6 is not the next work target unless a regression appears in the finalized pragmatic combat/event-runtime boundary.
+- The existing World slice should be kept stable as the embark/return consumer while Path behavior is hardened.
+- Phase 7 Path semantics are covered for row ordering, all currently original carryable supplies, water and armour interactions, capacity-upgrade cases, tooltip/original-control behavior, outfit return/drop behavior, and an organic no-resource-injection browser reachability scenario.
+- Each Phase 7 change needs source/data evidence, engine/session coverage, and UI or visual coverage when it changes player-facing Path behavior.
 
 Deliverables:
 
@@ -611,12 +686,27 @@ Deliverables:
 
 Acceptance criteria:
 
+- compass/Path reveal order matches original
 - capacity upgrades match original
 - all weight overrides match original
 - outfitting cannot exceed capacity
-- embark transitions into world with correct state
+- add/remove behavior preserves stores/outfit invariants for every carryable supply
+- water, armour, and perk-dependent Path behavior match original or are explicitly deferred to World/Phase 8 where the original behavior depends on World systems
+- embark transitions into the current World consumer with correct Path state
+- return from World/combat restores stores/outfit through the original safe-return rules
+- Phase 7 visual baselines remain stable at 1366, 1920, 2560, and 3840 widths
 
 ### Phase 8: World Exploration
+
+Current status:
+
+Phase 8 has a player-facing foundation slice. Compass purchase now creates an original-shaped 61x61 World map, original landmark counts/radii, original visibility mask, and stored ship direction; embark activates the original village position, renders a compact ASCII viewport, supports button and keyboard movement, consumes food/water counters, can trigger the existing World encounter/setpiece bridge, and can return to Path from the village. This does not yet complete roads, outpost behavior, mine unlocks, ship discovery consequences, fabricator discovery, executioner reachability, danger, starvation/dehydration death loops, or full map UI parity.
+
+Phase 8 constraints inherited from Phase 7:
+
+- Preserve the finalized Path/outfitting contracts: Compass reveal, outfit reservation, safe return, capacity, water, armour, and repeated embark behavior must not regress while World expands.
+- Treat original map/mask/landmark generation as the Phase 8 baseline, but do not claim World parity until roads, visibility persistence/rendering, danger, outposts, mine unlocks, ship discovery, fabricator discovery, executioner reachability, and death/perk behavior are implemented from player traversal.
+- Keep phase-specific notes in `docs/status/phase-8-world.md` instead of bloating this plan section.
 
 Deliverables:
 
@@ -1008,7 +1098,7 @@ Timing:
 
 ### Q0: Should git versioning be used during development?
 
-Decision: yes, immediately. `F:\ADR20` must be a git repository before implementation begins. Use milestone commits and tags so source extraction, planning, parity implementation, and future expansion work can be reviewed and recovered.
+Decision: yes. `F:\ADR20` is expected to stay under git versioning throughout implementation. Use milestone commits and tags so source extraction, planning, parity implementation, and future expansion work can be reviewed and recovered.
 
 ### Q1: Should the remake use React or a game framework such as Phaser?
 
@@ -1036,7 +1126,9 @@ Recommendation: start with Canvas for the remake's internal implementation, whil
 
 ### Q7: Should the remake include quality-of-life controls before parity?
 
-Recommendation: include only controls that do not alter progression or reveal hidden systems: keyboard focus, stable layout, readable cooldowns, clear disabled states, and pause-safe event behavior. Defer convenience features like automation, speed controls, content logs, or expanded stats.
+Recommendation: include only controls that do not alter progression or reveal hidden systems: keyboard focus, stable layout, readable cooldowns, clear disabled states, and pause-safe event behavior. Defer player-facing convenience features like automation, content logs, or expanded stats.
+
+Current exception: an opt-in `settings` tab behind `?debug=1` provides default-off `speed x 10` and `income x 10` debug toggles plus dev save controls for parity testing. This is not original behavior and is tracked as `DEV-007` in `REMAKE/docs/deviations.md`; it must not be treated as player-facing parity design. Visual parity baselines use `?testHarness=1` without `debug=1` to keep debug tooling out of screenshots.
 
 ### Q8: Should new content hooks be built before original parity?
 
@@ -1064,4 +1156,3 @@ The first remake means gameplay/UI parity excluding deferred systems. It is fini
 - `REMAKE/docs/parity-checklist.md` is fully resolved
 - `DATA/canonical-manifest.json` matches the pinned source baseline
 - future content can be added through typed data registries without rewriting core systems
-

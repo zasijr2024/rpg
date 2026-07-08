@@ -1,17 +1,17 @@
 export {
   canonicalManifest,
-  SOURCE_BASELINE_COMMIT
+  SOURCE_BASELINE_COMMIT,
 } from "./manifest/canonicalManifest";
 export type {
   CanonicalEventTitle,
   CanonicalManifest,
-  CanonicalSourceFile
+  CanonicalSourceFile,
 } from "./manifest/types";
 export { originalContentRegistry } from "./registry";
 export { originalPerks } from "./core/perks";
 export {
   originalPrestigeStores,
-  type OriginalPrestigeStoreType
+  type OriginalPrestigeStoreType,
 } from "./core/prestige";
 export {
   ENGINE_GAME_OVER_INITIAL,
@@ -31,7 +31,7 @@ export {
   originalStateMigrationSteps,
   type EngineOptionsDefaults,
   type ScoringBonus,
-  type StateMigrationStep
+  type StateMigrationStep,
 } from "./core/engineData";
 export {
   AUDIO_EVENT_DUCK_VOLUME,
@@ -44,7 +44,7 @@ export {
   AUDIO_SAFARI_DECODE_POLL_MS,
   originalAudioManifest,
   type OriginalAudioDefinition,
-  type OriginalAudioKind
+  type OriginalAudioKind,
 } from "./audio/audioManifest";
 export {
   LOCALIZATION_BABEL_CONFIG_PATH,
@@ -55,8 +55,20 @@ export {
   originalDeferredLocalizationScope,
   originalLanguageCodes,
   originalLocaleInventory,
-  type OriginalLocaleInventoryEntry
+  type OriginalLocaleInventoryEntry,
 } from "./localization/localizationManifest";
+export {
+  EVENT_TIME_RANGE_MINUTES,
+  originalExecutionerCombatDefinitions,
+  originalEventDefinitions,
+  originalSetpieceCombatDefinitions,
+  type OriginalCombatDefinition,
+  type OriginalCombatSpecialDefinition,
+  type OriginalCombatStatus,
+  type OriginalEventButtonDefinition,
+  type OriginalEventDefinition,
+  type OriginalEventSceneDefinition,
+} from "./events/eventData";
 export {
   DEFAULT_BAG_SPACE,
   DEFAULT_ITEM_WEIGHT,
@@ -68,7 +80,7 @@ export {
   originalPathWeightFor,
   originalPathWeightOverrides,
   type OriginalPathCapacityUpgrade,
-  type OriginalPathCarryable
+  type OriginalPathCarryable,
 } from "./path/pathWeights";
 export {
   ROOM_BUILDER_INCOME_DELAY,
@@ -95,7 +107,7 @@ export {
   type RoomMiscItemDefinition,
   type RoomStateDefinition,
   type RoomTradeGoodDefinition,
-  type RoomTradeGoodType
+  type RoomTradeGoodType,
 } from "./room/roomData";
 export {
   SHIP_ALLOY_PER_HULL,
@@ -144,7 +156,7 @@ export {
   type SpaceAsteroidDefinition,
   type SpaceAsteroidWaveThreshold,
   type SpaceHitAudioTier,
-  type SpaceTitleThreshold
+  type SpaceTitleThreshold,
 } from "./lateGame/lateGameData";
 export {
   OUTSIDE_CART_GATHER_WOOD_AMOUNT,
@@ -160,6 +172,8 @@ export {
   originalMaxPopulation,
   originalOutsideWorkerIncome,
   originalOutsideWorkerUnlocks,
+  originalPopulationDelayMinutes,
+  originalPopulationIncrease,
   originalPopulationMessageForArrivals,
   originalPopulationMessageThresholds,
   originalTrapDropCount,
@@ -169,7 +183,7 @@ export {
   type OutsidePopulationMessageThreshold,
   type OutsideTrapDropDefinition,
   type OutsideVillageTitleThreshold,
-  type OutsideWorkerIncomeDefinition
+  type OutsideWorkerIncomeDefinition,
 } from "./outside/outsideData";
 export {
   WORLD_BASE_HEALTH,
@@ -190,8 +204,18 @@ export {
   WORLD_TILE,
   WORLD_TILE_PROBS,
   WORLD_VILLAGE_POS,
+  originalWorldCompassDirection,
+  originalWorldDisplayLabel,
+  originalWorldGenerateMap,
+  originalWorldLightMap,
   originalWorldLandmarks,
+  originalWorldMapSearch,
+  originalWorldNewMask,
   originalWorldWeapons,
+  type WorldCompassDirection,
   type WorldLandmarkDefinition,
-  type WorldWeaponDefinition
+  type WorldMapGrid,
+  type WorldMapSearchResult,
+  type WorldMaskGrid,
+  type WorldWeaponDefinition,
 } from "./world/worldData";

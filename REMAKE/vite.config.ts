@@ -6,11 +6,11 @@ export default defineConfig({
   server: {
     host: "127.0.0.1",
     port: 41730,
-    strictPort: true
+    strictPort: true,
   },
   test: {
     exclude: ["node_modules", "dist", "src/tests/e2e/**"],
     environment: "jsdom",
-    globals: true
-  }
+    globals: true,
+  },
 });

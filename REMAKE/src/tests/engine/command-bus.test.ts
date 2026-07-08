@@ -19,9 +19,8 @@ describe("CommandBus", () => {
   it("throws when no command handler is registered", () => {
     const bus = new CommandBus<TestCommand>();
 
-    expect(() =>
-      bus.dispatch({ type: "add", payload: { amount: 5 } })
-    ).toThrow(/No command handler/);
+    expect(() => bus.dispatch({ type: "add", payload: { amount: 5 } })).toThrow(
+      /No command handler/,
+    );
   });
 });
-

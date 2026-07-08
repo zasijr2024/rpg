@@ -16,14 +16,14 @@ import {
   originalScoreFactors,
   originalStateCategories,
   originalStateMigrationSteps,
-  STATE_MANAGER_MAX_STORE
+  STATE_MANAGER_MAX_STORE,
 } from "../../content/original";
 
 describe("original core engine, state, and scoring data", () => {
   it("ports exact engine constants and defaults", () => {
     expect(ENGINE_SITE_URL).toBe("http://adarkroom.doublespeakgames.com");
     expect(ENGINE_SITE_URL_ENCODED).toBe(
-      "http%3A%2F%2Fadarkroom.doublespeakgames.com"
+      "http%3A%2F%2Fadarkroom.doublespeakgames.com",
     );
     expect(ENGINE_VERSION).toBe(1.3);
     expect(ENGINE_MAX_STORE).toBe(99999999999999);
@@ -37,7 +37,7 @@ describe("original core engine, state, and scoring data", () => {
       debug: false,
       log: false,
       dropbox: false,
-      doubleTime: false
+      doubleTime: false,
     });
   });
 
@@ -54,79 +54,61 @@ describe("original core engine, state, and scoring data", () => {
       "outfit",
       "config",
       "wait",
-      "cooldown"
+      "cooldown",
     ]);
   });
 
   it("documents original save migration steps", () => {
-    expect(originalStateMigrationSteps.map((step) => [step.from, step.to])).toEqual([
+    expect(
+      originalStateMigrationSteps.map((step) => [step.from, step.to]),
+    ).toEqual([
       [1.0, 1.1],
       [1.1, 1.2],
-      [1.2, 1.3]
+      [1.2, 1.3],
     ]);
     expect(originalStateMigrationSteps[2].operations).toContain(
-      "move ship hull, thrusters, seenWarning, and seenShip under game.spaceShip"
+      "move ship hull, thrusters, seenWarning, and seenShip under game.spaceShip",
     );
   });
 
   it("ports exact scoring factors and bonuses", () => {
     expect(originalScoreFactors).toEqual([
-      1,
-      1.5,
-      1,
-      2,
-      2,
-      3,
-      3,
-      2,
-      2,
-      2,
-      2,
-      1.5,
-      1,
-      1,
-      10,
-      30,
-      50,
-      100,
-      150,
-      150,
-      3,
-      3,
-      5,
-      4
+      1, 1.5, 1, 2, 2, 3, 3, 2, 2, 2, 2, 1.5, 1, 1, 10, 30, 50, 100, 150, 150,
+      3, 3, 5, 4,
     ]);
     expect(originalScoreFactors).toHaveLength(
-      canonicalManifest.keys.prestigeStores.length
+      canonicalManifest.keys.prestigeStores.length,
     );
     expect(originalScoreBonuses).toEqual([
       { key: "alien alloy", factor: 10 },
       { key: "fleet beacon", factor: 500 },
-      { key: "ship hull", factor: 50 }
+      { key: "ship hull", factor: 50 },
     ]);
   });
 
   it("preserves original score calculation", () => {
     const prestigeStores = Array.from(
       { length: canonicalManifest.keys.prestigeStores.length },
-      (_, index) => index + 1
+      (_, index) => index + 1,
     );
     expect(
       originalCalculateScore(
         prestigeStores,
         { "alien alloy": 3, "fleet beacon": 1 },
-        2
-      )
+        2,
+      ),
     ).toBe(10285);
   });
 
   it("feeds the original content registry", () => {
     expect(originalContentRegistry.engineOptionDefaults).toBe(
-      originalEngineOptionDefaults
+      originalEngineOptionDefaults,
     );
-    expect(originalContentRegistry.stateCategories).toBe(originalStateCategories);
+    expect(originalContentRegistry.stateCategories).toBe(
+      originalStateCategories,
+    );
     expect(originalContentRegistry.stateMigrationSteps).toBe(
-      originalStateMigrationSteps
+      originalStateMigrationSteps,
     );
     expect(originalContentRegistry.scoreFactors).toBe(originalScoreFactors);
     expect(originalContentRegistry.scoreBonuses).toBe(originalScoreBonuses);

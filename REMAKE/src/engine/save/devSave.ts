@@ -1,24 +1,27 @@
-import type { GameState } from "../state/types";
-
 export const DEV_SAVE_KEY = "adr-remake-dev-save";
 
+export type DevSaveData = unknown;
+
 export interface DevSaveAdapter {
-  load(): GameState | null;
-  save(state: GameState): void;
+  load(): DevSaveData | null;
+  save(data: DevSaveData): void;
   clear(): void;
 }
 
 export class LocalStorageDevSaveAdapter implements DevSaveAdapter {
-  load(): GameState | null {
+  load(): DevSaveData | null {
+    if (typeof window === "undefined") return null;
     const raw = window.localStorage.getItem(DEV_SAVE_KEY);
-    return raw ? (JSON.parse(raw) as GameState) : null;
+    return raw ? (JSON.parse(raw) as DevSaveData) : null;
   }
 
-  save(state: GameState): void {
-    window.localStorage.setItem(DEV_SAVE_KEY, JSON.stringify(state));
+  save(data: DevSaveData): void {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(DEV_SAVE_KEY, JSON.stringify(data));
   }
 
   clear(): void {
+    if (typeof window === "undefined") return;
     window.localStorage.removeItem(DEV_SAVE_KEY);
   }
 }
@@ -26,16 +29,15 @@ export class LocalStorageDevSaveAdapter implements DevSaveAdapter {
 export class MemoryDevSaveAdapter implements DevSaveAdapter {
   private raw: string | null = null;
 
-  load(): GameState | null {
-    return this.raw ? (JSON.parse(this.raw) as GameState) : null;
+  load(): DevSaveData | null {
+    return this.raw ? (JSON.parse(this.raw) as DevSaveData) : null;
   }
 
-  save(state: GameState): void {
-    this.raw = JSON.stringify(state);
+  save(data: DevSaveData): void {
+    this.raw = JSON.stringify(data);
   }
 
   clear(): void {
     this.raw = null;
   }
 }
-

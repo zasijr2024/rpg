@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createAsciiViewport,
-  viewportToText
+  viewportToText,
 } from "../spikes/world/asciiViewport";
 import {
   createInitialSpaceState,
-  DEFAULT_SPACE_PROTOTYPE
+  DEFAULT_SPACE_PROTOTYPE,
 } from "../spikes/space/spacePrototype";
 
 const tabs = ["room", "world", "space"] as const;
@@ -46,7 +46,10 @@ export function SpikeLab() {
       {activeTab === "world" && (
         <div role="tabpanel" className="spikePanel">
           <WorldKeyboardProbe cursor={cursor} setCursor={setCursor} />
-          <pre className="worldSpike" aria-label="61 by 61 ASCII world viewport">
+          <pre
+            className="worldSpike"
+            aria-label="61 by 61 ASCII world viewport"
+          >
             {mapText}
           </pre>
         </div>
@@ -133,7 +136,7 @@ function DomSpaceSpike() {
           className="spaceShip"
           style={{
             left: `${(state.shipX / DEFAULT_SPACE_PROTOTYPE.width) * 100}%`,
-            top: `${(state.shipY / DEFAULT_SPACE_PROTOTYPE.height) * 100}%`
+            top: `${(state.shipY / DEFAULT_SPACE_PROTOTYPE.height) * 100}%`,
           }}
         >
           @
@@ -142,7 +145,7 @@ function DomSpaceSpike() {
           className="spaceAsteroid"
           style={{
             left: `${(state.asteroidX / DEFAULT_SPACE_PROTOTYPE.width) * 100}%`,
-            top: `${(state.asteroidY / DEFAULT_SPACE_PROTOTYPE.height) * 100}%`
+            top: `${(state.asteroidY / DEFAULT_SPACE_PROTOTYPE.height) * 100}%`,
           }}
         >
           #

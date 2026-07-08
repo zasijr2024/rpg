@@ -9,7 +9,7 @@ export interface CooldownPressureResult {
 export function simulateCooldownPressure(
   durationMs: number,
   frameMs: number,
-  notify: (percent: number) => void
+  notify: (percent: number) => void,
 ): CooldownPressureResult {
   const clock = new ManualClock();
   const seen = new Set<number>();
@@ -33,7 +33,6 @@ export function simulateCooldownPressure(
   return {
     ticks,
     notifications,
-    distinctPercentValues: seen.size
+    distinctPercentValues: seen.size,
   };
 }
-

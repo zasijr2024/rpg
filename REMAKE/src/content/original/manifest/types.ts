@@ -35,4 +35,3 @@ export interface CanonicalManifest {
     titles: CanonicalEventTitle[];
   };
 }
-

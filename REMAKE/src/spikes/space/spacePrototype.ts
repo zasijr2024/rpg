@@ -14,23 +14,23 @@ export interface SpacePrototypeState {
 export const DEFAULT_SPACE_PROTOTYPE: SpacePrototypeConfig = {
   width: 700,
   height: 700,
-  shipSize: 18
+  shipSize: 18,
 };
 
 export function createInitialSpaceState(
-  config = DEFAULT_SPACE_PROTOTYPE
+  config = DEFAULT_SPACE_PROTOTYPE,
 ): SpacePrototypeState {
   return {
     shipX: config.width / 2,
     shipY: config.height / 2,
     asteroidX: config.width / 2,
-    asteroidY: config.height / 2 - 80
+    asteroidY: config.height / 2 - 80,
   };
 }
 
 export function hasPrototypeCollision(
   state: SpacePrototypeState,
-  config = DEFAULT_SPACE_PROTOTYPE
+  config = DEFAULT_SPACE_PROTOTYPE,
 ): boolean {
   const half = config.shipSize / 2;
   return (
@@ -38,4 +38,3 @@ export function hasPrototypeCollision(
     Math.abs(state.shipY - state.asteroidY) <= half
   );
 }
-
