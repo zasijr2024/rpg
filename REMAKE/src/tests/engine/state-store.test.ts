@@ -47,10 +47,12 @@ describe("StateStore", () => {
     state.add("stores.wood", -50);
     state.set('stores["alien alloy"]', -1);
     state.set('stores["steel"]', MAX_STORE + 1);
+    state.set("stores.fur", 4.9);
 
     expect(state.get("stores.wood")).toBe(0);
     expect(state.get('stores["alien alloy"]')).toBe(0);
     expect(state.get('stores["steel"]')).toBe(MAX_STORE);
+    expect(state.get("stores.fur")).toBe(4);
   });
 
   it("initializes all original state categories needed by the remake", () => {

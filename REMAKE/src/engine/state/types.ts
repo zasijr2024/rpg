@@ -15,7 +15,12 @@ export interface GameState {
 }
 
 export const ENGINE_VERSION = 1.3;
-export const MAX_STORE = 99_999_999_999_999;
+// The source game accepted values up to 99,999,999,999,999. That boundary can
+// no longer be scored exactly with JavaScript numbers once every score-bearing
+// store is combined. One trillion remains far beyond reachable play while
+// keeping the worst supported score safely below Number.MAX_SAFE_INTEGER.
+export const MAX_STORE = 1_000_000_000_000;
+export const MAX_EXACT_SCORE = Number.MAX_SAFE_INTEGER;
 
 export function createInitialState(): GameState {
   return {

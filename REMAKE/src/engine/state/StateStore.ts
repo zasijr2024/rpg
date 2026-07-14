@@ -80,6 +80,6 @@ export class StateStore {
     const [category] = parseStatePath(path);
     if (category !== "stores") return value;
 
-    return Math.max(0, Math.min(MAX_STORE, value));
+    return Math.floor(Math.max(0, Math.min(MAX_STORE, value)));
   }
 }

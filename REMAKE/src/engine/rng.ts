@@ -4,6 +4,17 @@ export interface Rng {
   fork(seed: number): Rng;
 }
 
+export interface RngLifecycleSnapshot {
+  kind: "mulberry32";
+  state: number;
+}
+
+export interface SerializableRng extends Rng {
+  lifecycleSnapshot(): RngLifecycleSnapshot;
+}
+
+export type RandomValues = (values: Uint32Array) => Uint32Array;
+
 export class Mulberry32Rng implements Rng {
   private state: number;
 
@@ -29,8 +40,60 @@ export class Mulberry32Rng implements Rng {
   fork(seed: number): Rng {
     return new Mulberry32Rng(seed);
   }
+
+  lifecycleSnapshot(): RngLifecycleSnapshot {
+    return {
+      kind: "mulberry32",
+      state: this.state >>> 0,
+    };
+  }
 }
 
-export function createDefaultRng(seed = 0x1fada462): Rng {
-  return new Mulberry32Rng(seed);
+export function createProductionSeed(
+  getRandomValues: RandomValues | undefined = cryptoRandomValues,
+): number {
+  if (getRandomValues) {
+    const values = new Uint32Array(1);
+    return getRandomValues(values)[0] ?? 0;
+  }
+  throw new Error("Production RNG requires crypto.getRandomValues");
+}
+
+const cryptoRandomValues: RandomValues | undefined = globalThis.crypto
+  ? (values) => {
+      globalThis.crypto.getRandomValues(values as never);
+      return values;
+    }
+  : undefined;
+
+export function createDefaultRng(seed?: number): Mulberry32Rng {
+  const resolvedSeed = seed ?? createProductionSeed();
+  return new Mulberry32Rng(resolvedSeed);
+}
+
+export function restoreRng(snapshot: RngLifecycleSnapshot): Mulberry32Rng {
+  if (snapshot.kind !== "mulberry32") {
+    throw new Error(`Unsupported RNG kind: ${snapshot.kind}`);
+  }
+  return new Mulberry32Rng(snapshot.state);
+}
+
+export function isRngLifecycleSnapshot(
+  value: unknown,
+): value is RngLifecycleSnapshot {
+  return (
+    value !== null &&
+    typeof value === "object" &&
+    (value as { kind?: unknown }).kind === "mulberry32" &&
+    typeof (value as { state?: unknown }).state === "number" &&
+    Number.isInteger((value as { state: number }).state) &&
+    (value as { state: number }).state >= 0 &&
+    (value as { state: number }).state <= 0xffff_ffff
+  );
+}
+
+export function isSerializableRng(rng: Rng): rng is SerializableRng {
+  return (
+    typeof (rng as Partial<SerializableRng>).lifecycleSnapshot === "function"
+  );
 }

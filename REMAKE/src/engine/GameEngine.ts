@@ -10,14 +10,27 @@ import {
   NotificationCenter,
   type NotificationCenterSnapshot,
 } from "./notifications/NotificationCenter";
-import { createDefaultRng, type Rng } from "./rng";
+import {
+  createDefaultRng,
+  isRngLifecycleSnapshot,
+  isSerializableRng,
+  restoreRng,
+  type Rng,
+  type RngLifecycleSnapshot,
+} from "./rng";
 import type { DevSaveAdapter, DevSaveData } from "./save/devSave";
+import {
+  isNonNegativeNumber,
+  isRecord,
+  isSemanticallyValidGameState,
+} from "./save/validation";
 import { StateStore } from "./state/StateStore";
 import { createInitialState, type GameState } from "./state/types";
 import type {
   WorldEncounterContext,
   WorldMoveDirection,
 } from "./world/WorldRuntime";
+import type { SpaceMoveDirection } from "./space/SpaceRuntime";
 
 export interface GameEngineSnapshot {
   sourceCommit: string;
@@ -28,6 +41,7 @@ export interface GameEngineSnapshot {
 
 export interface GameEngineOptions {
   rng?: Rng;
+  rngSeed?: number;
   clock?: ManualClock;
   state?: StateStore;
   saveAdapter?: DevSaveAdapter;
@@ -35,16 +49,15 @@ export interface GameEngineOptions {
 
 export interface GameEngineDevSnapshot {
   kind: "engine";
-  version: 1;
+  version: 2;
   state: GameState;
   nowMs: number;
+  rng: RngLifecycleSnapshot;
   cooldowns: CooldownEntrySnapshot[];
   notifications: NotificationCenterSnapshot;
 }
 
 export type GameCommand =
-  | Command<"state.set", { path: string; value: unknown }>
-  | Command<"state.add", { path: string; amount: number }>
   | Command<"notify", { source: string; message: string }>
   | Command<"cooldown.start", { key: string; durationMs: number }>
   | Command<"room.lightFire", Record<string, never>>
@@ -61,6 +74,18 @@ export type GameCommand =
   | Command<"world.move", { direction: WorldMoveDirection }>
   | Command<"world.enterLandmark", Record<string, never>>
   | Command<"world.returnHome", Record<string, never>>
+  | Command<"ship.reinforceHull", Record<string, never>>
+  | Command<"ship.upgradeEngine", Record<string, never>>
+  | Command<"ship.requestLiftOff", Record<string, never>>
+  | Command<"ship.confirmLiftOff", Record<string, never>>
+  | Command<"ship.linger", Record<string, never>>
+  | Command<"space.move", { direction: SpaceMoveDirection }>
+  | Command<
+      "space.setMovement",
+      { direction: SpaceMoveDirection; active: boolean }
+    >
+  | Command<"space.continueEnding", Record<string, never>>
+  | Command<"fabricator.fabricate", { key: string }>
   | Command<"event.triggerAvailable", Record<string, never>>
   | Command<"event.triggerWorldEncounter", WorldEncounterContext>
   | Command<"event.triggerWorldSetpiece", { scene: string }>
@@ -74,7 +99,7 @@ export interface GameEvents {
 }
 
 export class GameEngine {
-  readonly rng: Rng;
+  rng: Rng;
   readonly clock: ManualClock;
   state: StateStore;
   readonly commands = new CommandBus<GameCommand>();
@@ -84,7 +109,7 @@ export class GameEngine {
   private readonly saveAdapter?: DevSaveAdapter;
 
   constructor(options: GameEngineOptions = {}) {
-    this.rng = options.rng ?? createDefaultRng();
+    this.rng = options.rng ?? createDefaultRng(options.rngSeed);
     this.clock = options.clock ?? new ManualClock();
     this.state = options.state ?? new StateStore(createInitialState());
     this.saveAdapter = options.saveAdapter;
@@ -96,18 +121,22 @@ export class GameEngine {
   getSnapshot(): GameEngineSnapshot {
     return {
       sourceCommit: SOURCE_BASELINE_COMMIT,
-      saveScope: "dev-only disposable save",
-      rngKind: "seeded deterministic",
+      saveScope: "versioned autosave with backup recovery",
+      rngKind: isSerializableRng(this.rng) ? "mulberry32" : "injected",
       nowMs: this.clock.now(),
     };
   }
 
   createDevSnapshot(): GameEngineDevSnapshot {
+    if (!isSerializableRng(this.rng)) {
+      throw new Error("Dev snapshots require a serializable RNG");
+    }
     return {
       kind: "engine",
-      version: 1,
+      version: 2,
       state: this.state.snapshot(),
       nowMs: this.clock.now(),
+      rng: this.rng.lifecycleSnapshot(),
       cooldowns: this.cooldowns.lifecycleSnapshot(),
       notifications: this.notifications.snapshot(),
     };
@@ -115,11 +144,14 @@ export class GameEngine {
 
   restoreDevSnapshot(data: DevSaveData): boolean {
     if (isEngineDevSnapshot(data)) {
-      this.state = new StateStore(data.state);
-      this.clock.restoreNow(data.nowMs);
-      this.cooldowns.restore(data.cooldowns);
-      this.notifications.restore(data.notifications);
-      return true;
+      const previous = this.createDevSnapshot();
+      try {
+        this.applyEngineSnapshot(data);
+        return true;
+      } catch {
+        this.applyEngineSnapshot(previous);
+        return false;
+      }
     }
 
     if (isLegacyGameState(data)) {
@@ -154,7 +186,18 @@ export class GameEngine {
   loadDevState(): boolean {
     const loaded = this.loadDevSnapshot();
     if (!loaded) return false;
-    return this.restoreDevSnapshot(loaded);
+    if (this.restoreDevSnapshot(loaded)) return true;
+    const recovered = this.recoverDevSnapshot("invalid-engine-snapshot");
+    if (recovered && this.restoreDevSnapshot(recovered)) return true;
+    if (recovered) this.quarantineDevState("invalid-engine-backup-snapshot");
+    return false;
+  }
+
+  recoverDevSnapshot(reason: string): DevSaveData | null {
+    if (!this.saveAdapter) {
+      throw new Error("No dev save adapter configured");
+    }
+    return this.saveAdapter.recover(reason);
   }
 
   clearDevState(): void {
@@ -164,17 +207,28 @@ export class GameEngine {
     this.saveAdapter.clear();
   }
 
+  quarantineDevState(reason: string): void {
+    if (!this.saveAdapter) {
+      throw new Error("No dev save adapter configured");
+    }
+    this.saveAdapter.quarantine(reason);
+  }
+
+  hasDevSaveAdapter(): boolean {
+    return this.saveAdapter !== undefined;
+  }
+
+  private applyEngineSnapshot(data: GameEngineDevSnapshot): void {
+    // RNG must be authoritative before any clock or runtime lifecycle can
+    // schedule work that consumes randomness.
+    this.rng = restoreRng(data.rng);
+    this.clock.restoreNow(data.nowMs);
+    this.state = new StateStore(structuredClone(data.state));
+    this.cooldowns.restore(data.cooldowns);
+    this.notifications.restore(data.notifications);
+  }
+
   private registerCoreCommands(): void {
-    this.commands.register("state.set", (command) => {
-      this.state.set(command.payload.path, command.payload.value);
-      this.events.publish("command", command);
-    });
-
-    this.commands.register("state.add", (command) => {
-      this.state.add(command.payload.path, command.payload.amount);
-      this.events.publish("command", command);
-    });
-
     this.commands.register("notify", (command) => {
       const notification = this.notifications.notify(
         command.payload.source,
@@ -195,23 +249,80 @@ export function createGameEngine(options?: GameEngineOptions): GameEngine {
   return new GameEngine(options);
 }
 
-function isEngineDevSnapshot(data: DevSaveData): data is GameEngineDevSnapshot {
+export function isEngineDevSnapshot(
+  data: DevSaveData,
+): data is GameEngineDevSnapshot {
   return (
-    data !== null &&
-    typeof data === "object" &&
-    (data as { kind?: unknown }).kind === "engine" &&
-    (data as { version?: unknown }).version === 1 &&
-    typeof (data as { nowMs?: unknown }).nowMs === "number" &&
-    isLegacyGameState((data as { state?: unknown }).state)
+    isRecord(data) &&
+    data.kind === "engine" &&
+    data.version === 2 &&
+    isNonNegativeNumber(data.nowMs) &&
+    isRngLifecycleSnapshot(data.rng) &&
+    isLegacyGameState(data.state) &&
+    isCooldownEntries(data.cooldowns, data.nowMs) &&
+    isNotificationSnapshot(data.notifications, data.nowMs)
   );
 }
 
 function isLegacyGameState(data: DevSaveData): data is GameState {
-  return (
-    data !== null &&
-    typeof data === "object" &&
-    typeof (data as { version?: unknown }).version === "number" &&
-    typeof (data as { stores?: unknown }).stores === "object" &&
-    typeof (data as { game?: unknown }).game === "object"
-  );
+  return isSemanticallyValidGameState(data);
+}
+
+function isCooldownEntries(
+  value: unknown,
+  nowMs: number,
+): value is CooldownEntrySnapshot[] {
+  if (!Array.isArray(value)) return false;
+  const keys = new Set<string>();
+  return value.every((entry) => {
+    if (
+      !isRecord(entry) ||
+      typeof entry.key !== "string" ||
+      entry.key.length === 0 ||
+      keys.has(entry.key) ||
+      !isNonNegativeNumber(entry.startedAt) ||
+      entry.startedAt > nowMs ||
+      !isNonNegativeNumber(entry.durationMs) ||
+      entry.durationMs <= 0 ||
+      entry.durationMs > Number.MAX_SAFE_INTEGER
+    ) {
+      return false;
+    }
+    keys.add(entry.key);
+    return true;
+  });
+}
+
+function isNotificationSnapshot(
+  value: unknown,
+  nowMs: number,
+): value is NotificationCenterSnapshot {
+  if (
+    !isRecord(value) ||
+    !Number.isSafeInteger(value.nextId) ||
+    (value.nextId as number) < 1 ||
+    !Array.isArray(value.items)
+  ) {
+    return false;
+  }
+  const nextId = value.nextId as number;
+  const ids = new Set<number>();
+  return value.items.every((item) => {
+    const id = isRecord(item) ? item.id : undefined;
+    if (
+      !isRecord(item) ||
+      !Number.isSafeInteger(id) ||
+      (id as number) < 1 ||
+      (id as number) >= nextId ||
+      ids.has(id as number) ||
+      typeof item.source !== "string" ||
+      typeof item.message !== "string" ||
+      !isNonNegativeNumber(item.createdAt) ||
+      item.createdAt > nowMs
+    ) {
+      return false;
+    }
+    ids.add(id as number);
+    return true;
+  });
 }

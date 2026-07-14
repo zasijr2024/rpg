@@ -2,19 +2,17 @@ import { describe, expect, it } from "vitest";
 import { createGameEngine, MemoryDevSaveAdapter } from "../../engine";
 
 describe("GameEngine core services", () => {
-  it("dispatches state commands through the command bus", () => {
+  it("does not register arbitrary state-path commands", () => {
     const engine = createGameEngine();
 
-    engine.commands.dispatch({
-      type: "state.set",
-      payload: { path: "stores.wood", value: 5 },
-    });
-    engine.commands.dispatch({
-      type: "state.add",
-      payload: { path: "stores.wood", amount: 2 },
-    });
-
-    expect(engine.state.get("stores.wood")).toBe(7);
+    expect(() =>
+      (
+        engine.commands as unknown as { dispatch(command: unknown): void }
+      ).dispatch({
+        type: "state.set",
+        payload: { path: "stores.wood", value: 5 },
+      }),
+    ).toThrow(/No command handler/);
   });
 
   it("publishes notification events through notify commands", () => {
@@ -48,14 +46,11 @@ describe("GameEngine core services", () => {
     });
   });
 
-  it("round-trips dev saves with the current disposable save shape", () => {
+  it("round-trips engine state through the versioned save shape", () => {
     const saveAdapter = new MemoryDevSaveAdapter();
     const first = createGameEngine({ saveAdapter });
 
-    first.commands.dispatch({
-      type: "state.set",
-      payload: { path: 'stores["alien alloy"]', value: 4 },
-    });
+    first.state.set('stores["alien alloy"]', 4);
     first.saveDevState();
 
     const second = createGameEngine({ saveAdapter });
@@ -93,5 +88,20 @@ describe("GameEngine core services", () => {
         createdAt: 5000,
       },
     ]);
+  });
+
+  it("restores the exact RNG continuation before resumed engine work", () => {
+    const saveAdapter = new MemoryDevSaveAdapter();
+    const first = createGameEngine({ saveAdapter, rngSeed: 0x12345678 });
+    Array.from({ length: 37 }, () => first.rng.next());
+    first.saveDevState();
+    const expected = Array.from({ length: 100 }, () => first.rng.next());
+
+    const second = createGameEngine({ saveAdapter, rngSeed: 0x87654321 });
+    expect(second.loadDevState()).toBe(true);
+
+    expect(Array.from({ length: 100 }, () => second.rng.next())).toEqual(
+      expected,
+    );
   });
 });

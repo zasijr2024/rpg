@@ -11,6 +11,7 @@ import {
   originalWorldCompassDirection,
   type WorldCompassDirection,
 } from "../../content/original/world/worldData";
+import type { CooldownSnapshot } from "../cooldowns/CooldownManager";
 import {
   readBoolean,
   readNumber,
@@ -26,6 +27,7 @@ import {
   type PathCarryableType,
 } from "./pathOutfit";
 import type { WorldWeaponDamage } from "../../content/original/world/worldData";
+import { EXPEDITION_EMBARK_COOLDOWN_KEY } from "../world/ExpeditionTransaction";
 
 export type PathReturnDestination = "room" | "path";
 
@@ -62,6 +64,7 @@ export interface PathStateSnapshot {
   supplies: PathSupplySnapshot[];
   perks: PathPerkSnapshot[];
   canEmbark: boolean;
+  embarkCooldown: CooldownSnapshot;
   pendingReturn: boolean;
 }
 
@@ -97,6 +100,9 @@ export class PathRuntime {
     const capacity = originalPathCapacity(stores);
     const used = this.outfitWeight(outfit);
     const free = Math.max(0, capacity - used);
+    const embarkCooldown = this.engine.cooldowns.snapshot(
+      EXPEDITION_EMBARK_COOLDOWN_KEY,
+    );
     return {
       unlocked: this.unlocked(),
       title: "A Dusty Path",
@@ -108,9 +114,24 @@ export class PathRuntime {
       compassDirection: this.compassDirection(),
       supplies: this.supplyRows(stores, outfit, free),
       perks: this.perkRows(),
-      canEmbark: (outfit["cured meat"] ?? 0) > 0,
+      canEmbark:
+        (outfit["cured meat"] ?? 0) > 0 &&
+        !readBoolean(this.engine.state, "game.world.active") &&
+        !embarkCooldown.active,
+      embarkCooldown,
       pendingReturn: readBoolean(this.engine.state, "game.path.pendingReturn"),
     };
+  }
+
+  navigationSnapshot(): Pick<PathStateSnapshot, "unlocked" | "title"> {
+    return {
+      unlocked: this.unlocked(),
+      title: "A Dusty Path",
+    };
+  }
+
+  compassHeading(): WorldCompassDirection {
+    return this.compassDirection();
   }
 
   increaseSupply(key: string, amount: number): boolean {
@@ -276,8 +297,12 @@ export class PathRuntime {
     );
     if (storedDirection) return storedDirection;
 
-    const shipX = this.numberOrNull("game.world.ship.x");
-    const shipY = this.numberOrNull("game.world.ship.y");
+    const shipX =
+      this.numberOrNull("game.world.shipPosition.x") ??
+      this.numberOrNull("game.world.ship.x");
+    const shipY =
+      this.numberOrNull("game.world.shipPosition.y") ??
+      this.numberOrNull("game.world.ship.y");
     if (shipX !== null && shipY !== null) {
       return originalWorldCompassDirection({ x: shipX, y: shipY });
     }
@@ -294,7 +319,7 @@ export class PathRuntime {
   }
 
   private numberOrNull(path: string): number | null {
-    const value = this.engine.state.get(path, true);
+    const value = this.engine.state.get(path);
     return typeof value === "number" ? value : null;
   }
 

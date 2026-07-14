@@ -25,6 +25,10 @@ import type {
   WorldEncounterContext,
   WorldEventResolver,
 } from "../world/WorldRuntime";
+import {
+  EXPEDITION_DEATH_NOTIFICATION,
+  ExpeditionTransaction,
+} from "../world/ExpeditionTransaction";
 
 export interface EventButtonSnapshot {
   key: string;
@@ -107,12 +111,17 @@ export class EventRuntime {
     private readonly activeLocation: () => GameLocationKey,
     private readonly effectHandlers: EventRuntimeEffectHandlers = {},
     private readonly worldEvents?: WorldEventResolver,
+    private readonly expedition = new ExpeditionTransaction(engine),
   ) {
-    this.combat = new CombatRuntime(engine, {
-      onLeave: () => this.resolveCombatLeave(),
-      onPlayerDeath: () => this.endEvent(),
-      shouldReturnOnLeave: () => this.combatLeaveReturnsHome(),
-    });
+    this.combat = new CombatRuntime(
+      engine,
+      {
+        onLeave: () => this.resolveCombatLeave(),
+        onPlayerDeath: () => this.endEvent(),
+        shouldReturnOnLeave: () => this.combatLeaveReturnsHome(),
+      },
+      expedition,
+    );
   }
 
   update(): void {
@@ -125,6 +134,10 @@ export class EventRuntime {
     }
     if (this.activeEvent !== null || this.eventTimer !== null) return;
     this.scheduleNextEvent();
+  }
+
+  active(): boolean {
+    return this.activeEvent !== null;
   }
 
   snapshot(): EventPanelSnapshot | null {
@@ -206,7 +219,15 @@ export class EventRuntime {
     if (!button) return false;
     if (!this.canAfford(button.cost ?? {})) return false;
 
+    const usesExpeditionResources = this.usesExpeditionResources();
     this.applyCost(button.cost ?? {});
+    if (usesExpeditionResources && this.expedition.health() <= 0) {
+      if (this.expedition.abortOnDeath()) {
+        this.notify(EXPEDITION_DEATH_NOTIFICATION);
+      }
+      this.endEvent();
+      return true;
+    }
     if (button.reward) this.engine.state.addM("stores", button.reward);
     if (button.notification) this.notify(button.notification);
     button.onChoose?.(this.effectContext());
@@ -426,6 +447,9 @@ export class EventRuntime {
   }
 
   private combatLeaveReturnsHome(): boolean {
+    if (this.expedition.active() && this.activeEvent?.pool === "encounter") {
+      return false;
+    }
     const leaveButton = this.activeScene?.buttons.find(
       (button) => button.key === "leave",
     );
@@ -464,18 +488,23 @@ export class EventRuntime {
   }
 
   private applyCost(cost: Record<string, number>): void {
+    if (this.usesExpeditionResources()) {
+      for (const [resource, amount] of Object.entries(cost)) {
+        if (resource === "hp") {
+          this.expedition.addHealth(-amount);
+        } else if (resource === "water") {
+          this.expedition.addWater(-amount);
+        } else {
+          this.expedition.addInventory(resource, -amount);
+        }
+      }
+      return;
+    }
+
     const mod: Record<string, number> = {};
     for (const [store, amount] of Object.entries(cost)) {
       if (store === "hp") {
         this.engine.state.add("character.health", -amount);
-        continue;
-      }
-      if (store === "water") {
-        if (this.numberAt('outfit["water"]') >= amount) {
-          this.engine.state.add('outfit["water"]', -amount);
-        } else {
-          this.engine.state.add('stores["water"]', -amount);
-        }
         continue;
       }
       mod[store] = -amount;
@@ -484,14 +513,23 @@ export class EventRuntime {
   }
 
   private costQuantity(key: string): number {
-    if (key === "hp") return this.numberAt("character.health");
-    if (key === "water") {
-      return Math.max(
-        this.numberAt('outfit["water"]'),
-        this.numberAt('stores["water"]'),
-      );
+    if (this.usesExpeditionResources()) {
+      if (key === "hp") return this.expedition.health();
+      if (key === "water") return this.expedition.water();
+      return this.expedition.inventoryQuantity(key);
     }
+
+    if (key === "hp") return this.numberAt("character.health");
     return this.numberAt(`stores["${key}"]`);
+  }
+
+  private usesExpeditionResources(): boolean {
+    if (!this.expedition.active()) return false;
+    return (
+      this.activeEvent?.pool === "encounter" ||
+      this.activeEvent?.pool === "setpiece" ||
+      this.activeEvent?.pool === "executioner"
+    );
   }
 
   private restoreNextEvent(dueAt: number): void {
@@ -542,15 +580,24 @@ export class EventRuntime {
           : {};
       },
       setState: (path: string, value: unknown) =>
-        this.engine.state.set(path, value),
+        this.setEffectState(path, value),
       addStores: (stores: Record<string, number>) =>
         this.engine.state.addM("stores", stores),
       removeIncome: (key: string) =>
         this.engine.state.remove(`income["${key}"]`),
       addPerk: (key: string) =>
         this.engine.state.set(`character.perks["${key}"]`, true),
-      canApplyMap: () => this.effectHandlers.canApplyMap?.() === true,
-      applyMap: () => this.effectHandlers.applyMap?.(),
+      canApplyMap: () =>
+        this.effectHandlers.canApplyMap?.() ??
+        this.worldEvents?.canApplyMap() ??
+        false,
+      applyMap: () => {
+        if (this.effectHandlers.applyMap) {
+          this.effectHandlers.applyMap();
+          return;
+        }
+        this.worldEvents?.applyMap();
+      },
       killVillagers: (count: number) =>
         this.effectHandlers.killVillagers?.(count),
       destroyHuts: (count: number) =>
@@ -558,6 +605,21 @@ export class EventRuntime {
       notify: (message: string) => this.notify(message),
       rng: () => this.engine.rng.next(),
     };
+  }
+
+  private setEffectState(path: string, value: unknown): void {
+    if (
+      this.usesExpeditionResources() &&
+      path === "character.health" &&
+      typeof value === "number"
+    ) {
+      this.expedition.setHealth(value, value);
+      return;
+    }
+    this.engine.state.set(path, value);
+    if (value === true) {
+      this.worldEvents?.recordLandmarkResolutionForEffect(path);
+    }
   }
 
   private sceneLootActions(): EventLootActionSnapshot[] {

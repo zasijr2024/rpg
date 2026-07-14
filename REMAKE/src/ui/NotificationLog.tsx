@@ -19,7 +19,14 @@ export function NotificationLog({
   if (visibleNotifications.length === 0) return null;
 
   return (
-    <section className="notificationsPanel" aria-label={label}>
+    <section
+      className="notificationsPanel"
+      aria-label={label}
+      role="log"
+      aria-live="polite"
+      aria-atomic="false"
+      aria-relevant="additions text"
+    >
       {visibleNotifications.map((notification, index) => (
         <p
           key={notification.id}

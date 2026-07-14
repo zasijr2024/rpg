@@ -108,6 +108,31 @@ describe("architecture boundaries", () => {
     expect(violations).toEqual([]);
   });
 
+  it("keeps Economy, World, and Combat runtimes behind typed domain facades", () => {
+    const runtimeFiles = [
+      join(srcRoot, "engine", "outside", "OutsideRuntime.ts"),
+      join(srcRoot, "engine", "world", "WorldRuntime.ts"),
+      join(srcRoot, "engine", "combat", "CombatRuntime.ts"),
+    ];
+    const violations = runtimeFiles
+      .filter((file) =>
+        /engine\.state|StateStore/.test(readFileSync(file, "utf8")),
+      )
+      .map((file) => relative(projectRoot, file));
+
+    expect(violations).toEqual([]);
+  });
+
+  it("does not expose arbitrary state-path commands on the production command bus", () => {
+    const engine = readFileSync(
+      join(srcRoot, "engine", "GameEngine.ts"),
+      "utf8",
+    );
+
+    expect(engine).not.toContain('Command<"state.set"');
+    expect(engine).not.toContain('Command<"state.add"');
+  });
+
   it("keeps World encounter and setpiece selection out of EventRuntime", () => {
     const eventRuntime = readFileSync(
       join(srcRoot, "engine", "events", "EventRuntime.ts"),

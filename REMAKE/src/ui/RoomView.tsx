@@ -27,7 +27,12 @@ export function RoomView({
   } as CSSProperties;
 
   return (
-    <section className="roomPanel" aria-label={snapshot.title}>
+    <section
+      className="roomPanel"
+      aria-label={snapshot.title}
+      data-focus-owner="room"
+      tabIndex={-1}
+    >
       <div className="playColumn">
         <div className="roomStatus" aria-label="room status">
           <div>

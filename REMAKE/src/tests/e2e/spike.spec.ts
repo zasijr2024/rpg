@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("renders the ASCII world viewport without horizontal overflow", async ({
+test("browser: renders the ASCII world viewport without horizontal overflow", async ({
   page,
 }) => {
   await page.goto("/?spikes=1");
@@ -19,7 +19,9 @@ test("renders the ASCII world viewport without horizontal overflow", async ({
   expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1);
 });
 
-test("supports keyboard focus and world movement probe", async ({ page }) => {
+test("browser: supports keyboard focus and world movement probe", async ({
+  page,
+}) => {
   await page.goto("/?spikes=1");
   await page.getByRole("tab", { name: "world" }).click();
 
@@ -30,7 +32,7 @@ test("supports keyboard focus and world movement probe", async ({ page }) => {
   await expect(probe).toHaveText(/31,30/);
 });
 
-test("renders both space prototypes", async ({ page }) => {
+test("browser: renders both space prototypes", async ({ page }) => {
   await page.goto("/?spikes=1");
   await page.getByRole("tab", { name: "space" }).click();
 

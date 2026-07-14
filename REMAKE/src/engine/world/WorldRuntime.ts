@@ -1,32 +1,36 @@
 import {
   WORLD_DIRECTIONS,
   WORLD_FIGHT_CHANCE,
+  WORLD_FIGHT_DELAY,
+  WORLD_MEAT_HEAL,
   WORLD_MOVES_PER_FOOD,
   WORLD_MOVES_PER_WATER,
   WORLD_RADIUS,
   WORLD_TILE,
   WORLD_VILLAGE_POS,
   originalWorldDisplayLabel,
+  originalWorldDrawRoad,
   originalWorldGenerateMap,
   originalWorldLandmarks,
   originalWorldLightMap,
+  originalWorldMarkVisited,
   originalWorldMapSearch,
   originalWorldNewMask,
+  originalWorldUncoverMap,
   type WorldMapGrid,
   type WorldMaskGrid,
 } from "../../content/original/world/worldData";
 import type { GameEngine } from "../GameEngine";
-import {
-  readBoolean,
-  readNumber,
-  readNumericRecord,
-  readStringUnion,
-} from "../state/selectors";
+import type { GameNotification } from "../notifications/NotificationCenter";
 import {
   originalPathMaxHealth,
   originalPathMaxWater,
-  originalPathReturnOutfitToStores,
 } from "../path/pathOutfit";
+import {
+  EXPEDITION_DEATH_NOTIFICATION,
+  ExpeditionTransaction,
+} from "./ExpeditionTransaction";
+import { WorldDomainFacade } from "./WorldDomain";
 
 export type WorldEncounterTerrain =
   | "forest"
@@ -44,6 +48,9 @@ export interface WorldEncounterContext {
 export interface WorldEventResolver {
   encounterEventKey(context: WorldEncounterContext): string | null;
   setpieceEventKey(scene: string): string | null;
+  recordLandmarkResolutionForEffect(path: string): void;
+  canApplyMap(): boolean;
+  applyMap(): void;
 }
 
 export type WorldMoveDirection = "north" | "south" | "west" | "east";
@@ -51,6 +58,8 @@ export type WorldMoveDirection = "north" | "south" | "west" | "east";
 export interface WorldMoveOutcome {
   moved: boolean;
   encounter: WorldEncounterContext | null;
+  returnedHome: boolean;
+  setpieceScene: string | null;
 }
 
 export interface WorldMapCellSnapshot {
@@ -59,12 +68,27 @@ export interface WorldMapCellSnapshot {
   glyph: string;
   visible: boolean;
   current: boolean;
+  label?: string;
 }
 
 export interface WorldLandmarkSnapshot {
   scene: string;
   label: string;
   tile: string;
+}
+
+export interface WorldVisibleLandmarkSnapshot {
+  label: string;
+  distance: number;
+  direction: WorldCompassDirection | "here";
+}
+
+export interface WorldAccessibleSnapshot {
+  terrain: string;
+  villageDistance: number;
+  villageDirection: WorldCompassDirection | "here";
+  moves: WorldMoveDirection[];
+  landmarks: WorldVisibleLandmarkSnapshot[];
 }
 
 export interface WorldStateSnapshot {
@@ -79,9 +103,14 @@ export interface WorldStateSnapshot {
   water: number;
   maxWater: number;
   food: number;
+  danger: boolean;
+  starvation: boolean;
+  thirst: boolean;
   rows: WorldMapCellSnapshot[][];
+  accessible: WorldAccessibleSnapshot;
   landmark: WorldLandmarkSnapshot | null;
   canReturn: boolean;
+  notifications: GameNotification[];
 }
 
 const WORLD_ENCOUNTER_KEYS: Record<string, readonly string[]> = {
@@ -101,57 +130,30 @@ const WORLD_SETPIECE_EVENT_KEYS: Record<string, readonly string[]> = {
   ironmine: ["setpiece.ironmine"],
   coalmine: ["setpiece.coalmine"],
   sulphurmine: ["setpiece.sulphurmine"],
-  house: ["setpiece.old-house"],
-  cave: [
-    "setpiece.cave-depths",
-    "setpiece.cave-camp-cache",
-    "setpiece.cave-wanderer-nest",
-    "setpiece.cave-old-case",
-  ],
-  town: [
-    "setpiece.town-thug",
-    "setpiece.town-schoolhouse",
-    "setpiece.town-park-vigilante",
-    "setpiece.town-caravan-vigilante",
-    "setpiece.town-clinic",
-    "setpiece.town-clinic-madman",
-  ],
-  city: [
-    "setpiece.city-old-tower",
-    "setpiece.city-old-tower-scavenged",
-    "setpiece.city-old-tower-thug-rubble",
-    "setpiece.city-old-tower-rubble",
-    "setpiece.city-sniper",
-    "setpiece.city-hospital",
-    "setpiece.city-soldier-patrol",
-    "setpiece.city-commando-settlement",
-    "setpiece.city-commando-supplies",
-    "setpiece.city-subway",
-    "setpiece.city-subway-scavenged",
-    "setpiece.city-subway-beast-rubble",
-    "setpiece.city-military-camp",
-    "setpiece.city-military-camp-supplies",
-    "setpiece.city-shanty-market",
-    "setpiece.city-shanty-crowd",
-    "setpiece.city-shanty-crowd-sack",
-    "setpiece.city-shanty-crowd-youth",
-    "setpiece.city-drying-hut",
-    "setpiece.city-drying-hut-sack",
-    "setpiece.city-drying-meat-youth",
-    "setpiece.city-hospital-ward",
-    "setpiece.city-hospital-squatters",
-    "setpiece.city-hospital-deformed",
-    "setpiece.city-hospital-tentacles",
-    "setpiece.city-hospital-cache",
-    "setpiece.city-hospital-old-man-theatres",
-    "setpiece.city-hospital-old-man-squatters",
-    "setpiece.city-hospital-medicine",
-  ],
-  ship: ["setpiece.crashed-ship"],
+  house: ["setpiece.house"],
+  cave: ["setpiece.cave"],
+  town: ["setpiece.town"],
+  city: ["setpiece.city"],
+  ship: ["setpiece.ship"],
   borehole: ["setpiece.borehole"],
   battlefield: ["setpiece.battlefield"],
   swamp: ["setpiece.swamp"],
-  cache: ["setpiece.destroyed-village"],
+  cache: ["setpiece.cache"],
+};
+
+const TERRAIN_MOVE_NOTIFICATIONS: Record<string, string> = {
+  [`${WORLD_TILE.FOREST}:${WORLD_TILE.FIELD}`]:
+    "the trees yield to dry grass. the yellowed brush rustles in the wind.",
+  [`${WORLD_TILE.FOREST}:${WORLD_TILE.BARRENS}`]:
+    "the trees are gone. parched earth and blowing dust are poor replacements.",
+  [`${WORLD_TILE.FIELD}:${WORLD_TILE.FOREST}`]:
+    "trees loom on the horizon. grasses gradually yield to a forest floor of dry branches and fallen leaves.",
+  [`${WORLD_TILE.FIELD}:${WORLD_TILE.BARRENS}`]:
+    "the grasses thin. soon, only dust remains.",
+  [`${WORLD_TILE.BARRENS}:${WORLD_TILE.FIELD}`]:
+    "the barrens break at a sea of dying grass, swaying in the arid breeze.",
+  [`${WORLD_TILE.BARRENS}:${WORLD_TILE.FOREST}`]:
+    "a wall of gnarled trees rises from the dust. their branches twist into a skeletal canopy overhead.",
 };
 
 const WORLD_CENTER = {
@@ -159,45 +161,169 @@ const WORLD_CENTER = {
   y: WORLD_VILLAGE_POS[1],
 };
 
+type WorldCompassDirection =
+  | "north"
+  | "northeast"
+  | "east"
+  | "southeast"
+  | "south"
+  | "southwest"
+  | "west"
+  | "northwest";
+
 const LANDMARKS_BY_TILE = new Map(
   originalWorldLandmarks.map((landmark) => [landmark.tile, landmark]),
 );
 
+const MINE_CLEAR_FLAGS: Partial<Record<string, string>> = {
+  [WORLD_TILE.IRON_MINE]: "game.world.ironmine",
+  [WORLD_TILE.COAL_MINE]: "game.world.coalmine",
+  [WORLD_TILE.SULPHUR_MINE]: "game.world.sulphurmine",
+};
+
+const DUNGEON_CLEAR_FLAGS: Partial<Record<string, readonly string[]>> = {
+  [WORLD_TILE.CAVE]: [
+    "game.world.caveDepthsCleared",
+    "game.world.caveCampCacheCleared",
+    "game.world.caveWandererNestCleared",
+    "game.world.caveOldCaseCleared",
+  ],
+  [WORLD_TILE.TOWN]: [
+    "game.world.townCleared",
+    "game.world.townThugCleared",
+    "game.world.townSchoolhouseCleared",
+    "game.world.townParkVigilanteCleared",
+    "game.world.townCaravanVigilanteCleared",
+    "game.world.townClinicCleared",
+    "game.world.townClinicMadmanCleared",
+  ],
+  [WORLD_TILE.CITY]: [
+    "game.world.cityCleared",
+    "game.world.citySniperCleared",
+    "game.world.cityHospitalCleared",
+    "game.world.citySoldierPatrolCleared",
+    "game.world.cityCommandoSettlementCleared",
+    "game.world.cityCommandoSuppliesCleared",
+    "game.world.citySubwayCleared",
+    "game.world.citySubwayScavengedCleared",
+    "game.world.citySubwayBeastRubbleCleared",
+    "game.world.cityMilitaryCampCleared",
+    "game.world.cityMilitaryCampSuppliesCleared",
+    "game.world.cityShantyMarketCleared",
+    "game.world.cityShantyCrowdCleared",
+    "game.world.cityShantyCrowdSackCleared",
+    "game.world.cityShantyCrowdYouthCleared",
+    "game.world.cityDryingHutCleared",
+    "game.world.cityDryingHutSackCleared",
+    "game.world.cityDryingMeatYouthCleared",
+    "game.world.cityHospitalWardCleared",
+    "game.world.cityHospitalSquattersCleared",
+    "game.world.cityHospitalDeformedCleared",
+    "game.world.cityHospitalTentaclesCleared",
+    "game.world.cityHospitalCacheCleared",
+    "game.world.cityHospitalOldManTheatresCleared",
+    "game.world.cityHospitalOldManSquattersCleared",
+    "game.world.cityHospitalMedicineCleared",
+    "game.world.cityOldTowerCleared",
+    "game.world.cityOldTowerScavengedCleared",
+    "game.world.cityOldTowerThugRubbleCleared",
+    "game.world.cityOldTowerRubbleCleared",
+  ],
+  [WORLD_TILE.EXECUTIONER]: ["game.world.executionerCleared"],
+};
+
+const LANDMARK_VISIT_FLAGS: Partial<Record<string, readonly string[]>> = {
+  [WORLD_TILE.HOUSE]: ["game.world.oldHouseVisited"],
+  [WORLD_TILE.SWAMP]: ["game.world.swampVisited"],
+  [WORLD_TILE.BOREHOLE]: ["game.world.boreholeVisited"],
+  [WORLD_TILE.BATTLEFIELD]: ["game.world.battlefieldVisited"],
+  [WORLD_TILE.SHIP]: ["game.world.crashedShipVisited"],
+  [WORLD_TILE.CACHE]: ["game.world.destroyedVillageVisited"],
+};
+
+const MINE_RETURN_BUILDINGS: readonly {
+  readonly flag: string;
+  readonly building: string;
+}[] = [
+  { flag: "game.world.ironmine", building: "iron mine" },
+  { flag: "game.world.coalmine", building: "coal mine" },
+  { flag: "game.world.sulphurmine", building: "sulphur mine" },
+];
+
+const BLUEPRINT_REDEEMED_NOTIFICATION =
+  "blueprints feed into the fabricator data port. possibilities grow.";
+
 export class WorldRuntime implements WorldEventResolver {
-  constructor(private readonly engine: GameEngine) {}
+  private readonly validatedMaps = new WeakMap<object, WorldMapGrid | null>();
+  private readonly validatedMasks = new WeakMap<object, WorldMaskGrid | null>();
+  private rowsCache:
+    | {
+        map: WorldMapGrid | null;
+        mask: WorldMaskGrid | null;
+        x: number;
+        y: number;
+        revision: number;
+        rows: WorldMapCellSnapshot[][];
+      }
+    | undefined;
+  private accessibleCache:
+    | {
+        map: WorldMapGrid | null;
+        mask: WorldMaskGrid | null;
+        x: number;
+        y: number;
+        revision: number;
+        accessible: WorldAccessibleSnapshot;
+      }
+    | undefined;
+  private worldGridRevision = 0;
+  private readonly worldDomain: WorldDomainFacade;
+
+  constructor(
+    private readonly engine: GameEngine,
+    private readonly expedition = new ExpeditionTransaction(engine),
+  ) {
+    this.worldDomain = new WorldDomainFacade(engine);
+  }
 
   snapshot(): WorldStateSnapshot {
     const active = this.active();
     const [x, y] = this.position();
     return {
-      unlocked: readBoolean(this.engine.state, "features.location.world"),
+      unlocked: this.worldDomain.read().unlocked,
       active,
       title: "A Dusty Path",
       x,
       y,
       distance: this.distance(x, y),
-      hp: readNumber(this.engine.state, "game.world.health", this.maxHealth()),
+      hp: this.expedition.health(this.maxHealth()),
       maxHp: this.maxHealth(),
-      water: readNumber(this.engine.state, "game.world.water", this.maxWater()),
+      water: this.expedition.water(this.maxWater()),
       maxWater: this.maxWater(),
-      food: readNumber(this.engine.state, 'outfit["cured meat"]'),
-      rows: this.mapRows(x, y),
+      food: this.expedition.inventoryQuantity("cured meat"),
+      danger: this.worldDomain.read().danger,
+      starvation: this.worldDomain.read().starvation,
+      thirst: this.worldDomain.read().thirst,
+      rows: this.cachedMapRows(x, y),
+      accessible: this.cachedAccessibleModel(x, y),
       landmark: this.landmarkAt(x, y),
       canReturn: x === WORLD_CENTER.x && y === WORLD_CENTER.y,
+      notifications: this.engine.notifications.list("world"),
     };
+  }
+
+  isActive(): boolean {
+    return this.active();
   }
 
   embark(): void {
     this.ensureMap();
-    this.engine.state.set("features.location.world", true);
-    this.engine.state.set("game.world.active", true);
-    this.engine.state.set("game.world.x", WORLD_CENTER.x);
-    this.engine.state.set("game.world.y", WORLD_CENTER.y);
-    this.engine.state.set("game.world.health", this.maxHealth());
-    this.engine.state.set("game.world.water", this.maxWater());
-    this.engine.state.set("game.world.foodMove", 0);
-    this.engine.state.set("game.world.waterMove", 0);
-    this.engine.state.remove("game.world.dead");
+    this.expedition.begin({
+      position: WORLD_CENTER,
+      health: this.maxHealth(),
+      water: this.maxWater(),
+    });
+    this.worldDomain.dispatch({ type: "world.begin", payload: {} });
     this.markVisible(WORLD_CENTER.x, WORLD_CENTER.y);
   }
 
@@ -205,11 +331,7 @@ export class WorldRuntime implements WorldEventResolver {
     const existingMap = this.map();
     if (existingMap) {
       if (!this.mask()) {
-        this.engine.state.set(
-          "game.world.mask",
-          originalWorldNewMask(this.hasScoutPerk()),
-          true,
-        );
+        this.setMask(originalWorldNewMask(this.hasScoutPerk()));
       }
       this.storeShipDirection(existingMap);
       return;
@@ -218,17 +340,19 @@ export class WorldRuntime implements WorldEventResolver {
     const map = originalWorldGenerateMap(this.engine.rng, {
       includeCache: this.hasPreviousStores(),
     });
-    this.engine.state.set("game.world.map", map, true);
-    this.engine.state.set(
-      "game.world.mask",
-      originalWorldNewMask(this.hasScoutPerk()),
-      true,
-    );
+    this.setMap(map);
+    this.setMask(originalWorldNewMask(this.hasScoutPerk()));
     this.storeShipDirection(map);
   }
 
   move(direction: WorldMoveDirection): WorldMoveOutcome {
-    if (!this.active()) return { moved: false, encounter: null };
+    if (!this.active())
+      return {
+        moved: false,
+        encounter: null,
+        returnedHome: false,
+        setpieceScene: null,
+      };
     const delta =
       WORLD_DIRECTIONS[
         direction.toUpperCase() as keyof typeof WORLD_DIRECTIONS
@@ -236,27 +360,66 @@ export class WorldRuntime implements WorldEventResolver {
     const [x, y] = this.position();
     const nextX = Math.max(0, Math.min(WORLD_RADIUS * 2, x + delta[0]));
     const nextY = Math.max(0, Math.min(WORLD_RADIUS * 2, y + delta[1]));
-    if (nextX === x && nextY === y) return { moved: false, encounter: null };
+    if (nextX === x && nextY === y)
+      return {
+        moved: false,
+        encounter: null,
+        returnedHome: false,
+        setpieceScene: null,
+      };
+    const oldTile = this.tileAt(x, y);
+    const newTile = this.tileAt(nextX, nextY);
 
-    this.engine.state.set("game.world.x", nextX);
-    this.engine.state.set("game.world.y", nextY);
+    this.expedition.setPosition({ x: nextX, y: nextY });
+    this.narrateMove(oldTile, newTile);
     this.markVisible(nextX, nextY);
-    this.useSupplies();
-
-    if (
-      this.randomEncountersDisabled() ||
-      this.landmarkAt(nextX, nextY) ||
-      this.engine.rng.next() >= WORLD_FIGHT_CHANCE
-    ) {
-      return { moved: true, encounter: null };
+    if (newTile === WORLD_TILE.VILLAGE) {
+      return {
+        moved: true,
+        encounter: null,
+        returnedHome: this.returnHome(),
+        setpieceScene: null,
+      };
     }
+    this.checkDanger(nextX, nextY);
+    const landmarkScene = this.landmarkAt(nextX, nextY)?.scene ?? null;
+    if (landmarkScene) {
+      return {
+        moved: true,
+        encounter: null,
+        returnedHome: false,
+        setpieceScene: landmarkScene,
+      };
+    }
+    if (!this.consumesTravel(newTile))
+      return {
+        moved: true,
+        encounter: null,
+        returnedHome: false,
+        setpieceScene: null,
+      };
+    if (!this.useSupplies())
+      return {
+        moved: true,
+        encounter: null,
+        returnedHome: false,
+        setpieceScene: null,
+      };
+
+    const encounter = this.checkFight(nextX, nextY);
+    if (!encounter)
+      return {
+        moved: true,
+        encounter: null,
+        returnedHome: false,
+        setpieceScene: null,
+      };
 
     return {
       moved: true,
-      encounter: {
-        distance: this.distance(nextX, nextY),
-        terrain: this.terrainName(this.tileAt(nextX, nextY)),
-      },
+      encounter,
+      returnedHome: false,
+      setpieceScene: null,
     };
   }
 
@@ -270,6 +433,14 @@ export class WorldRuntime implements WorldEventResolver {
     if (!this.active()) return false;
     const [x, y] = this.position();
     if (x !== WORLD_CENTER.x || y !== WORLD_CENTER.y) return false;
+    this.testMap();
+    this.applyHomeReturnConsequences();
+    if (this.expedition.redeemBlueprints()) {
+      this.engine.notifications.notify(
+        "world",
+        BLUEPRINT_REDEEMED_NOTIFICATION,
+      );
+    }
     this.returnOutfitToStores();
     this.closeExpedition();
     this.engine.notifications.notify(
@@ -277,6 +448,105 @@ export class WorldRuntime implements WorldEventResolver {
       "the village is close enough to touch",
     );
     return true;
+  }
+
+  applyOutpostUseConsequences(): boolean {
+    if (!this.active()) return false;
+    if (!this.worldDomain.read().outpostUsed) {
+      return false;
+    }
+    const [x, y] = this.position();
+    if (this.tileAt(x, y) !== WORLD_TILE.OUTPOST) return false;
+
+    this.expedition.setWater(this.maxWater(), this.maxWater());
+    this.worldDomain.dispatch({
+      type: "world.consumeOutpost",
+      payload: { x, y },
+    });
+    this.invalidateWorldGrid();
+    return true;
+  }
+
+  applyWaterReplenishmentConsequences(): boolean {
+    if (!this.active()) return false;
+    if (!this.worldDomain.read().waterReplenished) {
+      return false;
+    }
+    this.expedition.setWater(this.maxWater(), this.maxWater());
+    this.worldDomain.dispatch({
+      type: "world.consumeWaterReplenishment",
+      payload: {},
+    });
+    return true;
+  }
+
+  recordLandmarkResolutionForEffect(path: string): void {
+    if (!this.active()) return;
+    const [x, y] = this.position();
+    const tile = this.tileAt(x, y);
+    if (!this.isLandmarkResolutionEffect(tile, path)) return;
+    this.worldDomain.dispatch({
+      type: "world.resolveLandmark",
+      payload: { x, y },
+    });
+  }
+
+  applyClearedLandmarkConsequences(): boolean {
+    if (!this.active()) return false;
+    const map = this.map();
+    if (!map) return false;
+    const [x, y] = this.position();
+    const tile = map[x]?.[y];
+
+    if (!this.landmarkResolved(x, y)) return false;
+
+    if (MINE_CLEAR_FLAGS[tile]) {
+      originalWorldDrawRoad(map, { x, y });
+      originalWorldMarkVisited(map, { x, y });
+      this.setMap(map);
+      return true;
+    }
+
+    if (DUNGEON_CLEAR_FLAGS[tile]) {
+      map[x][y] = WORLD_TILE.OUTPOST;
+      originalWorldDrawRoad(map, { x, y });
+      this.setMap(map);
+      return true;
+    }
+
+    if (LANDMARK_VISIT_FLAGS[tile]) {
+      if (tile === WORLD_TILE.SHIP) {
+        originalWorldDrawRoad(map, { x, y });
+      }
+      originalWorldMarkVisited(map, { x, y });
+      this.setMap(map);
+      return true;
+    }
+
+    return false;
+  }
+
+  canApplyMap(): boolean {
+    if (!this.worldDomain.read().unlocked) {
+      return false;
+    }
+    if (this.worldDomain.read().seenAll) return false;
+    const mask = this.mask();
+    if (!mask) return false;
+    return this.hasHiddenMaskTile(mask);
+  }
+
+  applyMap(): void {
+    const mask = this.mask();
+    if (!mask) return;
+    if (!this.worldDomain.read().seenAll) {
+      const target = this.randomHiddenMaskTile(mask);
+      if (target) {
+        originalWorldUncoverMap(target.x, target.y, 5, mask);
+        this.setMask(mask);
+      }
+    }
+    this.testMap();
   }
 
   finishEventReturnToPath(): void {
@@ -293,7 +563,7 @@ export class WorldRuntime implements WorldEventResolver {
 
   setpieceEventKey(scene: string): string | null {
     if (scene === "executioner") {
-      return this.engine.state.get("game.world.executioner", true) === true
+      return this.worldDomain.read().executionerCleared
         ? "executioner.antechamber"
         : "executioner.intro-defences";
     }
@@ -326,74 +596,200 @@ export class WorldRuntime implements WorldEventResolver {
   }
 
   private active(): boolean {
-    return readBoolean(this.engine.state, "game.world.active");
+    return this.expedition.active();
   }
 
   private position(): readonly [number, number] {
-    const x = readNumber(this.engine.state, "game.world.x", WORLD_CENTER.x);
-    const y = readNumber(this.engine.state, "game.world.y", WORLD_CENTER.y);
+    const { x, y } = this.expedition.position(WORLD_CENTER);
     return [x, y] as const;
   }
 
   private map(): WorldMapGrid | null {
-    const value = this.engine.state.get("game.world.map", true);
-    if (!Array.isArray(value) || value.length !== WORLD_RADIUS * 2 + 1) {
+    const value = this.worldDomain.read().map;
+    if (typeof value !== "object" || value === null) {
       return null;
     }
-    if (
-      !value.every(
+    const cached = this.validatedMaps.get(value);
+    if (cached !== undefined || this.validatedMaps.has(value))
+      return cached ?? null;
+    const valid =
+      Array.isArray(value) &&
+      value.length === WORLD_RADIUS * 2 + 1 &&
+      value.every(
         (column) =>
           Array.isArray(column) &&
           column.length === WORLD_RADIUS * 2 + 1 &&
           column.every((tile) => typeof tile === "string"),
-      )
-    ) {
-      return null;
-    }
-    return value as WorldMapGrid;
+      );
+    const map = valid ? (value as WorldMapGrid) : null;
+    this.validatedMaps.set(value, map);
+    return map;
   }
 
   private mask(): WorldMaskGrid | null {
-    const value = this.engine.state.get("game.world.mask", true);
-    if (!Array.isArray(value) || value.length !== WORLD_RADIUS * 2 + 1) {
+    const value = this.worldDomain.read().mask;
+    if (typeof value !== "object" || value === null) {
       return null;
     }
-    if (
-      !value.every(
+    const cached = this.validatedMasks.get(value);
+    if (cached !== undefined || this.validatedMasks.has(value))
+      return cached ?? null;
+    const valid =
+      Array.isArray(value) &&
+      value.length === WORLD_RADIUS * 2 + 1 &&
+      value.every(
         (column) =>
           Array.isArray(column) &&
           column.length === WORLD_RADIUS * 2 + 1 &&
           column.every((visible) => typeof visible === "boolean"),
-      )
-    ) {
-      return null;
-    }
-    return value as WorldMaskGrid;
+      );
+    const mask = valid ? (value as WorldMaskGrid) : null;
+    this.validatedMasks.set(value, mask);
+    return mask;
   }
 
-  private mapRows(x: number, y: number): WorldMapCellSnapshot[][] {
-    const radius = 4;
+  private hasHiddenMaskTile(mask: WorldMaskGrid): boolean {
+    return mask.some((column) => column.some((visible) => !visible));
+  }
+
+  private randomHiddenMaskTile(
+    mask: WorldMaskGrid,
+  ): { x: number; y: number } | null {
+    const size = WORLD_RADIUS * 2 + 1;
+    const maxAttempts = size * size;
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      const x = Math.floor(this.engine.rng.next() * size);
+      const y = Math.floor(this.engine.rng.next() * size);
+      if (!mask[x]?.[y]) return { x, y };
+    }
+
+    for (let x = 0; x < size; x += 1) {
+      for (let y = 0; y < size; y += 1) {
+        if (!mask[x]?.[y]) return { x, y };
+      }
+    }
+    return null;
+  }
+
+  private testMap(): void {
+    const mask = this.mask();
+    if (!mask) return;
+    if (!this.hasHiddenMaskTile(mask)) {
+      this.worldDomain.dispatch({
+        type: "world.setSeenAll",
+        payload: { value: true },
+      });
+    }
+  }
+
+  private cachedMapRows(x: number, y: number): WorldMapCellSnapshot[][] {
+    const map = this.map();
+    const mask = this.mask();
+    const cached = this.rowsCache;
+    if (
+      cached?.map === map &&
+      cached.mask === mask &&
+      cached.x === x &&
+      cached.y === y &&
+      cached.revision === this.worldGridRevision
+    ) {
+      return cached.rows;
+    }
+    const rows = this.mapRows(map, mask, x, y);
+    this.rowsCache = {
+      map,
+      mask,
+      x,
+      y,
+      revision: this.worldGridRevision,
+      rows,
+    };
+    return rows;
+  }
+
+  private cachedAccessibleModel(x: number, y: number): WorldAccessibleSnapshot {
+    const map = this.map();
+    const mask = this.mask();
+    const cached = this.accessibleCache;
+    if (
+      cached?.map === map &&
+      cached.mask === mask &&
+      cached.x === x &&
+      cached.y === y &&
+      cached.revision === this.worldGridRevision
+    ) {
+      return cached.accessible;
+    }
+
+    const accessible = this.accessibleModel(map, mask, x, y);
+    this.accessibleCache = {
+      map,
+      mask,
+      x,
+      y,
+      revision: this.worldGridRevision,
+      accessible,
+    };
+    return accessible;
+  }
+
+  private accessibleModel(
+    map: WorldMapGrid | null,
+    mask: WorldMaskGrid | null,
+    x: number,
+    y: number,
+  ): WorldAccessibleSnapshot {
+    const landmarks: WorldVisibleLandmarkSnapshot[] = [];
+    for (let landmarkY = 0; landmarkY <= WORLD_RADIUS * 2; landmarkY += 1) {
+      for (let landmarkX = 0; landmarkX <= WORLD_RADIUS * 2; landmarkX += 1) {
+        if (mask?.[landmarkX]?.[landmarkY] !== true) continue;
+        const label = this.mapCellLabel(map, landmarkX, landmarkY, false, true);
+        if (!label || label === "The Village") continue;
+        landmarks.push({
+          label,
+          distance: this.distanceBetween(x, y, landmarkX, landmarkY),
+          direction: this.directionTo(x, y, landmarkX, landmarkY),
+        });
+      }
+    }
+
+    landmarks.sort(
+      (left, right) =>
+        left.distance - right.distance || left.label.localeCompare(right.label),
+    );
+
+    return {
+      terrain: this.terrainLabel(this.tileAt(x, y)),
+      villageDistance: this.distance(x, y),
+      villageDirection: this.directionTo(x, y, WORLD_CENTER.x, WORLD_CENTER.y),
+      moves: this.availableMoves(x, y),
+      landmarks: landmarks.slice(0, 3),
+    };
+  }
+
+  private mapRows(
+    map: WorldMapGrid | null,
+    mask: WorldMaskGrid | null,
+    x: number,
+    y: number,
+  ): WorldMapCellSnapshot[][] {
     const rows: WorldMapCellSnapshot[][] = [];
-    for (let rowY = y - radius; rowY <= y + radius; rowY += 1) {
+    for (let rowY = 0; rowY <= WORLD_RADIUS * 2; rowY += 1) {
       const row: WorldMapCellSnapshot[] = [];
-      for (let colX = x - radius; colX <= x + radius; colX += 1) {
-        const inBounds =
-          colX >= 0 &&
-          colX <= WORLD_RADIUS * 2 &&
-          rowY >= 0 &&
-          rowY <= WORLD_RADIUS * 2;
-        const visible = inBounds && this.visible(colX, rowY);
+      for (let colX = 0; colX <= WORLD_RADIUS * 2; colX += 1) {
+        const current = colX === x && rowY === y;
+        const visible = mask?.[colX]?.[rowY] === true;
         row.push({
           x: colX,
           y: rowY,
-          glyph:
-            colX === x && rowY === y
-              ? "@"
-              : visible
-                ? this.tileAt(colX, rowY)
-                : " ",
+          glyph: current
+            ? "@"
+            : visible
+              ? this.tileGlyph(map?.[colX]?.[rowY] ?? WORLD_TILE.BARRENS)
+              : " ",
           visible,
-          current: colX === x && rowY === y,
+          current,
+          label: this.mapCellLabel(map, colX, rowY, current, visible),
         });
       }
       rows.push(row);
@@ -406,14 +802,47 @@ export class WorldRuntime implements WorldEventResolver {
     return map?.[x]?.[y] ?? WORLD_TILE.BARRENS;
   }
 
+  private narrateMove(oldTile: string, newTile: string): void {
+    const message = TERRAIN_MOVE_NOTIFICATIONS[`${oldTile}:${newTile}`];
+    if (!message) return;
+    this.engine.notifications.notify("world", message);
+  }
+
+  private consumesTravel(tile: string): boolean {
+    return tile !== WORLD_TILE.VILLAGE && !LANDMARKS_BY_TILE.has(tile);
+  }
+
   private terrainName(tile: string): "forest" | "field" | "barrens" {
     if (tile === WORLD_TILE.FOREST) return "forest";
     if (tile === WORLD_TILE.FIELD) return "field";
     return "barrens";
   }
 
+  private tileGlyph(tile: string): string {
+    return tile.charAt(0) || " ";
+  }
+
+  private mapCellLabel(
+    map: WorldMapGrid | null,
+    x: number,
+    y: number,
+    current: boolean,
+    visible: boolean,
+  ): string | undefined {
+    if (current) return "Wanderer";
+    if (!visible) return undefined;
+    const tile = map?.[x]?.[y] ?? WORLD_TILE.BARRENS;
+    if (tile === WORLD_TILE.VILLAGE) return "The Village";
+    if (tile === WORLD_TILE.OUTPOST && this.outpostUsed(x, y)) {
+      return undefined;
+    }
+    const landmark = LANDMARKS_BY_TILE.get(tile);
+    return landmark ? originalWorldDisplayLabel(landmark.label) : undefined;
+  }
+
   private landmarkAt(x: number, y: number): WorldLandmarkSnapshot | null {
     const tile = this.tileAt(x, y);
+    if (tile === WORLD_TILE.OUTPOST && this.outpostUsed(x, y)) return null;
     const landmark = LANDMARKS_BY_TILE.get(tile);
     if (!landmark) return null;
     return {
@@ -425,11 +854,29 @@ export class WorldRuntime implements WorldEventResolver {
 
   private markVisible(x: number, y: number): void {
     const mask = this.mask() ?? originalWorldNewMask(this.hasScoutPerk());
-    this.engine.state.set(
-      "game.world.mask",
-      originalWorldLightMap(x, y, mask, this.hasScoutPerk()),
-      true,
-    );
+    this.setMask(originalWorldLightMap(x, y, mask, this.hasScoutPerk()));
+  }
+
+  private setMap(map: WorldMapGrid): void {
+    this.worldDomain.dispatch({
+      type: "world.setMap",
+      payload: { value: map },
+    });
+    this.invalidateWorldGrid();
+  }
+
+  private setMask(mask: WorldMaskGrid): void {
+    this.worldDomain.dispatch({
+      type: "world.setMask",
+      payload: { value: mask },
+    });
+    this.invalidateWorldGrid();
+  }
+
+  private invalidateWorldGrid(): void {
+    this.worldGridRevision += 1;
+    this.rowsCache = undefined;
+    this.accessibleCache = undefined;
   }
 
   private visible(x: number, y: number): boolean {
@@ -437,93 +884,318 @@ export class WorldRuntime implements WorldEventResolver {
   }
 
   private distance(x: number, y: number): number {
-    return Math.max(Math.abs(x - WORLD_CENTER.x), Math.abs(y - WORLD_CENTER.y));
+    return this.distanceBetween(x, y, WORLD_CENTER.x, WORLD_CENTER.y);
   }
 
-  private useSupplies(): void {
-    const foodMove = readNumber(this.engine.state, "game.world.foodMove") + 1;
-    const waterMove = readNumber(this.engine.state, "game.world.waterMove") + 1;
-    if (foodMove >= WORLD_MOVES_PER_FOOD) {
-      this.engine.state.set("game.world.foodMove", 0);
-      const food = readNumber(this.engine.state, 'outfit["cured meat"]');
-      if (food > 0) {
-        this.engine.state.add('outfit["cured meat"]', -1);
-        if (food === 1)
-          this.engine.notifications.notify("world", "the meat has run out");
-      } else {
-        this.engine.notifications.notify("world", "starvation sets in");
+  private distanceBetween(
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+  ): number {
+    return Math.abs(fromX - toX) + Math.abs(fromY - toY);
+  }
+
+  private directionTo(
+    fromX: number,
+    fromY: number,
+    toX: number,
+    toY: number,
+  ): WorldCompassDirection | "here" {
+    const horizontal = toX === fromX ? "" : toX > fromX ? "east" : "west";
+    const vertical = toY === fromY ? "" : toY > fromY ? "south" : "north";
+    if (!horizontal && !vertical) return "here";
+    return `${vertical}${horizontal}` as WorldCompassDirection;
+  }
+
+  private availableMoves(x: number, y: number): WorldMoveDirection[] {
+    const moves: WorldMoveDirection[] = [];
+    if (y > 0) moves.push("north");
+    if (x > 0) moves.push("west");
+    if (x < WORLD_RADIUS * 2) moves.push("east");
+    if (y < WORLD_RADIUS * 2) moves.push("south");
+    return moves;
+  }
+
+  private terrainLabel(tile: string): string {
+    switch (tile) {
+      case WORLD_TILE.FOREST:
+        return "forest";
+      case WORLD_TILE.FIELD:
+        return "field";
+      case WORLD_TILE.BARRENS:
+        return "barrens";
+      case WORLD_TILE.ROAD:
+        return "road";
+      case WORLD_TILE.VILLAGE:
+        return "the village";
+      default: {
+        const landmark = LANDMARKS_BY_TILE.get(tile);
+        return landmark
+          ? originalWorldDisplayLabel(landmark.label)
+          : "unknown terrain";
       }
-    } else {
-      this.engine.state.set("game.world.foodMove", foodMove);
+    }
+  }
+
+  private checkDanger(x: number, y: number): void {
+    const distance = this.distance(x, y);
+    const state = this.worldDomain.read();
+    const danger = state.danger;
+    const hasIronArmour = (state.stores["i armour"] ?? 0) > 0;
+    const hasSteelArmour = (state.stores["s armour"] ?? 0) > 0;
+
+    if (!danger) {
+      if (
+        (!hasIronArmour && distance >= 8) ||
+        (!hasSteelArmour && distance >= 18)
+      ) {
+        this.worldDomain.dispatch({
+          type: "world.setDanger",
+          payload: { value: true },
+        });
+        this.engine.notifications.notify(
+          "world",
+          "dangerous to be this far from the village without proper protection",
+        );
+      }
+      return;
     }
 
-    if (waterMove >= WORLD_MOVES_PER_WATER) {
-      this.engine.state.set("game.world.waterMove", 0);
-      const water = readNumber(this.engine.state, "game.world.water");
-      if (water > 0) {
-        this.engine.state.add("game.world.water", -1);
-        if (water === 1)
-          this.engine.notifications.notify("world", "there is no more water");
+    if (distance < 8 || (distance < 18 && hasIronArmour)) {
+      this.worldDomain.dispatch({
+        type: "world.setDanger",
+        payload: { value: false },
+      });
+      this.engine.notifications.notify("world", "safer here");
+    }
+  }
+
+  private checkFight(x: number, y: number): WorldEncounterContext | null {
+    if (
+      this.randomEncountersDisabled() ||
+      this.tileAt(x, y) === WORLD_TILE.VILLAGE ||
+      this.landmarkAt(x, y)
+    ) {
+      return null;
+    }
+
+    const fightMove = this.expedition.cadence("fight") + 1;
+    this.expedition.setCadence("fight", fightMove);
+    if (fightMove <= WORLD_FIGHT_DELAY) return null;
+
+    const chance = WORLD_FIGHT_CHANCE * (this.hasPerk("stealthy") ? 0.5 : 1);
+    if (this.engine.rng.next() >= chance) return null;
+
+    this.expedition.setCadence("fight", 0);
+    return {
+      distance: this.distance(x, y),
+      terrain: this.terrainName(this.tileAt(x, y)),
+    };
+  }
+
+  private useSupplies(): boolean {
+    const foodMove = this.expedition.cadence("food") + 1;
+    const waterMove = this.expedition.cadence("water") + 1;
+    const movesPerFood =
+      WORLD_MOVES_PER_FOOD * (this.hasPerk("slow metabolism") ? 2 : 1);
+    const movesPerWater =
+      WORLD_MOVES_PER_WATER * (this.hasPerk("desert rat") ? 2 : 1);
+
+    if (foodMove >= movesPerFood) {
+      this.expedition.setCadence("food", 0);
+      const food = this.expedition.inventoryQuantity("cured meat");
+      if (food > 0) {
+        this.expedition.addInventory("cured meat", -1);
+        if (food === 1) {
+          this.engine.notifications.notify("world", "the meat has run out");
+        } else {
+          this.worldDomain.dispatch({
+            type: "world.setStarvation",
+            payload: { value: false },
+          });
+          this.setWorldHp(this.worldHp() + this.meatHeal());
+        }
+      } else if (!this.worldDomain.read().starvation) {
+        this.worldDomain.dispatch({
+          type: "world.setStarvation",
+          payload: { value: true },
+        });
+        this.engine.notifications.notify("world", "starvation sets in");
       } else {
+        this.worldDomain.dispatch({
+          type: "world.recordExposure",
+          payload: { kind: "starved" },
+        });
+        if (
+          this.worldDomain.read().starved >= 10 &&
+          !this.hasPerk("slow metabolism")
+        ) {
+          this.worldDomain.dispatch({
+            type: "world.unlockPerk",
+            payload: { perk: "slow metabolism" },
+          });
+        }
+        this.die();
+        return false;
+      }
+    } else {
+      this.expedition.setCadence("food", foodMove);
+    }
+
+    if (waterMove >= movesPerWater) {
+      this.expedition.setCadence("water", 0);
+      const water = this.expedition.water();
+      if (water > 0) {
+        this.expedition.addWater(-1);
+        if (water === 1) {
+          this.engine.notifications.notify("world", "there is no more water");
+        } else {
+          this.worldDomain.dispatch({
+            type: "world.setThirst",
+            payload: { value: false },
+          });
+        }
+      } else if (!this.worldDomain.read().thirst) {
+        this.worldDomain.dispatch({
+          type: "world.setThirst",
+          payload: { value: true },
+        });
         this.engine.notifications.notify(
           "world",
           "the thirst becomes unbearable",
         );
+      } else {
+        this.worldDomain.dispatch({
+          type: "world.recordExposure",
+          payload: { kind: "dehydrated" },
+        });
+        if (
+          this.worldDomain.read().dehydrated >= 10 &&
+          !this.hasPerk("desert rat")
+        ) {
+          this.worldDomain.dispatch({
+            type: "world.unlockPerk",
+            payload: { perk: "desert rat" },
+          });
+        }
+        this.die();
+        return false;
       }
     } else {
-      this.engine.state.set("game.world.waterMove", waterMove);
+      this.expedition.setCadence("water", waterMove);
     }
+
+    return true;
   }
 
   private maxHealth(): number {
-    return originalPathMaxHealth(
-      readNumericRecord(this.engine.state, "stores"),
-    );
+    return originalPathMaxHealth(this.worldDomain.read().stores);
   }
 
   private maxWater(): number {
-    return originalPathMaxWater(readNumericRecord(this.engine.state, "stores"));
+    return originalPathMaxWater(this.worldDomain.read().stores);
+  }
+
+  private worldHp(): number {
+    return this.expedition.health(this.maxHealth());
+  }
+
+  private setWorldHp(value: number): void {
+    this.expedition.setHealth(value, this.maxHealth());
+  }
+
+  private meatHeal(): number {
+    return WORLD_MEAT_HEAL * (this.hasPerk("gastronome") ? 2 : 1);
   }
 
   private returnOutfitToStores(): void {
-    originalPathReturnOutfitToStores(this.engine);
+    this.expedition.returnInventoryToStores();
+  }
+
+  private applyHomeReturnConsequences(): void {
+    for (const { flag, building } of MINE_RETURN_BUILDINGS) {
+      const flagKey = flag.replace(/^game\.world\./, "");
+      if (!this.worldDomain.read().flags[flagKey]) continue;
+      if ((this.worldDomain.read().buildings[building] ?? 0) > 0) {
+        continue;
+      }
+      this.worldDomain.dispatch({
+        type: "world.unlockBuilding",
+        payload: { key: building },
+      });
+    }
+    if (
+      this.worldDomain.read().shipCleared &&
+      !this.worldDomain.read().shipUnlocked
+    ) {
+      this.worldDomain.dispatch({ type: "world.unlockShip", payload: {} });
+    }
+    if (
+      this.worldDomain.read().executionerCleared &&
+      !this.worldDomain.read().fabricatorUnlocked
+    ) {
+      this.worldDomain.dispatch({
+        type: "world.unlockFabricator",
+        payload: {},
+      });
+      this.engine.notifications.notify(
+        "world",
+        "builder knows the strange device when she sees it. takes it for herself real quick. doesn't ask where it came from.",
+      );
+    }
   }
 
   private closeExpedition(): void {
-    this.engine.state.set("game.world.active", false);
-    this.engine.state.set("features.location.path", true);
-    this.engine.state.remove("game.path.pendingReturn");
+    this.expedition.commit();
+    this.worldDomain.dispatch({ type: "world.closePathReturn", payload: {} });
   }
 
   private randomEncountersDisabled(): boolean {
-    return (
-      readBoolean(this.engine.state, "config.events.randomDisabled") ||
-      readStringUnion(this.engine.state, "game.world.encounters", [
-        "disabled",
-      ] as const) === "disabled"
-    );
+    return this.worldDomain.read().randomEncountersDisabled;
   }
 
   private hasScoutPerk(): boolean {
-    return readBoolean(this.engine.state, 'character.perks["scout"]');
+    return this.hasPerk("scout");
   }
 
-  private hasPreviousStores(): boolean {
+  private hasPerk(key: string): boolean {
+    return this.worldDomain.read().perks[key] === true;
+  }
+
+  private isLandmarkResolutionEffect(tile: string, path: string): boolean {
     return (
-      Object.keys(readNumericRecord(this.engine.state, "previous.stores"))
-        .length > 0
+      MINE_CLEAR_FLAGS[tile] === path ||
+      DUNGEON_CLEAR_FLAGS[tile]?.includes(path) === true ||
+      LANDMARK_VISIT_FLAGS[tile]?.includes(path) === true
     );
   }
 
+  private landmarkResolved(x: number, y: number): boolean {
+    return this.worldDomain.read().resolvedLandmarks[`${x},${y}`] === true;
+  }
+
+  private hasPreviousStores(): boolean {
+    return Object.keys(this.worldDomain.read().previousStores).length > 0;
+  }
+
+  private outpostUsed(x: number, y: number): boolean {
+    return this.worldDomain.read().usedOutposts[`${x},${y}`] === true;
+  }
+
+  private die(): void {
+    if (!this.expedition.abortOnDeath()) return;
+    this.engine.notifications.notify("world", EXPEDITION_DEATH_NOTIFICATION);
+  }
+
   private storeShipDirection(map: WorldMapGrid): void {
-    const existingShipX = this.engine.state.get("game.world.ship.x");
-    const existingShipY = this.engine.state.get("game.world.ship.y");
-    if (typeof existingShipX === "number" && typeof existingShipY === "number")
-      return;
+    if (this.worldDomain.read().shipPosition) return;
 
     const ship = originalWorldMapSearch(WORLD_TILE.SHIP, map, 1)?.[0];
     if (!ship) return;
-    this.engine.state.set("game.world.ship.x", ship.x, true);
-    this.engine.state.set("game.world.ship.y", ship.y, true);
+    this.worldDomain.dispatch({
+      type: "world.setShipPosition",
+      payload: { x: ship.x, y: ship.y },
+    });
   }
 }

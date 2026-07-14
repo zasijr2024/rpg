@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "bundle": {
+    "entryJavaScript": { "maxBytes": 480000, "maxGzipBytes": 125000 },
+    "allJavaScript": { "maxBytes": 610000, "maxGzipBytes": 155000 },
+    "allCss": { "maxBytes": 24000, "maxGzipBytes": 6000 },
+    "lazyEntryJavaScript": { "maxBytes": 4000, "maxGzipBytes": 2000 }
+  },
+  "browser": {
+    "startupMs": 4000,
+    "longTaskMaxMs": 250,
+    "longTaskTotalMs": 500,
+    "idleLongTaskMaxMs": 100,
+    "idleTimerDelayMs": 150
+  }
+}

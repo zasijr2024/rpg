@@ -7,6 +7,7 @@ import {
   createInitialSpaceState,
   DEFAULT_SPACE_PROTOTYPE,
 } from "../spikes/space/spacePrototype";
+import "./styles/spike-lab.css";
 
 const tabs = ["room", "world", "space"] as const;
 type SpikeTab = (typeof tabs)[number];

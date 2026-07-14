@@ -1,6 +1,7 @@
 import type { PathStateSnapshot } from "../engine";
 import { StoresPanel } from "./StoresPanel";
 import type { RoomStateSnapshot } from "../engine";
+import { CompactStepper } from "./CompactStepper";
 
 interface PathViewProps {
   snapshot: PathStateSnapshot;
@@ -18,9 +19,17 @@ export function PathView({
   onEmbark,
 }: PathViewProps) {
   if (!snapshot.unlocked) return null;
+  const embarkCooldownSeconds = Math.ceil(
+    snapshot.embarkCooldown.remainingMs / 1000,
+  );
 
   return (
-    <section className="pathPanel" aria-label={snapshot.title}>
+    <section
+      className="pathPanel"
+      aria-label={snapshot.title}
+      data-focus-owner="path"
+      tabIndex={-1}
+    >
       <div className="playColumn">
         <section className="outfitPanel" aria-label="supplies">
           <div className="bagSpace">
@@ -34,46 +43,58 @@ export function PathView({
             <span>water</span>
             <span>{snapshot.water}</span>
           </div>
-          {snapshot.supplies.map((supply) => (
-            <div
-              className="outfitRow"
-              key={supply.key}
-              title={supplyTooltip(supply)}
-            >
-              <span className="outfitName">{supply.name}</span>
-              <span className="outfitCount">{supply.outfit}</span>
-              <span className="outfitControls">
-                <button
-                  className="upBtn"
-                  type="button"
-                  aria-label={`${supply.key} +1`}
-                  disabled={!supply.canIncrease}
-                  onClick={() => onIncreaseSupply(supply.key, 1)}
+          {snapshot.supplies.map((supply) => {
+            const detailsId = `supply-details-${supply.key.replace(/[^a-z0-9]+/gi, "-")}`;
+            return (
+              <div className="outfitRow" key={supply.key}>
+                <span
+                  className="outfitName compactDetail"
+                  tabIndex={0}
+                  aria-describedby={detailsId}
+                >
+                  {supply.name}
+                </span>
+                <span id={detailsId} className="screenReaderOnly">
+                  {supplyTooltip(supply)}
+                </span>
+                <span className="outfitCount">{supply.outfit}</span>
+                <CompactStepper
+                  className="outfitControls"
+                  label={`${supply.name} supply controls`}
+                  controls={[
+                    {
+                      key: "increase",
+                      label: `${supply.key} +1`,
+                      disabled: !supply.canIncrease,
+                      onClick: () => onIncreaseSupply(supply.key, 1),
+                      className: "upBtn",
+                    },
+                    {
+                      key: "decrease",
+                      label: `${supply.key} -1`,
+                      disabled: !supply.canDecrease,
+                      onClick: () => onDecreaseSupply(supply.key, 1),
+                      className: "dnBtn",
+                    },
+                    {
+                      key: "increase-many",
+                      label: `${supply.key} +10`,
+                      disabled: !supply.canIncreaseMany,
+                      onClick: () => onIncreaseSupply(supply.key, 10),
+                      className: "upManyBtn",
+                    },
+                    {
+                      key: "decrease-many",
+                      label: `${supply.key} -10`,
+                      disabled: !supply.canDecreaseMany,
+                      onClick: () => onDecreaseSupply(supply.key, 10),
+                      className: "dnManyBtn",
+                    },
+                  ]}
                 />
-                <button
-                  className="dnBtn"
-                  type="button"
-                  aria-label={`${supply.key} -1`}
-                  disabled={!supply.canDecrease}
-                  onClick={() => onDecreaseSupply(supply.key, 1)}
-                />
-                <button
-                  className="upManyBtn"
-                  type="button"
-                  aria-label={`${supply.key} +10`}
-                  disabled={!supply.canIncreaseMany}
-                  onClick={() => onIncreaseSupply(supply.key, 10)}
-                />
-                <button
-                  className="dnManyBtn"
-                  type="button"
-                  aria-label={`${supply.key} -10`}
-                  disabled={!supply.canDecreaseMany}
-                  onClick={() => onDecreaseSupply(supply.key, 10)}
-                />
-              </span>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </section>
 
         {snapshot.perks.length > 0 && (
@@ -89,10 +110,16 @@ export function PathView({
         <div className="actionRow">
           <button
             type="button"
+            className={
+              snapshot.embarkCooldown.active ? "cooldownButton" : undefined
+            }
             disabled={!snapshot.canEmbark}
             onClick={onEmbark}
           >
-            embark
+            <span>embark</span>
+            {snapshot.embarkCooldown.active && (
+              <span className="cooldownText">{embarkCooldownSeconds}s</span>
+            )}
           </button>
         </div>
       </div>

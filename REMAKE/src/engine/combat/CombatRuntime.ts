@@ -17,7 +17,11 @@ import {
 } from "../../content/original/world/worldData";
 import type { TimerId } from "../clock";
 import type { GameEngine } from "../GameEngine";
-import { originalPathReturnOutfitToStores } from "../path/pathOutfit";
+import {
+  EXPEDITION_DEATH_NOTIFICATION,
+  ExpeditionTransaction,
+} from "../world/ExpeditionTransaction";
+import { CombatDomainFacade } from "./CombatDomain";
 
 export type CombatPhase = "fighting" | "exploding" | "won";
 
@@ -61,6 +65,7 @@ export interface CombatLifecycleSnapshot {
   playerDotDueAt: number | null;
   playerShielded: boolean;
   playerBoosted: boolean;
+  playerBoostExpiresAt: number | null;
 }
 
 export interface CombatDeathOutcome {
@@ -91,6 +96,7 @@ const MEDS_COOLDOWN_MS = 7000;
 const HYPO_COOLDOWN_MS = 7000;
 const SHIELD_COOLDOWN_MS = 10000;
 const STIM_COOLDOWN_MS = 10000;
+const STIM_BOOST_MS = 3000;
 const STIM_HP_COST = 10;
 const COMBAT_LEAVE_COOLDOWN_MS = 1000;
 const COMBAT_DOT_TICK_MS = 1000;
@@ -99,37 +105,32 @@ const COMBAT_MEDITATE_MS = 5000;
 const COMBAT_ENRAGED_ATTACK_MS = 500;
 const COMBAT_ENERGISE_MULTIPLIER = 4;
 const COMBAT_EXPLOSION_MS = 3000;
-const WORLD_DEATH_NOTIFICATION = "the world fades";
-const BLUEPRINT_REDEMPTIONS = [
-  ["hypo blueprint", "hypo"],
-  ["kinetic armour blueprint", "kinetic armour"],
-  ["disruptor blueprint", "disruptor"],
-  ["plasma rifle blueprint", "plasma rifle"],
-  ["stim blueprint", "stim"],
-  ["glowstone blueprint", "glowstone"],
-] as const;
-const BLUEPRINT_REDEEMED_NOTIFICATION =
-  "blueprints feed into the fabricator data port. possibilities grow.";
-
 export class CombatRuntime {
   private combatDefinition: OriginalCombatDefinition | null = null;
   private combatState: CombatLifecycleSnapshot | null = null;
   private enemyAttackTimer: TimerId | null = null;
   private enemyExplosionTimer: TimerId | null = null;
   private playerDotTimer: TimerId | null = null;
+  private playerBoostTimer: TimerId | null = null;
   private enemyStatusTimer: TimerId | null = null;
   private readonly enemySpecialTimers = new Map<number, TimerId>();
+  private readonly combat: CombatDomainFacade;
 
   constructor(
     private readonly engine: GameEngine,
     private readonly callbacks: CombatRuntimeCallbacks = {},
-  ) {}
+    private readonly expedition = new ExpeditionTransaction(engine),
+  ) {
+    this.combat = new CombatDomainFacade(engine);
+  }
 
   start(combat: OriginalCombatDefinition): void {
     this.clear();
     this.combatDefinition = combat;
     const maxHp = this.playerMaxHp();
-    if (this.numberAt("character.health") <= 0) this.setPlayerHp(maxHp);
+    if (!this.expedition.active() && (this.combat.read().health ?? 0) <= 0) {
+      this.setPlayerHp(maxHp);
+    }
     this.combatState = {
       phase: "fighting",
       enemyHp: combat.health,
@@ -148,6 +149,7 @@ export class CombatRuntime {
       playerDotDueAt: null,
       playerShielded: false,
       playerBoosted: false,
+      playerBoostExpiresAt: null,
     };
     this.scheduleEnemyAttack(combat.attackDelay * 1000);
     this.restoreEnemySpecials({});
@@ -163,6 +165,9 @@ export class CombatRuntime {
     if (this.playerDotTimer !== null) {
       this.engine.clock.clearTimer(this.playerDotTimer);
     }
+    if (this.playerBoostTimer !== null) {
+      this.engine.clock.clearTimer(this.playerBoostTimer);
+    }
     if (this.enemyStatusTimer !== null) {
       this.engine.clock.clearTimer(this.enemyStatusTimer);
     }
@@ -172,6 +177,7 @@ export class CombatRuntime {
     this.enemyAttackTimer = null;
     this.enemyExplosionTimer = null;
     this.playerDotTimer = null;
+    this.playerBoostTimer = null;
     this.enemyStatusTimer = null;
     this.enemySpecialTimers.clear();
     this.combatDefinition = null;
@@ -237,6 +243,7 @@ export class CombatRuntime {
       enemyStatusExpiresAt: this.timerDueAt(this.enemyStatusTimer),
       enemySpecialDueAts: this.enemySpecialDueAts(),
       playerDotDueAt: this.timerDueAt(this.playerDotTimer),
+      playerBoostExpiresAt: this.timerDueAt(this.playerBoostTimer),
     };
   }
 
@@ -260,12 +267,14 @@ export class CombatRuntime {
       playerDotDueAt: null,
       playerShielded: snapshot.playerShielded ?? false,
       playerBoosted: snapshot.playerBoosted ?? false,
+      playerBoostExpiresAt: null,
     };
     this.restoreEnemyAttack(snapshot.enemyAttackDueAt);
     this.restoreEnemyExplosion(snapshot.enemyExplosionDueAt);
     this.restoreEnemyStatusExpiration(snapshot.enemyStatusExpiresAt);
     this.restoreEnemySpecials(snapshot.enemySpecialDueAts);
     this.restorePlayerDot(snapshot.playerDotDueAt, snapshot.playerDotDamage);
+    this.restorePlayerBoost(snapshot.playerBoostExpiresAt);
   }
 
   private combatActions(): CombatActionSnapshot[] {
@@ -335,7 +344,7 @@ export class CombatRuntime {
       if (typeof weapon.damage === "number" && weapon.damage <= 0) {
         return false;
       }
-      if (this.numberAt(`outfit["${weapon.key}"]`) <= 0) return false;
+      if (this.outfitItem(weapon.key) <= 0) return false;
       return this.canAffordOutfit(weapon.cost ?? {});
     });
     const hasDamageWeapon = carriedWeapons.some(
@@ -356,7 +365,7 @@ export class CombatRuntime {
     return healers
       .filter((healer) => {
         void healer.amount;
-        return this.numberAt(`outfit["${healer.key}"]`) > 0;
+        return this.outfitItem(healer.key) > 0;
       })
       .map((healer) => ({
         key: `heal:${healer.key}`,
@@ -374,7 +383,7 @@ export class CombatRuntime {
 
   private availableDefensiveActions(): CombatActionSnapshot[] {
     const actions: CombatActionSnapshot[] = [];
-    if (this.numberAt('stores["kinetic armour"]') > 0) {
+    if (this.store("kinetic armour") > 0) {
       const cooldown = this.engine.cooldowns.snapshot("event.combat.shield");
       actions.push({
         key: "shield",
@@ -385,7 +394,7 @@ export class CombatRuntime {
         kind: "defend",
       });
     }
-    if (this.numberAt('outfit["stim"]') > 0) {
+    if (this.outfitItem("stim") > 0) {
       const cooldown = this.engine.cooldowns.snapshot("event.combat.stim");
       actions.push({
         key: "stim",
@@ -455,7 +464,7 @@ export class CombatRuntime {
       return false;
     }
     if (this.playerHp() >= this.playerMaxHp()) return false;
-    if (this.numberAt(`outfit["${itemKey}"]`) <= 0) return false;
+    if (this.outfitItem(itemKey) <= 0) return false;
     if (this.engine.cooldowns.isActive(this.healCooldownKey(itemKey))) {
       return false;
     }
@@ -523,22 +532,18 @@ export class CombatRuntime {
     const outcome: CombatDeathOutcome = {
       reason: "combat",
       returnLocation: "room",
-      notification: WORLD_DEATH_NOTIFICATION,
+      notification: EXPEDITION_DEATH_NOTIFICATION,
     };
 
-    this.engine.state.set("character.dead", true);
-    this.engine.state.set("game.world.dead", true);
-    this.engine.state.set("game.world.returnLocation", outcome.returnLocation);
-    this.engine.state.remove("outfit");
+    this.expedition.abortOnDeath();
     this.engine.notifications.notify("event", outcome.notification);
     this.clear();
     this.callbacks.onPlayerDeath?.(outcome);
   }
 
   private resolveSafeReturn(): CombatLeaveOutcome {
-    this.redeemBlueprints();
     this.returnOutfit();
-    this.engine.state.set("game.world.returnLocation", "path");
+    this.combat.dispatch({ type: "combat.setVictoryReturn", payload: {} });
     return {
       reason: "victory",
       returnLocation: "path",
@@ -570,6 +575,7 @@ export class CombatRuntime {
     this.enemyAttackTimer = null;
     this.enemyExplosionTimer = null;
     this.clearPlayerDot();
+    this.clearPlayerBoost();
     this.clearEnemySpecials();
     this.clearEnemyStatus();
   }
@@ -616,6 +622,7 @@ export class CombatRuntime {
       this.enemyAttackTimer = null;
     }
     this.clearPlayerDot();
+    this.clearPlayerBoost();
     this.clearEnemySpecials();
     this.clearEnemyStatus();
   }
@@ -624,7 +631,7 @@ export class CombatRuntime {
     if (!this.combatState || this.combatState.phase !== "fighting") {
       return false;
     }
-    if (this.numberAt('stores["kinetic armour"]') <= 0) return false;
+    if (this.store("kinetic armour") <= 0) return false;
     if (this.engine.cooldowns.isActive("event.combat.shield")) return false;
     this.combatState.playerShielded = true;
     this.engine.cooldowns.start("event.combat.shield", SHIELD_COOLDOWN_MS);
@@ -635,11 +642,11 @@ export class CombatRuntime {
     if (!this.combatState || this.combatState.phase !== "fighting") {
       return false;
     }
-    if (this.numberAt('outfit["stim"]') <= 0) return false;
+    if (this.outfitItem("stim") <= 0) return false;
     if (this.playerHp() <= STIM_HP_COST) return false;
     if (this.engine.cooldowns.isActive("event.combat.stim")) return false;
     this.setPlayerHp(this.playerHp() - STIM_HP_COST);
-    this.combatState.playerBoosted = true;
+    this.schedulePlayerBoostExpiry();
     this.engine.cooldowns.start("event.combat.stim", STIM_COOLDOWN_MS);
     if (this.playerHp() <= 0) {
       this.resolvePlayerDeath();
@@ -732,7 +739,7 @@ export class CombatRuntime {
         continue;
       }
       for (const [outfitKey, outfitAmount] of Object.entries(
-        this.numericRecordAt("outfit"),
+        this.combat.read().outfit,
       )) {
         const dropCount = this.dropCountFor(lootKey, outfitKey);
         if (dropCount <= 0 || dropCount > outfitAmount) continue;
@@ -751,7 +758,7 @@ export class CombatRuntime {
 
   private dropCountFor(lootKey: string, outfitKey: string): number {
     if (lootKey === outfitKey) return 0;
-    const outfitAmount = this.numberAt(`outfit["${outfitKey}"]`);
+    const outfitAmount = this.outfitItem(outfitKey);
     if (outfitAmount <= 0) return 0;
     const outfitWeight = originalPathWeightFor(outfitKey);
     if (outfitWeight <= 0) return 0;
@@ -783,11 +790,11 @@ export class CombatRuntime {
   }
 
   private outfitCapacity(): number {
-    return originalPathCapacity(this.numericRecordAt("stores"));
+    return originalPathCapacity(this.combat.read().stores);
   }
 
   private outfitWeight(): number {
-    return this.lootWeight(this.numericRecordAt("outfit"));
+    return this.lootWeight(this.combat.read().outfit);
   }
 
   private lootWeight(items: Record<string, number>): number {
@@ -795,26 +802,6 @@ export class CombatRuntime {
       (total, [key, amount]) => total + amount * originalPathWeightFor(key),
       0,
     );
-  }
-
-  private returnOutfit(): void {
-    originalPathReturnOutfitToStores(this.engine);
-  }
-
-  private redeemBlueprints(): void {
-    let redeemed = false;
-    for (const [blueprint, item] of BLUEPRINT_REDEMPTIONS) {
-      if (this.numberAt(`outfit["${blueprint}"]`) <= 0) continue;
-      this.engine.state.set(`character.blueprints["${item}"]`, true);
-      this.engine.state.remove(`outfit["${blueprint}"]`);
-      redeemed = true;
-    }
-    if (redeemed) {
-      this.engine.notifications.notify(
-        "event",
-        BLUEPRINT_REDEEMED_NOTIFICATION,
-      );
-    }
   }
 
   private rollLoot(
@@ -1038,6 +1025,45 @@ export class CombatRuntime {
     }
   }
 
+  private schedulePlayerBoostExpiry(delayMs = STIM_BOOST_MS): void {
+    if (!this.combatState || this.combatState.phase !== "fighting") return;
+    this.clearPlayerBoost();
+    this.combatState.playerBoosted = true;
+    this.combatState.playerBoostExpiresAt = this.engine.clock.now() + delayMs;
+    this.playerBoostTimer = this.engine.clock.setTimeout(() => {
+      this.playerBoostTimer = null;
+      this.clearPlayerBoost();
+    }, delayMs);
+  }
+
+  private restorePlayerBoost(dueAt: number | null | undefined): void {
+    if (!this.combatState || this.combatState.phase !== "fighting") return;
+    if (
+      !this.combatState.playerBoosted ||
+      dueAt === null ||
+      dueAt === undefined
+    ) {
+      this.clearPlayerBoost();
+      return;
+    }
+    if (dueAt <= this.engine.clock.now()) {
+      this.clearPlayerBoost();
+      return;
+    }
+    this.schedulePlayerBoostExpiry(this.remainingMs(dueAt));
+  }
+
+  private clearPlayerBoost(): void {
+    if (this.playerBoostTimer !== null) {
+      this.engine.clock.clearTimer(this.playerBoostTimer);
+    }
+    this.playerBoostTimer = null;
+    if (this.combatState) {
+      this.combatState.playerBoosted = false;
+      this.combatState.playerBoostExpiresAt = null;
+    }
+  }
+
   private combatStatusText(): string {
     if (!this.combatDefinition || !this.combatState) return "";
     if (this.combatState.phase === "won") {
@@ -1047,52 +1073,55 @@ export class CombatRuntime {
   }
 
   private playerMaxHp(): number {
-    if (this.numberAt('stores["kinetic armour"]') > 0) {
+    if (this.store("kinetic armour") > 0) {
       return WORLD_BASE_HEALTH + 75;
     }
-    if (this.numberAt('stores["s armour"]') > 0) {
+    if (this.store("s armour") > 0) {
       return WORLD_BASE_HEALTH + 35;
     }
-    if (this.numberAt('stores["i armour"]') > 0) {
+    if (this.store("i armour") > 0) {
       return WORLD_BASE_HEALTH + 15;
     }
-    if (this.numberAt('stores["l armour"]') > 0) {
+    if (this.store("l armour") > 0) {
       return WORLD_BASE_HEALTH + 5;
     }
     return WORLD_BASE_HEALTH;
   }
 
   private playerHp(): number {
-    const current = this.engine.state.get("character.health");
-    if (typeof current === "number") {
+    if (this.expedition.active()) {
+      return Math.max(
+        0,
+        Math.min(
+          this.expedition.health(this.playerMaxHp()),
+          this.playerMaxHp(),
+        ),
+      );
+    }
+    const current = this.combat.read().health;
+    if (current !== null) {
       return Math.max(0, Math.min(current, this.playerMaxHp()));
     }
     return this.playerMaxHp();
   }
 
   private setPlayerHp(value: number): void {
-    this.engine.state.set(
-      "character.health",
-      Math.max(0, Math.min(this.playerMaxHp(), value)),
-    );
+    if (this.expedition.active()) {
+      this.expedition.setHealth(value, this.playerMaxHp());
+      return;
+    }
+    this.combat.dispatch({
+      type: "combat.setHealth",
+      payload: { value, maximum: this.playerMaxHp() },
+    });
   }
 
   private playerHitChance(): number {
-    return (
-      WORLD_BASE_HIT_CHANCE +
-      (this.engine.state.get('character.perks["precise"]', true) === true
-        ? 0.1
-        : 0)
-    );
+    return WORLD_BASE_HIT_CHANCE + (this.combat.read().perks.precise ? 0.1 : 0);
   }
 
   private enemyHitChance(combat: OriginalCombatDefinition): number {
-    return (
-      combat.hit *
-      (this.engine.state.get('character.perks["evasive"]', true) === true
-        ? 0.8
-        : 1)
-    );
+    return combat.hit * (this.combat.read().perks.evasive ? 0.8 : 1);
   }
 
   private enemyDamageForStatus(status: OriginalCombatStatus | null): number {
@@ -1111,28 +1140,22 @@ export class CombatRuntime {
   private weaponDamage(weapon: WorldWeaponDefinition): number {
     if (typeof weapon.damage !== "number") return 0;
     let damage = weapon.damage;
-    if (
-      weapon.type === "unarmed" &&
-      this.engine.state.get('character.perks["boxer"]', true) === true
-    ) {
+    if (weapon.type === "unarmed" && this.combat.read().perks.boxer) {
       damage *= 2;
     }
     if (
       weapon.type === "unarmed" &&
-      this.engine.state.get('character.perks["martial artist"]', true) === true
+      this.combat.read().perks["martial artist"]
     ) {
       damage *= 3;
     }
     if (
       weapon.type === "unarmed" &&
-      this.engine.state.get('character.perks["unarmed master"]', true) === true
+      this.combat.read().perks["unarmed master"]
     ) {
       damage *= 2;
     }
-    if (
-      weapon.type === "melee" &&
-      this.engine.state.get('character.perks["barbarian"]', true) === true
-    ) {
+    if (weapon.type === "melee" && this.combat.read().perks.barbarian) {
       damage = Math.floor(damage * 1.5);
     }
     return damage;
@@ -1142,7 +1165,7 @@ export class CombatRuntime {
     const boostMultiplier = this.combatState?.playerBoosted ? 0.5 : 1;
     if (
       weapon.type === "unarmed" &&
-      this.engine.state.get('character.perks["unarmed master"]', true) === true
+      this.combat.read().perks["unarmed master"]
     ) {
       return (weapon.cooldown / 2) * boostMultiplier;
     }
@@ -1150,29 +1173,16 @@ export class CombatRuntime {
   }
 
   private recordPunch(): void {
-    this.engine.state.add("character.punches", 1);
-    const punches = this.numberAt("character.punches");
-    if (punches === 50) {
-      this.engine.state.set('character.perks["boxer"]', true);
-    } else if (punches === 150) {
-      this.engine.state.set('character.perks["martial artist"]', true);
-    } else if (punches === 300) {
-      this.engine.state.set('character.perks["unarmed master"]', true);
-    }
+    this.combat.dispatch({ type: "combat.recordPunch", payload: {} });
   }
 
   private meatHeal(): number {
-    return (
-      WORLD_MEAT_HEAL *
-      (this.engine.state.get('character.perks["gastronome"]', true) === true
-        ? 2
-        : 1)
-    );
+    return WORLD_MEAT_HEAL * (this.combat.read().perks.gastronome ? 2 : 1);
   }
 
   private canAffordOutfit(cost: Record<string, number>): boolean {
     return Object.entries(cost).every(
-      ([store, amount]) => this.numberAt(`outfit["${store}"]`) >= amount,
+      ([store, amount]) => this.outfitItem(store) >= amount,
     );
   }
 
@@ -1183,7 +1193,10 @@ export class CombatRuntime {
   }
 
   private addOutfit(key: string, amount: number): void {
-    this.engine.state.add(`outfit["${key}"]`, amount);
+    this.combat.dispatch({
+      type: "combat.changeOutfit",
+      payload: { key, amount },
+    });
   }
 
   private weaponCooldownKey(weaponKey: string): string {
@@ -1201,20 +1214,16 @@ export class CombatRuntime {
     return 0;
   }
 
-  private numberAt(path: string): number {
-    const value = this.engine.state.get(path, true);
-    if (value === true) return 1;
-    return typeof value === "number" ? value : 0;
+  private store(key: string): number {
+    return this.combat.read().stores[key] ?? 0;
   }
 
-  private numericRecordAt(path: string): Record<string, number> {
-    const value = this.engine.state.get(path, true);
-    if (!value || typeof value !== "object") return {};
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).filter(
-        (entry): entry is [string, number] => typeof entry[1] === "number",
-      ),
-    );
+  private outfitItem(key: string): number {
+    return this.combat.read().outfit[key] ?? 0;
+  }
+
+  private returnOutfit(): void {
+    this.combat.dispatch({ type: "combat.returnOutfit", payload: {} });
   }
 
   private timerDueAt(id: TimerId | null): number | null {

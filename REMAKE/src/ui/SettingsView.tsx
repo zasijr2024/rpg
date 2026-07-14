@@ -31,7 +31,12 @@ export function SettingsView({
   onClear,
 }: SettingsViewProps) {
   return (
-    <section className="settingsPanel" aria-label="settings">
+    <section
+      className="settingsPanel"
+      aria-label="settings"
+      data-focus-owner="settings"
+      tabIndex={-1}
+    >
       <div className="settingsColumn">
         <section className="settingsGroup" aria-label="debug toggles">
           <label className="toggleRow">

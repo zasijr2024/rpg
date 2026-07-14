@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { OutsideStateSnapshot, RoomStateSnapshot } from "../engine";
 import { NotificationLog } from "./NotificationLog";
 import { StoresPanel } from "./StoresPanel";
+import { CompactStepper } from "./CompactStepper";
 
 interface OutsideViewProps {
   snapshot: OutsideStateSnapshot;
@@ -36,7 +37,12 @@ export function OutsideView({
   } as CSSProperties;
 
   return (
-    <section className="outsidePanel" aria-label={snapshot.title}>
+    <section
+      className="outsidePanel"
+      aria-label={snapshot.title}
+      data-focus-owner="outside"
+      tabIndex={-1}
+    >
       <div className="playColumn">
         {snapshot.villageRows.length > 0 && (
           <section
@@ -92,55 +98,63 @@ export function OutsideView({
         </div>
         {snapshot.workerRows.length > 0 && (
           <section className="workersPanel" aria-label="workers">
-            {snapshot.workerRows.map((worker) => (
-              <div className="workerRow" key={worker.key}>
-                <span
-                  className="workerName"
-                  title={worker.income
-                    .map((income) => `${income.store}: ${income.text}`)
-                    .join(", ")}
-                >
-                  {worker.name}
-                </span>
-                <span className="workerCount">{worker.value}</span>
-                {worker.controlled && (
-                  <span className="workerControls">
-                    <button
-                      type="button"
-                      aria-label={`${worker.name} +1`}
-                      disabled={!worker.canIncrease}
-                      onClick={() => onIncreaseWorker(worker.key, 1)}
-                    >
-                      +
-                    </button>
-                    <button
-                      type="button"
-                      aria-label={`${worker.name} -1`}
-                      disabled={!worker.canDecrease}
-                      onClick={() => onDecreaseWorker(worker.key, 1)}
-                    >
-                      -
-                    </button>
-                    <button
-                      type="button"
-                      aria-label={`${worker.name} +10`}
-                      disabled={!worker.canIncrease}
-                      onClick={() => onIncreaseWorker(worker.key, 10)}
-                    >
-                      ++
-                    </button>
-                    <button
-                      type="button"
-                      aria-label={`${worker.name} -10`}
-                      disabled={!worker.canDecrease}
-                      onClick={() => onDecreaseWorker(worker.key, 10)}
-                    >
-                      --
-                    </button>
+            {snapshot.workerRows.map((worker) => {
+              const detailsId = `worker-details-${worker.key.replace(/[^a-z0-9]+/gi, "-")}`;
+              const income = worker.income
+                .map((entry) => `${entry.store}: ${entry.text}`)
+                .join(", ");
+              return (
+                <div className="workerRow" key={worker.key}>
+                  <span
+                    className="workerName compactDetail"
+                    tabIndex={0}
+                    aria-describedby={detailsId}
+                  >
+                    {worker.name}
                   </span>
-                )}
-              </div>
-            ))}
+                  <span id={detailsId} className="screenReaderOnly">
+                    income: {income || "none"}
+                  </span>
+                  <span className="workerCount">{worker.value}</span>
+                  {worker.controlled && (
+                    <CompactStepper
+                      className="workerControls"
+                      label={`${worker.name} worker controls`}
+                      controls={[
+                        {
+                          key: "increase",
+                          label: `${worker.name} +1`,
+                          disabled: !worker.canIncrease,
+                          onClick: () => onIncreaseWorker(worker.key, 1),
+                          className: "upBtn",
+                        },
+                        {
+                          key: "decrease",
+                          label: `${worker.name} -1`,
+                          disabled: !worker.canDecrease,
+                          onClick: () => onDecreaseWorker(worker.key, 1),
+                          className: "dnBtn",
+                        },
+                        {
+                          key: "increase-many",
+                          label: `${worker.name} +10`,
+                          disabled: !worker.canIncrease,
+                          onClick: () => onIncreaseWorker(worker.key, 10),
+                          className: "upManyBtn",
+                        },
+                        {
+                          key: "decrease-many",
+                          label: `${worker.name} -10`,
+                          disabled: !worker.canDecrease,
+                          onClick: () => onDecreaseWorker(worker.key, 10),
+                          className: "dnManyBtn",
+                        },
+                      ]}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </section>
         )}
         <NotificationLog

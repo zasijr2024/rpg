@@ -7,7 +7,12 @@ import {
   type OriginalCombatStatus,
 } from "../../content/original/events/eventData";
 import { originalWorldWeapons } from "../../content/original/world/worldData";
-import { CombatRuntime, createGameEngine, type Rng } from "../../engine";
+import {
+  CombatRuntime,
+  createGameEngine,
+  ExpeditionTransaction,
+  type Rng,
+} from "../../engine";
 
 function sequenceRng(values: number[]): Rng {
   let index = 0;
@@ -390,6 +395,38 @@ describe("CombatRuntime", () => {
     expect(engine.state.get('outfit["fur"]')).toBe(0);
   });
 
+  it("keeps loot carried when combat leave continues the active expedition", () => {
+    const engine = createGameEngine({
+      rng: sequenceRng([0, 0, 0.5, 0, 0, 0.9]),
+    });
+    const expedition = new ExpeditionTransaction(engine);
+    const leaves: Array<string | null> = [];
+    const combat = new CombatRuntime(
+      engine,
+      {
+        onLeave: (outcome) => leaves.push(outcome.returnLocation),
+        shouldReturnOnLeave: () => false,
+      },
+      expedition,
+    );
+
+    engine.state.set('outfit["cured meat"]', 2);
+    engine.state.set('outfit["grenade"]', 1);
+    expedition.begin({ position: { x: 30, y: 30 }, health: 10, water: 10 });
+    combat.start(snarlingBeastCombat());
+
+    expect(combat.chooseAction("attack:grenade")).toBe(true);
+    engine.clock.advanceBy(1000);
+    expect(combat.chooseAction("takeEverything")).toBe(true);
+    expect(combat.chooseAction("leave")).toBe(true);
+
+    expect(leaves).toEqual([null]);
+    expect(engine.state.get("game.world.returnLocation", true)).toBe(0);
+    expect(engine.state.get('stores["fur"]', true)).toBe(0);
+    expect(engine.state.get('outfit["fur"]')).toBe(2);
+    expect(expedition.active()).toBe(true);
+  });
+
   it("applies original world-death effects and reports lifecycle closure through callback", () => {
     const engine = createGameEngine({ rng: sequenceRng([0]) });
     const deaths: string[] = [];
@@ -644,7 +681,7 @@ describe("CombatRuntime", () => {
     expect(combat.snapshot()?.playerHp).toBe(24);
   });
 
-  it("uses stim boost to spend health and halve weapon cooldowns", () => {
+  it("expires stim boost after three seconds and restores normal weapon cooldowns", () => {
     const engine = createGameEngine({ rng: sequenceRng([0]) });
     const combat = new CombatRuntime(engine);
 
@@ -665,6 +702,10 @@ describe("CombatRuntime", () => {
     expect(combat.chooseAction("stim")).toBe(true);
     expect(combat.snapshot()?.playerHp).toBe(20);
     expect(engine.state.get('outfit["stim"]')).toBe(1);
+    expect(combat.lifecycleSnapshot()).toMatchObject({
+      playerBoosted: true,
+      playerBoostExpiresAt: 3000,
+    });
     expect(
       combat.snapshot()?.actions.find((action) => action.key === "stim"),
     ).toMatchObject({
@@ -681,9 +722,31 @@ describe("CombatRuntime", () => {
       disabled: true,
       cooldownRemainingMs: 1000,
     });
+
+    engine.clock.advanceBy(2999);
+    expect(combat.lifecycleSnapshot()).toMatchObject({
+      playerBoosted: true,
+      playerBoostExpiresAt: 3000,
+    });
+
+    engine.clock.advanceBy(1);
+    expect(combat.lifecycleSnapshot()).toMatchObject({
+      playerBoosted: false,
+      playerBoostExpiresAt: null,
+    });
+
+    expect(combat.chooseAction("attack:bone spear")).toBe(true);
+    expect(
+      combat
+        .snapshot()
+        ?.actions.find((action) => action.key === "attack:bone spear"),
+    ).toMatchObject({
+      disabled: true,
+      cooldownRemainingMs: 2000,
+    });
   });
 
-  it("restores stim boost before applying accelerated weapon cooldowns", () => {
+  it("restores the one-second stim remainder from a two-second lifecycle snapshot", () => {
     const engine = createGameEngine({ rng: sequenceRng([0]) });
     const combat = new CombatRuntime(engine);
 
@@ -694,9 +757,13 @@ describe("CombatRuntime", () => {
     combat.start(weaponTargetCombat());
 
     expect(combat.chooseAction("stim")).toBe(true);
+    engine.clock.advanceBy(2000);
     const lifecycle = combat.lifecycleSnapshot();
     if (!lifecycle) throw new Error("Missing stim lifecycle");
-    expect(lifecycle.playerBoosted).toBe(true);
+    expect(lifecycle).toMatchObject({
+      playerBoosted: true,
+      playerBoostExpiresAt: 3000,
+    });
 
     engine.clock.clearAll();
     const restored = new CombatRuntime(engine);
@@ -710,6 +777,18 @@ describe("CombatRuntime", () => {
     ).toMatchObject({
       disabled: true,
       cooldownRemainingMs: 1000,
+    });
+
+    engine.clock.advanceBy(999);
+    expect(restored.lifecycleSnapshot()).toMatchObject({
+      playerBoosted: true,
+      playerBoostExpiresAt: 3000,
+    });
+
+    engine.clock.advanceBy(1);
+    expect(restored.lifecycleSnapshot()).toMatchObject({
+      playerBoosted: false,
+      playerBoostExpiresAt: null,
     });
   });
 
@@ -1211,18 +1290,13 @@ describe("CombatRuntime", () => {
     automatonEngine.clock.advanceBy(1000);
     expect(automatonCombat.chooseAction("takeEverything")).toBe(true);
     expect(automatonCombat.chooseAction("leave")).toBe(true);
-    expect(automatonEngine.state.get('character.blueprints["glowstone"]')).toBe(
-      true,
-    );
+    expect(
+      automatonEngine.state.get('character.blueprints["glowstone"]', true),
+    ).toBe(0);
     expect(
       automatonEngine.state.get('outfit["glowstone blueprint"]', true),
     ).toBe(0);
-    expect(
-      automatonEngine.state.get('stores["glowstone blueprint"]', true),
-    ).toBe(0);
-    expect(automatonEngine.notifications.list("event").at(-1)?.message).toBe(
-      "blueprints feed into the fabricator data port. possibilities grow.",
-    );
+    expect(automatonEngine.state.get('stores["glowstone blueprint"]')).toBe(1);
   });
 
   it("mounts setpiece combat catalog entries through the combat boundary", () => {

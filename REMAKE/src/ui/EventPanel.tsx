@@ -1,6 +1,7 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type FocusEvent,
@@ -26,96 +27,159 @@ export function EventPanel({
   onLootAction,
 }: EventPanelProps) {
   const panelRef = useRef<HTMLElement | null>(null);
+  const previousSceneRef = useRef<string | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!event) return;
     const panel = panelRef.current;
     if (!panel) return;
-    const firstButton = panel.querySelector<HTMLButtonElement>(
-      "button:not(:disabled)",
-    );
-    (firstButton ?? panel).focus();
-  }, [event?.eventKey, event?.sceneKey]);
+    const sceneKey = `${event.eventKey}:${event.sceneKey}`;
+    const active = document.activeElement;
+    const focusChangedScene = previousSceneRef.current !== sceneKey;
+    const activeIsUsable =
+      active instanceof HTMLElement &&
+      panel.contains(active) &&
+      !(active instanceof HTMLButtonElement && active.disabled);
+
+    if (focusChangedScene || !activeIsUsable) {
+      focusFirstAction(panel);
+    }
+    previousSceneRef.current = sceneKey;
+  }, [event]);
+
+  useEffect(() => {
+    if (!event) return undefined;
+    const panel = panelRef.current;
+    if (!panel) return undefined;
+    const keepFocusInDialog = () => {
+      if (!panel.contains(document.activeElement)) focusFirstAction(panel);
+    };
+    document.addEventListener("focusin", keepFocusInDialog, true);
+    return () =>
+      document.removeEventListener("focusin", keepFocusInDialog, true);
+  }, [event]);
 
   if (!event) return null;
 
   return (
-    <section
-      ref={panelRef}
-      className="eventPanel"
-      aria-label="event"
-      role="dialog"
-      aria-modal="true"
-      tabIndex={-1}
-      onKeyDown={trapFocus}
-    >
-      <h2>{event.title}</h2>
-      <div className="eventText">
-        {event.combat ? (
-          <CombatText event={event} onCombatAction={onCombatAction} />
-        ) : (
-          <>
-            {event.text.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
-            {event.loot && (
-              <LootText loot={event.loot} onLootAction={onLootAction} />
-            )}
-          </>
-        )}
-      </div>
-      <div className="eventButtons">
-        {event.combat
-          ? visibleCombatActions(event.combat.actions).map((button) => (
-              <button
-                key={button.key}
-                type="button"
-                disabled={button.disabled}
-                onClick={() => onCombatAction(button.key)}
-              >
-                <span className="buttonLabel">{button.text}</span>
-                {button.cooldownRemainingMs > 0 && (
-                  <span className="costText">
-                    {Math.ceil(button.cooldownRemainingMs / 1000)}s
-                  </span>
-                )}
-                {Object.keys(button.cost).length > 0 && (
-                  <span className="costText">{formatCost(button.cost)}</span>
-                )}
-              </button>
-            ))
-          : [
-              ...visibleLootActions(event.loot?.actions ?? []).map((button) => (
-                <button
-                  key={button.key}
-                  type="button"
-                  disabled={button.disabled}
-                  onClick={() => onLootAction(button.key)}
-                >
-                  <span className="buttonLabel">{button.text}</span>
-                </button>
-              )),
-              ...event.buttons.map((button) => (
-                <button
-                  key={button.key}
-                  type="button"
-                  disabled={button.disabled}
-                  onClick={() => {
-                    onChoose(button.key);
-                    if (button.link) {
-                      window.open(button.link, "_blank", "noopener,noreferrer");
-                    }
-                  }}
-                >
-                  <span className="buttonLabel">{button.text}</span>
-                  {Object.keys(button.cost).length > 0 && (
-                    <span className="costText">{formatCost(button.cost)}</span>
-                  )}
-                </button>
-              )),
-            ]}
-      </div>
-    </section>
+    <>
+      <div className="eventBackdrop" aria-hidden="true" />
+      <section
+        ref={panelRef}
+        className="eventPanel"
+        aria-label="event"
+        role="dialog"
+        aria-modal="true"
+        tabIndex={-1}
+        onKeyDown={trapFocus}
+      >
+        <h2>{event.title}</h2>
+        <div className="eventText">
+          {event.combat ? (
+            <CombatText event={event} onCombatAction={onCombatAction} />
+          ) : (
+            <>
+              {event.text.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+              {event.loot && (
+                <LootText loot={event.loot} onLootAction={onLootAction} />
+              )}
+            </>
+          )}
+        </div>
+        <div className="eventButtons">
+          {event.combat
+            ? [
+                ...visibleCombatActions(event.combat.actions)
+                  .filter(
+                    (button) =>
+                      !(
+                        event.combat?.phase === "won" &&
+                        hasPostCombatSceneChoice(event) &&
+                        button.kind === "leave"
+                      ),
+                  )
+                  .map((button) => (
+                    <button
+                      key={button.key}
+                      type="button"
+                      disabled={button.disabled}
+                      onClick={() => onCombatAction(button.key)}
+                    >
+                      <span className="buttonLabel">{button.text}</span>
+                      {button.cooldownRemainingMs > 0 && (
+                        <span className="costText">
+                          {Math.ceil(button.cooldownRemainingMs / 1000)}s
+                        </span>
+                      )}
+                      {Object.keys(button.cost).length > 0 && (
+                        <span className="costText">
+                          {formatCost(button.cost)}
+                        </span>
+                      )}
+                    </button>
+                  )),
+                ...(event.combat.phase === "won" &&
+                hasPostCombatSceneChoice(event)
+                  ? event.buttons.map((button) => (
+                      <button
+                        key={`scene:${button.key}`}
+                        type="button"
+                        disabled={button.disabled}
+                        onClick={() => onChoose(button.key)}
+                      >
+                        <span className="buttonLabel">{button.text}</span>
+                        {Object.keys(button.cost).length > 0 && (
+                          <span className="costText">
+                            {formatCost(button.cost)}
+                          </span>
+                        )}
+                      </button>
+                    ))
+                  : []),
+              ]
+            : [
+                ...visibleLootActions(event.loot?.actions ?? []).map(
+                  (button) => (
+                    <button
+                      key={button.key}
+                      type="button"
+                      disabled={button.disabled}
+                      onClick={() => onLootAction(button.key)}
+                    >
+                      <span className="buttonLabel">{button.text}</span>
+                    </button>
+                  ),
+                ),
+                ...event.buttons.map((button) => (
+                  <button
+                    key={button.key}
+                    type="button"
+                    disabled={button.disabled}
+                    onClick={() => {
+                      onChoose(button.key);
+                      if (button.link) {
+                        window.open(
+                          button.link,
+                          "_blank",
+                          "noopener,noreferrer",
+                        );
+                      }
+                    }}
+                  >
+                    <span className="buttonLabel">{button.text}</span>
+                    {Object.keys(button.cost).length > 0 && (
+                      <span className="costText">
+                        {formatCost(button.cost)}
+                      </span>
+                    )}
+                  </button>
+                )),
+              ]}
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -332,6 +396,10 @@ function visibleCombatActions(
   });
 }
 
+function hasPostCombatSceneChoice(event: EventPanelSnapshot): boolean {
+  return event.buttons.some((button) => button.key !== "leave");
+}
+
 function visibleLootActions(
   actions: EventLootActionSnapshot[],
 ): EventLootActionSnapshot[] {
@@ -345,13 +413,17 @@ function parseDropAction(actionKey: string): { lootKey: string } | null {
   return lootKey ? { lootKey } : null;
 }
 
+function focusFirstAction(panel: HTMLElement) {
+  const buttons = focusableButtons(panel);
+  const firstButton =
+    buttons.find((button) => button.closest(".eventButtons")) ??
+    buttons.find((button) => !button.classList.contains("lootDropToggle"));
+  (firstButton ?? panel).focus();
+}
+
 function trapFocus(event: KeyboardEvent<HTMLElement>) {
   if (event.key !== "Tab") return;
-  const buttons = Array.from(
-    event.currentTarget.querySelectorAll<HTMLButtonElement>(
-      "button:not(:disabled)",
-    ),
-  );
+  const buttons = focusableButtons(event.currentTarget);
   if (buttons.length === 0) {
     event.preventDefault();
     event.currentTarget.focus();
@@ -361,13 +433,22 @@ function trapFocus(event: KeyboardEvent<HTMLElement>) {
   const first = buttons[0];
   const last = buttons[buttons.length - 1];
   const active = document.activeElement;
-  if (event.shiftKey && active === first) {
+  if (event.shiftKey && (active === first || active === event.currentTarget)) {
     event.preventDefault();
     last.focus();
-  } else if (!event.shiftKey && active === last) {
+  } else if (
+    !event.shiftKey &&
+    (active === last || active === event.currentTarget)
+  ) {
     event.preventDefault();
     first.focus();
   }
+}
+
+function focusableButtons(panel: HTMLElement): HTMLButtonElement[] {
+  return Array.from(
+    panel.querySelectorAll<HTMLButtonElement>("button:not(:disabled)"),
+  ).filter((button) => getComputedStyle(button).visibility !== "hidden");
 }
 
 function formatCost(cost: Record<string, number>): string {

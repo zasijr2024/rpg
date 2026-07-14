@@ -10,6 +10,9 @@
   --location-width: 700px;
   --stores-width: 220px;
   --wrapper-width: 920px;
+  --world-wrapper-width: 1180px;
+  --world-sidebar-width: 260px;
+  --space-stage-size: 700px;
   --reading-width: min(72ch, calc(100vw - 2rem));
   --rule: #111;
   --rule-muted: #8a8a8a;
@@ -48,6 +51,64 @@ select {
   padding: var(--page-padding) 0 0 var(--notification-width);
 }
 
+.worldShell {
+  width: min(var(--world-wrapper-width), calc(100vw - 2rem));
+  padding-left: 0;
+}
+
+.spaceShell {
+  width: min(var(--location-width), calc(100vw - 2rem));
+  padding-left: 0;
+}
+
+.persistenceWarning {
+  width: min(var(--location-width), 100%);
+  margin: 0 0 20px;
+  padding: 10px 12px;
+  border: 1px solid #8a4b08;
+  background: #fff4df;
+  color: #4b2905;
+}
+
+.backgroundTimeNotice {
+  display: flex;
+  width: min(var(--location-width), 100%);
+  margin: 0 0 20px;
+  padding: 8px 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--rule);
+  background: #f7f7f3;
+}
+
+.backgroundTimeNotice p {
+  margin: 0;
+}
+
+.persistenceWarning p {
+  margin: 0;
+}
+
+.persistenceWarningActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.persistenceWarningActions button {
+  min-height: 32px;
+}
+
+.worldShell .locationTabs {
+  width: 100%;
+}
+
+.worldShell .eventPanel {
+  left: 0;
+}
+
 .locationTabs {
   display: flex;
   gap: 0;
@@ -80,6 +141,60 @@ select {
   padding-left: 0;
 }
 
+.hyperModeButton {
+  position: absolute;
+  z-index: 1;
+  top: var(--page-padding);
+  right: 0;
+  border: 0;
+  background: transparent;
+  color: #555;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hyperModeButton:hover,
+.hyperModeButton:focus-visible {
+  color: #111;
+  text-decoration: underline;
+}
+
+.lazyRouteError {
+  width: min(var(--reading-width), 100%);
+  margin-top: 24px;
+  border: 1px solid var(--rule);
+  padding: 16px 20px;
+}
+
+.lazyRouteError h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.lazyRouteError p {
+  margin: 0 0 12px;
+}
+
+.lazyRouteErrorActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lazyRouteErrorActions button {
+  border: 1px solid var(--rule);
+  background: #fff;
+  min-height: 31px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.lazyRouteErrorActions button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
 .locationTabs button:hover {
   text-decoration: underline;
 }
@@ -92,6 +207,8 @@ select {
 .roomPanel,
 .outsidePanel,
 .pathPanel,
+.fabricatorPanel,
+.shipPanel,
 .settingsPanel {
   position: relative;
   width: min(var(--location-width), 100%);
@@ -101,8 +218,307 @@ select {
 
 .roomPanel,
 .outsidePanel,
-.pathPanel {
+.pathPanel,
+.fabricatorPanel,
+.shipPanel {
   display: block;
+}
+
+.shipStatus {
+  width: 100px;
+  margin: 0 0 20px;
+}
+
+.shipStatus > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.shipStatus dt,
+.shipStatus dd {
+  margin: 0;
+}
+
+.shipActions,
+.fabricatorActions {
+  display: grid;
+  gap: 5px;
+  width: 150px;
+}
+
+.shipActions button,
+.fabricatorActions button {
+  min-height: 45px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.shipActions button:disabled,
+.fabricatorActions button:disabled {
+  border-color: var(--rule-disabled-border);
+  color: #767676;
+  cursor: default;
+}
+
+.shipActions .buttonLabel,
+.shipActions .costText,
+.fabricatorActions .buttonLabel,
+.fabricatorActions .costText {
+  display: block;
+}
+
+.liftOffWarning {
+  width: min(24rem, 100%);
+  margin-top: 24px;
+  border: 1px solid var(--rule);
+  padding: 16px;
+}
+
+.liftOffWarning h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.liftOffWarning div,
+.spaceControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.liftOffWarning button,
+.spaceControls button,
+.endingPanel button {
+  min-width: 64px;
+  min-height: 32px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+}
+
+.spacePanel {
+  position: relative;
+  width: min(var(--location-width), 100%);
+  outline: none;
+}
+
+.spacePanel:focus-visible {
+  outline: 2px solid var(--rule);
+  outline-offset: 4px;
+}
+
+.spaceAssistToggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  margin: 0 auto 8px;
+  color: #555;
+  font-size: 14px;
+}
+
+.spaceAssistToggle button {
+  min-height: 32px;
+  border: 0;
+  border-bottom: 1px solid var(--rule-muted);
+  background: transparent;
+  color: #111;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.spaceAssistToggle button:hover,
+.spaceAssistToggle button:focus-visible {
+  border-bottom-color: var(--rule);
+}
+
+.spaceAssistToggle button:focus-visible {
+  outline: 2px solid var(--rule);
+  outline-offset: 2px;
+}
+
+.spaceFlightStage {
+  position: relative;
+  width: min(100%, calc(100vh - 190px), var(--space-stage-size));
+  margin: 0 auto;
+}
+
+.spaceCanvas {
+  width: min(100%, 20rem);
+  aspect-ratio: 1;
+  border: 1px solid var(--rule);
+  background: #fff;
+}
+
+.spaceReadout {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  left: 12px;
+  padding: 4px 8px;
+  background: rgb(255 255 255 / 88%);
+}
+
+.spaceReadout h1,
+.spaceReadout p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.spaceCanvas.spaceFlightCanvas {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.spaceControls {
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.spaceInstructions {
+  margin: 6px 0 0;
+  text-align: center;
+}
+
+.spaceSpatialFeed {
+  display: grid;
+  gap: 3px;
+  width: min(44rem, 100%);
+  margin: 12px auto 0;
+  padding: 10px 12px;
+  border-top: 1px solid var(--rule-muted);
+  border-bottom: 1px solid var(--rule-muted);
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.spaceSpatialFeed h2,
+.spaceSpatialFeed p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.spaceSpatialFeed p[data-threat-level="high"],
+.spaceSpatialFeed p[data-threat-level="imminent"] {
+  color: #7a1e13;
+  font-weight: 700;
+}
+
+.endingPanel {
+  display: flex;
+  min-height: calc(100vh - (2 * var(--page-padding)));
+  width: min(44rem, 100%);
+  margin: 0 auto;
+  padding: clamp(3rem, 10vh, 8rem) 1rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.endingHeader {
+  margin-bottom: clamp(2rem, 6vh, 5rem);
+}
+
+.endingMarker {
+  margin: 0 0 1rem;
+  color: #666;
+  letter-spacing: 0.9em;
+  transform: translateX(0.45em);
+}
+
+.endingPanel h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3.4vw, 3.4rem);
+  font-weight: normal;
+  letter-spacing: 0.18em;
+}
+
+.endingNarrative {
+  width: min(58ch, 100%);
+  line-height: 1.6;
+}
+
+.endingNarrative p {
+  margin: 0 0 clamp(1.5rem, 4vh, 3rem);
+}
+
+.endingCoda {
+  margin: clamp(1rem, 3vh, 2.5rem) 0;
+  line-height: 1.5;
+}
+
+.endingCoda p {
+  margin: 0;
+}
+
+.endingScores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 7vw, 5rem);
+  width: min(38rem, 100%);
+  margin-bottom: clamp(2.5rem, 8vh, 6rem);
+}
+
+.endingScores p {
+  display: flex;
+  margin: 0;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.endingScores span {
+  color: #444;
+  letter-spacing: 0.04em;
+}
+
+.endingScores strong {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  font-weight: normal;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.endingPanel .endingAction {
+  min-width: 120px;
+  min-height: 44px;
+  padding: 8px 18px;
+}
+
+.fleetEnding {
+  width: min(52rem, 100%);
+}
+
+.shipStores > p,
+.fabricatorStores > p,
+.fabricatorActions > p,
+.fabricatorBlueprints > p {
+  margin-top: 0;
+}
+
+.fabricatorBlueprints {
+  margin-bottom: 25px;
+}
+
+.fabricatorBlueprints > p,
+.fabricatorActions > p {
+  margin-bottom: 8px;
+}
+
+.fabricatorBlueprints > div {
+  margin-bottom: 3px;
 }
 
 .playColumn,
@@ -295,10 +711,10 @@ select {
 
 .workerRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 32px 42px;
+  grid-template-columns: minmax(0, 1fr) 32px 52px;
   align-items: center;
   gap: 4px;
-  min-height: 30px;
+  min-height: 52px;
   margin: 0;
   position: relative;
 }
@@ -318,9 +734,12 @@ select {
 
 .workerControls {
   position: relative;
-  display: block;
-  width: 42px;
-  height: 32px;
+  display: grid;
+  grid-template-columns: repeat(2, 24px);
+  grid-template-rows: repeat(2, 24px);
+  gap: 4px;
+  width: 52px;
+  height: 52px;
 }
 
 .outfitPanel {
@@ -337,10 +756,10 @@ select {
 .outfitMeta,
 .outfitRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px 34px;
+  grid-template-columns: minmax(0, 1fr) 42px 52px;
   align-items: center;
   gap: 6px;
-  min-height: 31px;
+  min-height: 52px;
 }
 
 .outfitMeta {
@@ -361,16 +780,19 @@ select {
 }
 
 .outfitControls {
-  position: relative;
-  display: block;
-  width: 34px;
-  height: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, 24px);
+  grid-template-rows: repeat(2, 24px);
+  gap: 4px;
+  width: 52px;
+  height: 52px;
 }
 
-.outfitControls button {
-  position: absolute;
-  width: 14px;
-  height: 12px;
+.outfitControls button,
+.workerControls button {
+  position: relative;
+  width: 24px;
+  height: 24px;
   border: 0;
   background: #fff;
   color: #111;
@@ -380,28 +802,10 @@ select {
   cursor: pointer;
 }
 
-.outfitControls .upBtn,
-.outfitControls .dnBtn {
-  right: 15px;
-}
-
-.outfitControls .upManyBtn,
-.outfitControls .dnManyBtn {
-  right: 0;
-}
-
-.outfitControls .upBtn,
-.outfitControls .upManyBtn {
-  top: -1px;
-}
-
-.outfitControls .dnBtn,
-.outfitControls .dnManyBtn {
-  bottom: -1px;
-}
-
 .outfitControls button::before,
-.outfitControls button::after {
+.outfitControls button::after,
+.workerControls button::before,
+.workerControls button::after {
   position: absolute;
   content: "";
   left: 50%;
@@ -411,66 +815,85 @@ select {
 }
 
 .outfitControls .upBtn::before,
-.outfitControls .upManyBtn::before {
-  bottom: 2px;
+.outfitControls .upManyBtn::before,
+.workerControls .upBtn::before,
+.workerControls .upManyBtn::before {
+  bottom: 5px;
   margin-left: -6px;
   border-width: 6px;
   border-color: transparent transparent #111 transparent;
 }
 
-.outfitControls .upBtn::after {
-  bottom: 2px;
+.outfitControls .upBtn::after,
+.workerControls .upBtn::after {
+  bottom: 5px;
   margin-left: -4px;
   border-width: 4px;
   border-color: transparent transparent #fff transparent;
 }
 
-.outfitControls .upManyBtn::after {
-  bottom: 2px;
+.outfitControls .upManyBtn::after,
+.workerControls .upManyBtn::after {
+  bottom: 5px;
   margin-left: -3px;
   border-width: 3px;
   border-color: transparent transparent #fff transparent;
 }
 
 .outfitControls .dnBtn::before,
-.outfitControls .dnManyBtn::before {
-  top: 2px;
+.outfitControls .dnManyBtn::before,
+.workerControls .dnBtn::before,
+.workerControls .dnManyBtn::before {
+  top: 5px;
   margin-left: -6px;
   border-width: 6px;
   border-color: #111 transparent transparent transparent;
 }
 
-.outfitControls .dnBtn::after {
-  top: 2px;
+.outfitControls .dnBtn::after,
+.workerControls .dnBtn::after {
+  top: 5px;
   margin-left: -4px;
   border-width: 4px;
   border-color: #fff transparent transparent transparent;
 }
 
-.outfitControls .dnManyBtn::after {
-  top: 2px;
+.outfitControls .dnManyBtn::after,
+.workerControls .dnManyBtn::after {
+  top: 5px;
   margin-left: -3px;
   border-width: 3px;
   border-color: #fff transparent transparent transparent;
 }
 
-.outfitControls button:disabled {
+.outfitControls button:disabled,
+.workerControls button:disabled {
   color: var(--rule-muted);
   cursor: default;
 }
 
 .outfitControls .upBtn:disabled::before,
-.outfitControls .upManyBtn:disabled::before {
+.outfitControls .upManyBtn:disabled::before,
+.workerControls .upBtn:disabled::before,
+.workerControls .upManyBtn:disabled::before {
   border-color: transparent transparent #999 transparent;
 }
 
 .outfitControls .dnBtn:disabled::before,
-.outfitControls .dnManyBtn:disabled::before {
+.outfitControls .dnManyBtn:disabled::before,
+.workerControls .dnBtn:disabled::before,
+.workerControls .dnManyBtn:disabled::before {
   border-color: #999 transparent transparent transparent;
 }
 
-.outfitControls button:disabled::after {
+.outfitControls button:disabled::after,
+.workerControls button:disabled::after {
   display: none;
+}
+
+.compactDetail:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
 }
 
 .perksPanel {
@@ -480,8 +903,8 @@ select {
 }
 
 .worldPanel {
-  width: min(var(--location-width), 100%);
-  min-height: 700px;
+  width: 100%;
+  min-height: calc(100vh - 60px);
   outline: none;
 }
 
@@ -490,11 +913,48 @@ select {
   outline-offset: 2px;
 }
 
-.worldStatus {
-  width: 260px;
+.screenReaderOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.worldLayout {
   display: grid;
-  gap: 3px;
-  margin-bottom: 16px;
+  grid-template-columns: minmax(0, 1fr) var(--world-sidebar-width);
+  align-items: start;
+  gap: 28px;
+}
+
+.worldMapStage {
+  display: flex;
+  min-width: 0;
+  min-height: min(680px, calc(100vh - 90px));
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.worldSidebar {
+  display: grid;
+  align-content: start;
+  gap: 22px;
+  min-width: 0;
+  padding-top: 14px;
+}
+
+.worldStatus {
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  gap: 5px;
+  margin: 0;
 }
 
 .worldStatus div {
@@ -503,22 +963,35 @@ select {
   gap: 1rem;
 }
 
+.worldStatus .worldConditionRow {
+  color: #7a1e13;
+}
+
 .worldMap {
   width: max-content;
-  max-width: 100%;
-  margin: 0 0 14px;
-  overflow: auto;
+  max-width: none;
+  margin: 0;
+  padding: 10px;
+  overflow: visible;
   font-family: "Courier New", Courier, monospace;
-  font-size: 18px;
-  line-height: 1.1;
+  font-size: 15px;
+  line-height: 11px;
   letter-spacing: 0;
+  border: 1px solid var(--rule);
   background: #fff;
+  color: #555;
+}
+
+.worldMapLandmark {
+  position: relative;
   color: #111;
+  font-weight: 700;
 }
 
 .landmarkPanel {
-  width: 260px;
-  margin-bottom: 14px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -543,8 +1016,31 @@ select {
     "west . east"
     ". south .";
   gap: 5px;
-  width: 250px;
-  margin-bottom: 14px;
+  width: 100%;
+  margin: 0;
+}
+
+.worldSidebar .actionRow {
+  margin: 0;
+}
+
+.worldSidebar .actionRow button {
+  width: 100%;
+}
+
+.worldSidebar .notificationsPanel {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  overflow: auto;
+  padding-right: 5px;
+}
+
+.worldSidebar .notificationsPanel::after {
+  display: none;
 }
 
 .worldControls button[aria-label="north"] {
@@ -563,109 +1059,46 @@ select {
   grid-area: south;
 }
 
-.workerControls button {
-  position: absolute;
-  width: 18px;
-  height: 14px;
-  border: 0;
-  background: transparent;
-  color: #111;
-  padding: 0;
-  font-size: 0;
-  cursor: pointer;
+@media (max-width: 900px) {
+  .worldShell {
+    width: min(var(--location-width), calc(100vw - 2rem));
+    padding-left: var(--notification-width);
+  }
+
+  .worldShell .locationTabs {
+    width: min(var(--location-width), 100%);
+  }
+
+  .worldShell .eventPanel {
+    left: var(--notification-width);
+  }
+
+  .worldLayout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .worldMapStage {
+    justify-content: flex-start;
+  }
+
+  .worldSidebar {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 1fr);
+    column-gap: 22px;
+    align-items: start;
+  }
+
+  .worldSidebar .notificationsPanel {
+    grid-column: 1 / -1;
+  }
 }
 
+.outfitControls button:hover:not(:disabled),
 .workerControls button:hover:not(:disabled) {
   background: #f2f2ee;
 }
 
-.workerControls button::before,
-.workerControls button::after {
-  position: absolute;
-  content: "";
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-style: solid;
-}
-
-.workerControls button:nth-child(1),
-.workerControls button:nth-child(3) {
-  top: 1px;
-}
-
-.workerControls button:nth-child(2),
-.workerControls button:nth-child(4) {
-  bottom: 2px;
-}
-
-.workerControls button:nth-child(1),
-.workerControls button:nth-child(2) {
-  right: 20px;
-}
-
-.workerControls button:nth-child(3),
-.workerControls button:nth-child(4) {
-  right: 0;
-}
-
-.workerControls button:nth-child(1)::before,
-.workerControls button:nth-child(3)::before {
-  bottom: 2px;
-  margin-left: -6px;
-  border-width: 6px;
-  border-color: transparent transparent #111 transparent;
-}
-
-.workerControls button:nth-child(1)::after,
-.workerControls button:nth-child(3)::after {
-  bottom: 2px;
-  margin-left: -4px;
-  border-width: 4px;
-  border-color: transparent transparent #fff transparent;
-}
-
-.workerControls button:nth-child(2)::before,
-.workerControls button:nth-child(4)::before {
-  top: 2px;
-  margin-left: -6px;
-  border-width: 6px;
-  border-color: #111 transparent transparent transparent;
-}
-
-.workerControls button:nth-child(2)::after,
-.workerControls button:nth-child(4)::after {
-  top: 2px;
-  margin-left: -4px;
-  border-width: 4px;
-  border-color: #fff transparent transparent transparent;
-}
-
-.workerControls button:nth-child(3)::after,
-.workerControls button:nth-child(4)::after {
-  margin-left: -3px;
-  border-width: 3px;
-}
-
-.workerControls button:disabled {
-  cursor: default;
-  opacity: 0.75;
-}
-
-.workerControls button:disabled::after {
-  display: none;
-}
-
-.workerControls button:nth-child(1):disabled::before,
-.workerControls button:nth-child(3):disabled::before {
-  border-color: transparent transparent #999 transparent;
-}
-
-.workerControls button:nth-child(2):disabled::before,
-.workerControls button:nth-child(4):disabled::before {
-  border-color: #999 transparent transparent transparent;
-}
-
+.outfitControls button:focus-visible,
 .workerControls button:focus-visible {
   outline: 2px solid #111;
   outline-offset: 2px;
@@ -893,6 +1326,13 @@ select {
   padding: 16px 20px;
 }
 
+.eventBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  cursor: default;
+}
+
 .eventPanel h2 {
   margin: 0 0 14px;
   font-size: 18px;
@@ -1031,90 +1471,95 @@ select {
   margin-top: 0.2rem;
 }
 
-.spikeLab {
-  width: var(--reading-width);
-}
+/*
+ * Physical-density policy: a true 4K/1x desktop gets a larger reading scale,
+ * wider but still deliberately sparse columns, and physically credible hit
+ * areas. Mid-size and zoomed layouts keep the parity-scale presentation.
+ */
+@media (min-width: 3000px) and (min-height: 1600px) and (resolution: 1dppx) {
+  :root {
+    font-size: 20px;
+    --page-padding: 40px;
+    --notification-width: 280px;
+    --location-width: 960px;
+    --stores-width: 260px;
+    --wrapper-width: 1280px;
+    --world-wrapper-width: 1540px;
+    --world-sidebar-width: 330px;
+    --space-stage-size: 900px;
+  }
 
-.spikeLab h2 {
-  font-size: 1rem;
-  font-weight: 400;
-  margin: 0 0 1rem;
-}
+  .appShell :is(p, li, dt, dd, button, label, input, select, textarea) {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
 
-.tabList {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
+  .appShell :is(h1, h2, h3) {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
 
-.tabButton,
-.spikePanel button {
-  min-width: 6rem;
-  border: 1px solid var(--rule);
-  background: #fff;
-  color: #111;
-  padding: 0.4rem 0.65rem;
-}
+  .appShell button:not(.upBtn):not(.upManyBtn):not(.dnBtn):not(.dnManyBtn) {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px 12px;
+  }
 
-.tabButton[aria-selected="true"] {
-  border-color: #111;
-}
+  .locationTabs {
+    height: 64px;
+    padding-bottom: 12px;
+  }
 
-.tabButton:focus-visible,
-.spikePanel button:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
+  .locationTabs button {
+    font-size: 1.05rem;
+  }
 
-.spikePanel {
-  border-top: 1px solid var(--rule);
-  padding-top: 1rem;
-}
+  .workerRow {
+    grid-template-columns: minmax(0, 1fr) 42px 68px;
+    min-height: 68px;
+  }
 
-.worldSpike {
-  max-width: 100%;
-  overflow: auto;
-  font-size: clamp(0.62rem, 0.48rem + 0.25vw, 0.9rem);
-  line-height: 1;
-  letter-spacing: 0;
-  margin: 1rem 0 0;
-}
+  .outfitMeta,
+  .outfitRow {
+    grid-template-columns: minmax(0, 1fr) 52px 68px;
+    min-height: 68px;
+  }
 
-.keyboardProbe {
-  width: auto;
-}
+  .outfitControls,
+  .workerControls {
+    grid-template-columns: repeat(2, 32px);
+    grid-template-rows: repeat(2, 32px);
+    width: 68px;
+    height: 68px;
+  }
 
-.spaceSpikeGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: 1rem;
-}
+  .outfitControls button,
+  .workerControls button {
+    width: 32px;
+    height: 32px;
+  }
 
-.spaceSpikeGrid figure {
-  margin: 0;
-}
+  .spaceReadout :is(h1, p),
+  .spaceSpatialFeed :is(h2, p) {
+    font-size: 0.9rem;
+  }
 
-.spaceSpikeGrid figcaption {
-  margin-bottom: 0.5rem;
-}
+  .worldMap {
+    font-size: 0.9rem;
+    line-height: 0.72rem;
+  }
 
-.spaceCanvas,
-.spaceDom {
-  width: min(100%, 20rem);
-  aspect-ratio: 1;
-  border: 1px solid var(--rule);
-  background: #fff;
-}
+  .worldSidebar {
+    padding-top: 20px;
+  }
 
-.spaceDom {
-  position: relative;
-  overflow: hidden;
-}
+  .endingPanel h1 {
+    font-size: clamp(2.5rem, 3vw, 4.5rem);
+  }
 
-.spaceShip,
-.spaceAsteroid {
-  position: absolute;
-  transform: translate(-50%, -50%);
+  .endingScores strong {
+    font-size: clamp(3.5rem, 5vw, 6rem);
+  }
 }
 
 @media (max-width: 760px) {
@@ -1122,14 +1567,25 @@ select {
   .roomPanel,
   .outsidePanel,
   .pathPanel,
+  .fabricatorPanel,
+  .shipPanel,
+  .spacePanel,
   .settingsPanel,
-  .spikeLab {
+  .worldShell {
     width: 100%;
   }
 
   .appShell {
     width: calc(100vw - 2rem);
     padding: var(--page-padding) 0;
+  }
+
+  .worldShell {
+    padding: var(--page-padding) 0;
+  }
+
+  .worldShell .eventPanel {
+    left: 1rem;
   }
 
   .eventPanel {
@@ -1150,6 +1606,7 @@ select {
   .roomPanel,
   .outsidePanel,
   .pathPanel,
+  .fabricatorPanel,
   .playColumn {
     min-height: auto;
   }
@@ -1188,8 +1645,36 @@ select {
     max-width: 100%;
   }
 
+  .worldPanel {
+    min-height: auto;
+  }
+
+  .worldMapStage {
+    min-height: 0;
+  }
+
+  .worldSidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .worldSidebar .notificationsPanel {
+    grid-column: auto;
+    max-height: 160px;
+  }
+
   .worldControls {
     width: min(250px, 100%);
+  }
+
+  .endingPanel {
+    min-height: calc(100vh - (2 * var(--page-padding)));
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .endingScores {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .roomActions {

@@ -18,6 +18,10 @@ import type { TimerId } from "../clock";
 import type { CooldownSnapshot } from "../cooldowns/CooldownManager";
 import type { GameEngine } from "../GameEngine";
 import type { GameNotification } from "../notifications/NotificationCenter";
+import {
+  EconomyDomainFacade,
+  type EconomyIncomeReadModel,
+} from "./EconomyDomain";
 
 export interface OutsideStateSnapshot {
   unlocked: boolean;
@@ -63,22 +67,21 @@ export interface OutsideRuntimeLifecycleSnapshot {
 export class OutsideRuntime {
   private populationTimer: TimerId | null = null;
   private incomeTimer: TimerId | null = null;
+  private readonly economy: EconomyDomainFacade;
 
-  constructor(private readonly engine: GameEngine) {}
+  constructor(
+    private readonly engine: GameEngine,
+    private readonly incomePaused: () => boolean = () => false,
+  ) {
+    this.economy = new EconomyDomainFacade(engine);
+  }
 
   initialize(): void {
     if (!this.isUnlocked()) return;
-    if (this.engine.state.get("game.buildings") === undefined) {
-      this.engine.state.set("game.buildings", {}, true);
-    }
-    if (this.engine.state.get("game.population") === undefined) {
-      this.engine.state.set("game.population", 0, true);
-    }
-    if (this.engine.state.get("game.workers") === undefined) {
-      this.engine.state.set("game.workers", {}, true);
-    }
+    this.economy.dispatch({ type: "economy.initialize", payload: {} });
     this.syncUnlockedWorkers();
     this.syncVillageIncome();
+    this.startThievesIfNeeded();
     this.schedulePopulationIfNeeded();
     this.scheduleWorkerIncome();
   }
@@ -125,14 +128,12 @@ export class OutsideRuntime {
   snapshot(): OutsideStateSnapshot {
     return {
       unlocked: this.isUnlocked(),
-      title: originalVillageTitleForHuts(
-        this.numberAt('game.buildings["hut"]'),
-      ),
+      title: originalVillageTitleForHuts(this.building("hut")),
       gatherCooldown: this.engine.cooldowns.snapshot("gather wood"),
       gatherAmount: this.gatherAmount(),
       trapCooldown: this.engine.cooldowns.snapshot("check traps"),
-      hasTraps: this.numberAt('game.buildings["trap"]') > 0,
-      population: this.numberAt("game.population"),
+      hasTraps: this.building("trap") > 0,
+      population: this.economy.read().population,
       maxPopulation: this.maxPopulation(),
       villageRows: this.villageRows(),
       workerRows: this.workerRows(),
@@ -142,12 +143,19 @@ export class OutsideRuntime {
     };
   }
 
+  navigationSnapshot(): Pick<OutsideStateSnapshot, "unlocked" | "title"> {
+    return {
+      unlocked: this.isUnlocked(),
+      title: originalVillageTitleForHuts(this.building("hut")),
+    };
+  }
+
   onArrival(): void {
     this.initialize();
     if (!this.isUnlocked()) return;
-    if (this.engine.state.get("game.outside.seenForest") === true) return;
+    if (this.economy.read().seenForest) return;
     this.notify("the sky is grey and the wind blows relentlessly");
-    this.engine.state.set("game.outside.seenForest", true);
+    this.economy.dispatch({ type: "economy.markForestSeen", payload: {} });
   }
 
   gatherWood(): boolean {
@@ -156,7 +164,10 @@ export class OutsideRuntime {
     if (this.engine.cooldowns.isActive("gather wood")) return false;
 
     this.notify("dry brush and dead branches litter the forest floor");
-    this.engine.state.add("stores.wood", this.gatherAmount());
+    this.economy.dispatch({
+      type: "economy.changeStores",
+      payload: { changes: { wood: this.gatherAmount() } },
+    });
     this.engine.cooldowns.start("gather wood", OUTSIDE_GATHER_DELAY * 1000);
     return true;
   }
@@ -164,11 +175,11 @@ export class OutsideRuntime {
   checkTraps(): boolean {
     this.initialize();
     if (!this.isUnlocked()) return false;
-    if (this.numberAt('game.buildings["trap"]') <= 0) return false;
+    if (this.building("trap") <= 0) return false;
     if (this.engine.cooldowns.isActive("check traps")) return false;
 
-    const traps = this.numberAt('game.buildings["trap"]');
-    const bait = this.numberAt("stores.bait");
+    const traps = this.building("trap");
+    const bait = this.store("bait");
     const drops: Record<string, number> = {};
     const messages: string[] = [];
 
@@ -185,7 +196,10 @@ export class OutsideRuntime {
 
     drops.bait = -originalBaitUsedForTraps(traps, bait);
     this.notify(`the traps contain ${this.joinTrapMessages(messages)}`);
-    this.engine.state.addM("stores", drops);
+    this.economy.dispatch({
+      type: "economy.changeStores",
+      payload: { changes: drops },
+    });
     this.engine.cooldowns.start("check traps", OUTSIDE_TRAPS_DELAY * 1000);
     return true;
   }
@@ -198,7 +212,10 @@ export class OutsideRuntime {
       Math.max(0, amount),
     );
     if (increaseAmount <= 0) return false;
-    this.engine.state.add(`game.workers["${worker}"]`, increaseAmount);
+    this.economy.dispatch({
+      type: "economy.changeWorker",
+      payload: { key: worker, amount: increaseAmount },
+    });
     this.syncVillageIncome();
     return true;
   }
@@ -206,21 +223,27 @@ export class OutsideRuntime {
   decreaseWorker(worker: string, amount: number): boolean {
     this.initialize();
     if (!this.canControlWorker(worker)) return false;
-    const current = this.numberAt(`game.workers["${worker}"]`);
+    const current = this.worker(worker);
     const decreaseAmount = Math.min(current, Math.max(0, amount));
     if (decreaseAmount <= 0) return false;
-    this.engine.state.add(`game.workers["${worker}"]`, -decreaseAmount);
+    this.economy.dispatch({
+      type: "economy.changeWorker",
+      payload: { key: worker, amount: -decreaseAmount },
+    });
     this.syncVillageIncome();
     return true;
   }
 
   increasePopulation(): void {
     this.initialize();
-    const space = this.maxPopulation() - this.numberAt("game.population");
+    const space = this.maxPopulation() - this.economy.read().population;
     const arrivals = originalPopulationIncrease(space, this.engine.rng.next());
     if (arrivals > 0) {
       this.notify(originalPopulationMessageForArrivals(arrivals));
-      this.engine.state.add("game.population", arrivals);
+      this.economy.dispatch({
+        type: "economy.changePopulation",
+        payload: { amount: arrivals },
+      });
       this.syncVillageIncome();
     }
     this.populationTimer = null;
@@ -229,23 +252,35 @@ export class OutsideRuntime {
 
   killVillagers(count: number): void {
     this.initialize();
-    this.engine.state.add("game.population", count * -1);
-    if (this.numberAt("game.population") < 0) {
-      this.engine.state.set("game.population", 0);
+    this.economy.dispatch({
+      type: "economy.changePopulation",
+      payload: { amount: count * -1 },
+    });
+    if (this.economy.read().population < 0) {
+      this.economy.dispatch({
+        type: "economy.setPopulation",
+        payload: { value: 0 },
+      });
     }
 
     const remainingGatherers = this.getNumGatherers();
     if (remainingGatherers < 0) {
       let gap = -remainingGatherers;
-      const workers = this.engine.state.get("game.workers", true);
-      if (workers && typeof workers === "object") {
-        for (const key of Object.keys(workers as Record<string, unknown>)) {
-          const workersInJob = this.numberAt(`game.workers["${key}"]`);
+      const workers = this.economy.read().workers;
+      if (workers) {
+        for (const key of Object.keys(workers)) {
+          const workersInJob = this.worker(key);
           if (workersInJob < gap) {
             gap -= workersInJob;
-            this.engine.state.set(`game.workers["${key}"]`, 0);
+            this.economy.dispatch({
+              type: "economy.setWorker",
+              payload: { key, value: 0 },
+            });
           } else {
-            this.engine.state.add(`game.workers["${key}"]`, gap * -1);
+            this.economy.dispatch({
+              type: "economy.changeWorker",
+              payload: { key, amount: gap * -1 },
+            });
             break;
           }
         }
@@ -259,12 +294,10 @@ export class OutsideRuntime {
     let dead = 0;
 
     for (let i = 0; i < count; i += 1) {
-      const population = this.numberAt("game.population");
+      const population = this.economy.read().population;
       const rate = population / OUTSIDE_HUT_ROOM;
       const fullHuts = Math.floor(rate);
-      const huts = allowEmpty
-        ? this.numberAt('game.buildings["hut"]')
-        : Math.ceil(rate);
+      const huts = allowEmpty ? this.building("hut") : Math.ceil(rate);
       if (!huts) break;
 
       const target = Math.floor(this.engine.rng.next() * huts) + 1;
@@ -275,10 +308,10 @@ export class OutsideRuntime {
         inhabitants = population % OUTSIDE_HUT_ROOM;
       }
 
-      this.engine.state.set(
-        'game.buildings["hut"]',
-        this.numberAt('game.buildings["hut"]') - 1,
-      );
+      this.economy.dispatch({
+        type: "economy.setBuilding",
+        payload: { key: "hut", value: this.building("hut") - 1 },
+      });
       if (inhabitants) {
         this.killVillagers(inhabitants);
         dead += inhabitants;
@@ -292,27 +325,20 @@ export class OutsideRuntime {
     for (const [building, workers] of Object.entries(
       originalOutsideWorkerUnlocks,
     )) {
-      if (this.numberAt(`game.buildings["${building}"]`) <= 0) continue;
+      if (this.building(building) <= 0) continue;
       for (const worker of workers) {
-        if (
-          typeof this.engine.state.get(`game.workers["${worker}"]`) !== "number"
-        ) {
-          this.engine.state.set(`game.workers["${worker}"]`, 0, true);
+        if (!(worker in this.economy.read().workers)) {
+          this.economy.dispatch({
+            type: "economy.setWorker",
+            payload: { key: worker, value: 0, silent: true },
+          });
         }
       }
     }
   }
 
   private ensureBaseState(): void {
-    if (this.engine.state.get("game.buildings") === undefined) {
-      this.engine.state.set("game.buildings", {}, true);
-    }
-    if (this.engine.state.get("game.population") === undefined) {
-      this.engine.state.set("game.population", 0, true);
-    }
-    if (this.engine.state.get("game.workers") === undefined) {
-      this.engine.state.set("game.workers", {}, true);
-    }
+    this.economy.dispatch({ type: "economy.initialize", payload: {} });
   }
 
   private syncVillageIncome(): void {
@@ -320,28 +346,32 @@ export class OutsideRuntime {
       const count =
         worker.key === "gatherer"
           ? this.getNumGatherers()
-          : this.numberAt(`game.workers["${worker.key}"]`);
+          : this.worker(worker.key);
       if (
         worker.key !== "gatherer" &&
-        typeof this.engine.state.get(`game.workers["${worker.key}"]`) !==
-          "number"
+        !(worker.key in this.economy.read().workers)
       ) {
         continue;
       }
-      this.engine.state.set(
-        `income["${worker.key}"]`,
-        {
-          delay: worker.delay,
-          stores: this.scaledStores(worker.stores, Math.max(0, count)),
+      const existingIncome = this.economy.read().income[worker.key];
+      this.economy.dispatch({
+        type: "economy.setIncome",
+        payload: {
+          key: worker.key,
+          value: {
+            delay: worker.delay,
+            stores: this.scaledStores(worker.stores, Math.max(0, count)),
+            timeLeft: existingIncome?.timeLeft ?? worker.delay,
+          },
+          silent: true,
         },
-        true,
-      );
+      });
     }
   }
 
   private schedulePopulationIfNeeded(): void {
     if (this.populationTimer !== null) return;
-    if (this.numberAt('game.buildings["hut"]') <= 0) return;
+    if (this.building("hut") <= 0) return;
     const delayMinutes = originalPopulationDelayMinutes(this.engine.rng.next());
     this.populationTimer = this.engine.clock.setTimeout(
       () => this.increasePopulation(),
@@ -370,58 +400,105 @@ export class OutsideRuntime {
   }
 
   private collectWorkerIncome(): void {
-    this.syncVillageIncome();
+    if (this.incomePaused()) return;
+    // Worker and population commands keep the income definitions in sync.
+    // Reading and rewriting every definition again on each one-second income
+    // tick made long, otherwise ordinary catch-up windows quadratic in the
+    // number of active jobs. Take one coherent read for this tick instead.
+    const economy = this.economy.read();
+    const availableStores = { ...economy.stores };
+    const incomeMultiplier = economy.incomeMultiplier;
     for (const worker of originalOutsideWorkerIncome) {
-      const income = this.engine.state.get(`income["${worker.key}"]`);
-      if (income === null || typeof income !== "object") continue;
-      const definition = income as {
-        delay?: unknown;
-        stores?: unknown;
-        timeLeft?: unknown;
-      };
-      if (typeof definition.delay !== "number") continue;
-      if (definition.stores === null || typeof definition.stores !== "object")
-        continue;
+      const definition = economy.income[worker.key];
+      if (!definition) continue;
 
-      const timeLeft =
-        typeof definition.timeLeft === "number" ? definition.timeLeft - 1 : -1;
+      const timeLeft = definition.timeLeft - 1;
       if (timeLeft > 0) {
-        this.engine.state.set(
-          `income["${worker.key}"].timeLeft`,
-          timeLeft,
-          true,
-        );
+        this.economy.dispatch({
+          type: "economy.setIncomeTimeLeft",
+          payload: { key: worker.key, value: timeLeft, silent: true },
+        });
         continue;
       }
 
       const stores = this.effectiveIncomeStores(
-        definition.stores as Record<string, unknown>,
+        definition.stores,
+        incomeMultiplier,
       );
-      if (this.canApplyIncome(stores)) {
-        this.engine.state.addM("stores", stores, true);
+      if (this.canApplyIncome(stores, availableStores)) {
+        this.economy.dispatch({
+          type: "economy.changeStores",
+          payload: { changes: stores, silent: true },
+        });
+        for (const [store, amount] of Object.entries(stores)) {
+          availableStores[store] = (availableStores[store] ?? 0) + amount;
+        }
       }
-      this.engine.state.set(
-        `income["${worker.key}"].timeLeft`,
-        definition.delay,
-        true,
-      );
+      this.economy.dispatch({
+        type: "economy.setIncomeTimeLeft",
+        payload: { key: worker.key, value: definition.delay, silent: true },
+      });
     }
+    this.collectThiefIncome(economy.income.thieves, availableStores);
+  }
+
+  private startThievesIfNeeded(): void {
+    const economy = this.economy.read();
+    if (economy.thieves !== null || !economy.worldUnlocked) return;
+    if (!Object.values(economy.stores).some((amount) => amount > 5_000)) return;
+    this.economy.dispatch({ type: "economy.startThieves", payload: {} });
+  }
+
+  private collectThiefIncome(
+    definition: EconomyIncomeReadModel | undefined,
+    availableStores: Record<string, number>,
+  ): void {
+    if (!definition) return;
+    const timeLeft = definition.timeLeft - 1;
+    if (timeLeft > 0) {
+      this.economy.dispatch({
+        type: "economy.setIncomeTimeLeft",
+        payload: { key: "thieves", value: timeLeft, silent: true },
+      });
+      return;
+    }
+    const changes: Record<string, number> = {};
+    for (const [store, requested] of Object.entries(definition.stores)) {
+      if (requested >= 0) continue;
+      changes[store] = -Math.min(availableStores[store] ?? 0, -requested);
+    }
+    this.economy.dispatch({
+      type: "economy.collectThieves",
+      payload: {},
+    });
+    for (const [store, amount] of Object.entries(changes)) {
+      availableStores[store] = (availableStores[store] ?? 0) + amount;
+    }
+    this.economy.dispatch({
+      type: "economy.setIncomeTimeLeft",
+      payload: { key: "thieves", value: definition.delay, silent: true },
+    });
   }
 
   private effectiveIncomeStores(
     stores: Record<string, unknown>,
+    incomeMultiplier = this.incomeMultiplier(),
   ): Record<string, number> {
     const effective: Record<string, number> = {};
     for (const [store, amount] of Object.entries(stores)) {
       if (typeof amount !== "number" || amount === 0) continue;
-      effective[store] = amount * this.incomeMultiplier();
+      effective[store] = amount * incomeMultiplier;
     }
     return effective;
   }
 
-  private canApplyIncome(stores: Record<string, number>): boolean {
+  private canApplyIncome(
+    stores: Record<string, number>,
+    availableStores?: Readonly<Record<string, number>>,
+  ): boolean {
     return Object.entries(stores).every(
-      ([store, amount]) => this.numberAt(`stores["${store}"]`) + amount >= 0,
+      ([store, amount]) =>
+        (availableStores?.[store] ?? this.store(store)) + amount >= 0,
     );
   }
 
@@ -437,21 +514,16 @@ export class OutsideRuntime {
   }
 
   private gatherAmount(): number {
-    return originalGatherWoodAmount(
-      this.numberAt('game.buildings["cart"]') > 0,
-    );
+    return originalGatherWoodAmount(this.building("cart") > 0);
   }
 
   private villageRows(): OutsideVillageRowSnapshot[] {
-    const buildings = this.engine.state.get("game.buildings", true);
-    if (buildings === null || typeof buildings !== "object") return [];
+    const buildings = this.economy.read().buildings;
     const rows: OutsideVillageRowSnapshot[] = [];
-    for (const [key, value] of Object.entries(
-      buildings as Record<string, unknown>,
-    )) {
+    for (const [key, value] of Object.entries(buildings)) {
       if (typeof value !== "number" || value <= 0) continue;
       if (key === "trap") {
-        const bait = this.numberAt("stores.bait");
+        const bait = this.store("bait");
         const unbaited = Math.max(0, value - bait);
         const baited = Math.min(value, bait);
         if (unbaited > 0) rows.push({ key: "trap", value: unbaited });
@@ -466,21 +538,17 @@ export class OutsideRuntime {
   }
 
   private workerRows(): OutsideWorkerRowSnapshot[] {
-    if (this.numberAt("game.population") <= 0) return [];
+    if (this.economy.read().population <= 0) return [];
 
     const rows: OutsideWorkerRowSnapshot[] = [];
     rows.push(
       this.workerRow("gatherer", Math.max(0, this.getNumGatherers()), false),
     );
 
-    const workers = this.engine.state.get("game.workers", true);
-    if (workers && typeof workers === "object") {
-      for (const key of Object.keys(
-        workers as Record<string, unknown>,
-      ).sort()) {
-        rows.push(
-          this.workerRow(key, this.numberAt(`game.workers["${key}"]`), true),
-        );
+    const workers = this.economy.read().workers;
+    if (workers) {
+      for (const key of Object.keys(workers).sort()) {
+        rows.push(this.workerRow(key, this.worker(key), true));
       }
     }
     return rows;
@@ -522,12 +590,10 @@ export class OutsideRuntime {
   }
 
   private getNumGatherers(): number {
-    let gatherers = this.numberAt("game.population");
-    const workers = this.engine.state.get("game.workers", true);
-    if (workers && typeof workers === "object") {
-      for (const value of Object.values(workers as Record<string, unknown>)) {
-        if (typeof value === "number") gatherers -= value;
-      }
+    let gatherers = this.economy.read().population;
+    const workers = this.economy.read().workers;
+    for (const value of Object.values(workers)) {
+      gatherers -= value;
     }
     return gatherers;
   }
@@ -536,31 +602,36 @@ export class OutsideRuntime {
     return (
       worker !== "gatherer" &&
       originalOutsideWorkerIncome.some((entry) => entry.key === worker) &&
-      typeof this.engine.state.get(`game.workers["${worker}"]`) === "number"
+      worker in this.economy.read().workers
     );
   }
 
   private maxPopulation(): number {
-    return originalMaxPopulation(this.numberAt('game.buildings["hut"]'));
+    return originalMaxPopulation(this.building("hut"));
   }
 
   private isUnlocked(): boolean {
-    return this.engine.state.get("features.location.outside") === true;
+    return this.economy.read().unlocked;
   }
 
   private notify(message: string): void {
     this.engine.notifications.notify("outside", message);
   }
 
-  private numberAt(path: string): number {
-    const value = this.engine.state.get(path, true);
-    return typeof value === "number" ? value : 0;
+  private building(key: string): number {
+    return this.economy.read().buildings[key] ?? 0;
+  }
+
+  private worker(key: string): number {
+    return this.economy.read().workers[key] ?? 0;
+  }
+
+  private store(key: string): number {
+    return this.economy.read().stores[key] ?? 0;
   }
 
   private incomeMultiplier(): 1 | 10 {
-    return this.engine.state.get("config.debug.incomeMultiplier", true) === 10
-      ? 10
-      : 1;
+    return this.economy.read().incomeMultiplier;
   }
 
   private timerDueAt(id: TimerId | null): number | null {

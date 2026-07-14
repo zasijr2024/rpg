@@ -91,7 +91,10 @@ export class RoomRuntime {
   private needWoodTimer: TimerId | null = null;
   private incomeTimer: TimerId | null = null;
 
-  constructor(private readonly engine: GameEngine) {}
+  constructor(
+    private readonly engine: GameEngine,
+    private readonly incomePaused: () => boolean = () => false,
+  ) {}
 
   initialize(): void {
     if (this.engine.state.get("features.location.room") === undefined) {
@@ -175,6 +178,19 @@ export class RoomRuntime {
       craftOptions: this.craftOptions(),
       buyOptions: this.buyOptions(),
       notifications: this.engine.notifications.list(),
+    };
+  }
+
+  navigationTitle(): RoomStateSnapshot["title"] {
+    return this.fireValue() < FIRE.Flickering.value
+      ? "A Dark Room"
+      : "A Firelit Room";
+  }
+
+  storesPanelSnapshot(): Pick<RoomStateSnapshot, "stores" | "income"> {
+    return {
+      stores: this.storeRows(),
+      income: this.incomeRows(),
     };
   }
 
@@ -664,7 +680,7 @@ export class RoomRuntime {
     if (this.incomeTimer !== null) return;
     this.incomeTimer = this.engine.clock.setTimeout(() => {
       this.incomeTimer = null;
-      if (this.numberAt("game.builder.level") > 3) {
+      if (!this.incomePaused() && this.numberAt("game.builder.level") > 3) {
         this.engine.state.add(
           "stores.wood",
           ROOM_BUILDER_WOOD_INCOME * this.incomeMultiplier(),

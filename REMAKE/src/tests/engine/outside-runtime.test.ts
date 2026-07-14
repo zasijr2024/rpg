@@ -234,6 +234,12 @@ describe("OutsideRuntime", () => {
       },
     ]);
 
+    engine.clock.advanceBy(9999);
+    expect(engine.state.get("stores.wood", true)).toBe(0);
+
+    engine.clock.advanceBy(1);
+    expect(engine.state.get("stores.wood")).toBe(20);
+
     engine.clock.advanceBy(1000);
     expect(engine.state.get("stores.wood")).toBe(20);
   });
