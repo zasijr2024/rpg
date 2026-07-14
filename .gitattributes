@@ -1,3 +1,5 @@
+* text=auto eol=lf
+
 DATA/canonical-manifest.json text eol=lf
 DATA/parity-graph.json text eol=lf
 REMAKE/src/generated/canonical-manifest.json text eol=lf
