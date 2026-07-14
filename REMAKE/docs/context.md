@@ -2,7 +2,7 @@
 
 ## Current Authoritative Status
 
-Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope. Every code-level recommendation in the 2026-07-11 full-product roast is implemented: visible/recoverable persistence, entry-bundle headroom, repository CI configuration, lazy-route recovery, semantic restore validation, nonvisual Space support, 4K/ending presentation, background-time disclosure, exact scoring, multi-seed tooling, and a production complete-spine lane. Public `Release Candidate` sign-off is still on `HOLD`. P14V-01's evidence contracts and P14V-05's fail-closed fixed-corpus runner are implemented; program `P14V-2026-07-12` still must freeze/reproduce a clean candidate, prove hosted CI, reproduce the corrected four-seed policy and retain the 32-seed corpus on that revision, collect strict unassisted sessions, perform a normal-clock real-screen-reader Space flight, resolve license/NOTICE and balance decisions, and verify the final tag.
+Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope. Every code-level recommendation in the 2026-07-11 full-product roast is implemented. Public `Release Candidate` sign-off is still on `HOLD`. Candidate `d3696de` passes the clean technical RC gate, reproduces the corrected four-seed policy, and has a retained 32-seed corpus with zero game-defect or unclassified results. Program `P14V-2026-07-12` still must prove hosted CI, collect strict unassisted sessions, perform a normal-clock real-screen-reader Space flight, resolve license/NOTICE and balance decisions, and verify the final tag.
 
 Current evidence and plan: `docs/status/phase-14-roast-remediation-2026-07-11.md`, `docs/status/phase-14-release-readiness-plan-2026-07-12.md`, `docs/status/phase-14-full-parity-qa.md`, `REPORTS/remediation/P14V-2026-07-12/README.md`, `REPORTS/phase14_data_parity_report_2026-07-11.md`, and `REPORTS/current_prototype_full_roasting_audit_2026-07-11.md`.
 
@@ -164,7 +164,7 @@ Goal: recreate the pinned latest web version of _A Dark Room_ in a modern, stabl
 
 ## Post-Parity Instructions
 
-Phase 14 parity and code remediation are closed. Candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18` passes the local technical RC gate from a separate clean checkout, and its four-seed policy diagnostic is valid; it is not yet public-sign-off evidence. Continue `P14V-2026-07-12` before expansion with hosted CI, the retained 32-seed corpus, strict human cohort, normal-clock real-screen-reader Space/ending, license/NOTICE and original-mode decision, then P14V-aware clean tag verification. Any behavior-changing fix returns to clean candidate reproduction. Do not reopen a completed roadmap phase to hide expansion, redesign, or an unlabelled rebalance.
+Phase 14 parity and code remediation are closed. Candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18` passes the local technical RC gate and has valid four-seed and retained 32-seed diagnostic evidence; this is not yet public sign-off. Continue `P14V-2026-07-12` before expansion with hosted CI, the strict human cohort, normal-clock real-screen-reader Space/ending, license/NOTICE and original-mode decision, then P14V-aware clean tag verification. Any behavior-changing fix returns to clean candidate reproduction. Do not reopen a completed roadmap phase to hide expansion, redesign, or an unlabelled rebalance.
 
 ## Historical Phase Instructions (Superseded)
 

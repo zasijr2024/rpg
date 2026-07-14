@@ -39,7 +39,7 @@ The budget moved from a 59-byte hostage margin to more than 64 kB of raw entry h
 1. `playtests/README.md` requires at least three de-identified, genuinely unassisted production sessions. No such sessions are claimed in this implementation pass.
 2. `docs/accessibility-screen-reader-runbook.md` requires an operator to complete and record a full Space flight and ending with Narrator or NVDA. Automated semantics and axe scans are evidence of implementation, not proof of screen-reader playability.
 
-P14V-01 replaced the count-oriented version-1 human schema/gate with a strict same-revision cohort contract and added a normal-clock, console-free manual fixture alongside the frozen automation-only `space-slice` harness. Final collection still waits for the candidate and corpus gates; no operator outcome is inferred from the tooling.
+P14V-01 replaced the count-oriented version-1 human schema/gate with a strict same-revision cohort contract and added a normal-clock, console-free manual fixture alongside the frozen automation-only `space-slice` harness. P14V-02/P14V-05 subsequently froze the candidate and corpus; final collection now waits for human playtest and screen-reader operators, and no operator outcome is inferred from the tooling.
 
 Until those records exist, describe uncontrolled human pacing and real-screen-reader Space as **implemented but not human-verified**.
 

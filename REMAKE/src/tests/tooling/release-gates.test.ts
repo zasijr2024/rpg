@@ -268,7 +268,6 @@ describe("release gate separation", () => {
       "P14R-06",
       "P14R-09",
       "P14V-03",
-      "P14V-05",
       "P14V-06",
       "P14V-07",
       "P14V-08",

@@ -2,7 +2,7 @@
 
 This folder is the authority for the human-session evidence requested by the Phase 14 roast and `P14V-06`. Automation, developer-guided runs, and sessions using `?debug=1` or `?testHarness=1` do not qualify.
 
-Collection tooling status: **ready**. Schema version 2 and the cohort validator reject duplicate session/participant IDs, mixed cohort identity, revision, ruleset or artifact, invalid active-play totals, inconsistent milestones, exclusions, and contradictory completion/abandonment records. Collection still waits for P14V-05 to freeze the candidate cohort revision and progression corpus.
+Collection tooling status: **ready for operators on candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`**. P14V-05 retained the separate 32-seed diagnostic corpus. Schema version 2 and the cohort validator reject duplicate session/participant IDs, mixed cohort identity, revision, ruleset or artifact, invalid active-play totals, inconsistent milestones, exclusions, and contradictory completion/abandonment records. Choose and hash one exact production build before session 1, then keep that artifact identity and the `original` ruleset fixed for the cohort.
 
 ## Cohort Contract
 

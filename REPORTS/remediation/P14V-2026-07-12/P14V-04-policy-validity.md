@@ -162,5 +162,5 @@ This clean reproduction closes P14V-04. It does not establish a player completio
 
 ## Next Work
 
-1. Run the implemented `npm run study:progression:corpus` P14V-05 writer/aggregator on the frozen revision, retaining its one versioned 32-seed summary with the exact revision and environment.
+1. P14V-05 subsequently retained the fixed 32-seed artifact on this revision; see `P14V-05-progression-corpus.md`.
 2. Keep human completion, pacing, and balance claims out of this diagnostic; those remain P14V-06/P14V-08 evidence and decisions.

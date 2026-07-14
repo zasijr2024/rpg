@@ -26,7 +26,7 @@ The pinned original source contains the pacing constants and progression costs b
 
 The original real-command policy completed 0/4 fixed production RNG seeds: three runs died during the first expedition and one failed to recover the final Workshop scales. After adding legal death/resource recovery and late-game policy corrections without changing game balance, candidate `d3696de` reproduced 4/4 with 11 legal deaths and no failures from a separate clean checkout. The command passes when every run is classified, not because a player-completion threshold succeeded. Both results are scripted-policy evidence and must not be described as player completion rates.
 
-No qualifying unassisted human sessions exist. `P14V-01` strengthened the cohort schema/gate, P14V-02/P14V-04 froze and reproduced the candidate, and the P14V-05 shard/aggregate writer is ready to retain the fixed 32-seed corpus. `P14V-06` then collects at least three same-revision sessions, normally continuing to five and up to eight if results conflict. See `phase-14-release-readiness-plan-2026-07-12.md`.
+The retained P14V-05 corpus covers 32 exact seeds: 12 study-policy completions, 20 policy-classified stops, zero game-defect stops, and zero unclassified stops. It is diagnostic automation, not player evidence. No qualifying unassisted human sessions exist. P14V-06 is now ready to collect at least three same-revision sessions, normally continuing to five and up to eight if results conflict. See `phase-14-release-readiness-plan-2026-07-12.md`.
 
 ## Historical RA-P1-14 Evidence
 

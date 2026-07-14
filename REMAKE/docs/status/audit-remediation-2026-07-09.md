@@ -10,7 +10,7 @@ The historical RA remediation program is complete: P0, P1, and all eight P2 pack
 
 ## Current Package
 
-- ID: none active in the historical RA program; `P14V-02` and `P14V-04` are complete and `P14V-05` is next in the separate validation ledger
+- ID: none active in the historical RA program; `P14V-02`, `P14V-04`, and `P14V-05` are complete in the separate validation ledger, with operator-owned P14V-06/P14V-07 next
 - Name: RA remediation closed; see `REMAKE/docs/planning.md` for P14V
 - State: all RA packages complete; no closure tag is claimed because the worktree remains dirty.
 - Final Phase 14 checkpoint: 69 unit-test files / 483 tests; cumulative Beta gate passed; 381 Chromium parity executions passed with 139 expected skips; 9 served-production and 27 release-browser executions passed; dependency audits found zero vulnerabilities.

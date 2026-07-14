@@ -11,7 +11,7 @@ Current readiness:
 - Save safety: schema-1 checksummed autosaves retain one committed backup, quarantine corrupt/incompatible data, recover without partial live-state mutation, and migrate supported unversioned remake saves.
 - Production performance: versioned bundle budgets are enforced during builds, and served-`dist` browser gates protect startup, long tasks, idle responsiveness, blocked-storage startup, save/reload, and late-game lazy routes.
 - Executioner content is finalized against all 798 pinned source requirements, with exhaustive routed branch contracts and organic World/Fabricator consequences.
-- Roast remediation: persistence failures are visible/recoverable, bundle headroom is restored, CI configuration and lazy-route recovery exist, and nonvisual Space support is implemented. Current `HOLD` reasons are the missing hosted CI run, retained 32-seed corpus, strict human sessions, real screen-reader Space flight, open license/NOTICE decision, product sign-off, and P14V-aware clean tag.
+- Roast remediation: persistence failures are visible/recoverable, bundle headroom is restored, CI configuration and lazy-route recovery exist, nonvisual Space support is implemented, and the 32-seed corpus is retained. Current `HOLD` reasons are the missing hosted CI run, strict human sessions, real screen-reader Space flight, open license/NOTICE decision, product sign-off, and P14V-aware clean tag.
 
 Start here:
 
@@ -63,4 +63,4 @@ npm run closure:status
 npm run closure:verify-tag -- <tag>
 ```
 
-`study:progression:corpus` runs the fixed 32-seed policy diagnostic in deterministic shards and writes one validated P14V-05 artifact. It refuses a dirty worktree by default; `--allow-dirty` exists only for provisional tooling diagnostics. Current expected blockers: `study:human:gate` fails at 0/3 and recruitment waits for P14V-05; `closure:verify-tag` fails closed while any RA/P14R/P14V package remains open. The clean `d3696de` technical RC result is recorded under `REPORTS/remediation/P14V-2026-07-12/`.
+`study:progression:corpus` runs the fixed 32-seed policy diagnostic in deterministic shards and writes one validated P14V-05 artifact. Candidate `d3696de` retained that artifact with 12 study-policy completions, 20 policy-classified stops, and zero game-defect/unclassified stops. Current expected blockers: `study:human:gate` fails at 0/3 until real operators contribute sessions; `closure:verify-tag` fails closed while any RA/P14R/P14V package remains open.

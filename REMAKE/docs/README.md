@@ -7,11 +7,11 @@ Current readiness:
 - Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope; see `status/phase-14-full-parity-qa.md`.
 - The connected visible-control route runs from fresh Room through World, canonical Mines, Executioner Blueprint, Fabricator, Ship, Space, and score ending in Chromium, Firefox, and WebKit.
 - Parity Complete, Production Beta, and the technical Release Candidate gate pass on clean candidate `d3696de`; public sign-off additionally requires the remaining hosted-CI, corpus, human, real-screen-reader, licensing/decision, and tag packages in `P14V-2026-07-12`.
-- Fresh-run pacing evidence is reproducible but controlled; see `status/fresh-save-pacing.md` for the deterministic milestone trace, the original 0/4 and clean-candidate 4/4 policy diagnostics, and the still-pending 32-seed P14V corpus.
+- Fresh-run pacing evidence is reproducible but controlled; see `status/fresh-save-pacing.md` for the deterministic milestone trace, the original 0/4 and clean-candidate 4/4 policy diagnostics, and the retained 32-seed P14V corpus. None is a player completion rate.
 - Parser-backed parity measurement now exposes 2,547 stable event/scene/button/transition/effect/reward requirements in `DATA/parity-graph.json`.
 - Executioner parity is finalized against its complete 798-requirement source graph, with organic World entry/clear consequences and exhaustive headless branch contracts.
 - Phase 14 closes the declared parity scope with 284 completed checklist items, 3 linked deviations, and no open/partial items.
-- All code-level recommendations from the latest roast are implemented; see `status/phase-14-roast-remediation-2026-07-11.md`. P14V-01 supplied the strict cohort gate and normal-clock manual Space fixture; the candidate is frozen, while final playtest recruitment waits for the corpus gate and real assistive-technology evidence waits for an operator.
+- All code-level recommendations from the latest roast are implemented; see `status/phase-14-roast-remediation-2026-07-11.md`. The candidate and corpus are frozen; final playtest and real assistive-technology evidence now wait for human operators.
 
 Recommended reading order:
 

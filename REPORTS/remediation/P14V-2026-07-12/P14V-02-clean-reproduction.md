@@ -60,4 +60,4 @@ Final executable verdict: `Technical Release Candidate: PASS`.
 
 ## Exit
 
-P14V-02 is complete for candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`. P14V-03 hosted CI and P14V-07 real assistive-technology evidence may now run against this revision. The clean four-seed result also satisfies P14V-04's reproduction prerequisite, so P14V-05 is the next local engineering package. Any behavior-changing candidate fix invalidates this record and returns the program to P14V-02.
+P14V-02 is complete for candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`. P14V-03 hosted CI and P14V-07 real assistive-technology evidence may run against this revision. The clean four-seed result satisfied P14V-04's reproduction prerequisite, and P14V-05 subsequently retained the 32-seed corpus. Any behavior-changing candidate fix invalidates this record and returns the program to P14V-02.
