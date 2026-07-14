@@ -238,29 +238,28 @@ export function App() {
         )}
         <PersistenceWarning session={session} />
         {activeLocation !== "space" && (
-          <LocationTabs
-            tabs={tabs}
-            activeLocation={activeLocation}
-            onSelect={selectLocation}
-          />
-        )}
-
-        {activeLocation !== "space" && (
-          <button
-            ref={hyperButtonRef}
-            type="button"
-            className="hyperModeButton"
-            aria-pressed={navigation.hyperMode}
-            onClick={() => {
-              if (navigation.hyperMode) {
-                session.setHyperMode(false);
-              } else {
-                setHyperConfirmationOpen(true);
-              }
-            }}
-          >
-            {navigation.hyperMode ? "classic." : "hyper."}
-          </button>
+          <div className="locationNavigation">
+            <LocationTabs
+              tabs={tabs}
+              activeLocation={activeLocation}
+              onSelect={selectLocation}
+            />
+            <button
+              ref={hyperButtonRef}
+              type="button"
+              className="hyperModeButton"
+              aria-pressed={navigation.hyperMode}
+              onClick={() => {
+                if (navigation.hyperMode) {
+                  session.setHyperMode(false);
+                } else {
+                  setHyperConfirmationOpen(true);
+                }
+              }}
+            >
+              {navigation.hyperMode ? "classic." : "hyper."}
+            </button>
+          </div>
         )}
 
         <div
