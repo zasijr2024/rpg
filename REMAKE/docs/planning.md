@@ -26,10 +26,10 @@ Evidence labels: `fresh-run`, `scenario-seeded`, `headless`, `browser`, `visual`
 - Readiness: Production Beta implementation with Release Candidate evidence in progress
 - Historical implementation program: `RA-2026-07-09`, complete
 - Active validation program: `P14V-2026-07-12`
-- Active package: none; `P14V-01` is complete and `P14V-02` is next, requiring maintainer scope review and checkpoint authorization before candidate freeze
+- Active package: none; `P14V-02` and `P14V-04` are complete on candidate `d3696de`; `P14V-05` is the next local engineering package
 - Core-loop gate: P0/P1/P2, P14R implementation, and roadmap Phases 9-14 complete for the declared parity scope
-- Remaining work: clean reproduction, hosted CI, clean-candidate reproduction of the corrected policy plus its retained 32-seed corpus, at least 3 unassisted sessions with 5 normally targeted and up to 8 if results conflict, real screen-reader Space/ending, license/NOTICE and product decision, and final clean tag
-- Current unknowns must not be collapsed into automation: the provisional dirty-worktree 4/4 policy result is not a player statistic, and axe is not a real screen-reader flight
+- Remaining work: hosted CI, the retained 32-seed corpus, at least 3 unassisted sessions with 5 normally targeted and up to 8 if results conflict, real screen-reader Space/ending, license/NOTICE and product decision, and final clean tag
+- Current unknowns must not be collapsed into automation: the clean-candidate 4/4 policy result is not a player statistic, and axe is not a real screen-reader flight
 - Report archive: current through the `P14V-2026-07-12` evidence index
 - Planning baseline: synchronized 2026-07-14
 
@@ -139,7 +139,7 @@ P2-01 tooling evidence:
 
 - `release-gates.json` and the validated runner define cumulative Parity Complete, Production Beta, and Release Candidate package/check/command ownership without promoting the fresh-run smoke into a release claim.
 - Parity owns the pinned four-project Chromium suite through `test:e2e:parity`; Release Candidate separately owns `test:e2e:release`, which `RA-P2-03` will expand to the cross-browser/real-zoom matrix.
-- Phase 14 static CLI evidence reports 284 complete and 3 linked-deviation checklist items with zero open/partial entries. Parity Complete and Production Beta are ready; Release Candidate has exactly one blocker: the dirty worktree.
+- Phase 14 static CLI evidence reports 284 complete and 3 linked-deviation checklist items with zero open/partial entries. Candidate `d3696de` passes Parity Complete, Production Beta, and the technical Release Candidate gate from a separate clean checkout; public sign-off remains blocked by the open P14V evidence packages.
 
 P2-02 durable-save evidence:
 
@@ -189,7 +189,7 @@ Authority: `REPORTS/current_prototype_full_roasting_audit_2026-07-11.md`. These 
 | P14R-03 | Semantic saves           | Domain/cross-field validation plus generated malformed-state and backup recovery tests                           | done                                                                                  |
 | P14R-04 | Repository CI            | Clean-install change lane plus scheduled/manual full Release Candidate gate                                      | done                                                                                  |
 | P14R-05 | Lazy recovery            | Save-preserving Fabricator/Ship/Space error boundary and cross-browser aborted-chunk retry                       | done                                                                                  |
-| P14R-06 | Nonvisual Space          | Optional spatial feed, hazard alerts, automated accessibility and an honest real-AT runbook                      | implementation done; candidate operator pass pending P14V-02/P14V-07                   |
+| P14R-06 | Nonvisual Space          | Optional spatial feed, hazard alerts, automated accessibility and an honest real-AT runbook                      | implementation done; candidate operator pass pending P14V-07                           |
 | P14R-07 | Large desktop and ending | Physical-density policy, stronger ending hierarchy, regenerated/inspected 4K matrix                              | done                                                                                  |
 | P14R-08 | Background economics     | Retain bounded open-tab debt, disclose closed-page no-progress rule on first resume                              | done                                                                                  |
 | P14R-09 | Pacing distribution      | Scheduled multi-seed real-command study plus schema and summarizer for unassisted sessions                       | implementation done; policy/corpus/cohort evidence pending P14V-04..P14V-06            |
@@ -207,9 +207,9 @@ Authority: `docs/status/phase-14-release-readiness-plan-2026-07-12.md`. These pa
 | ------- | -------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | P14V-00 | Plan and document synchronization                  | none                               | Ledgers, status, runbooks, indexes, and evidence locations agree without claiming missing evidence                                                                                 | done    |
 | P14V-01 | Honest evidence gates and collection tooling       | P14V-00                            | Closure understands P14R/P14V or separates technical/product sign-off; diagnostic naming is honest; cohort records fail closed; a normal-clock nonvisual Space fixture is runnable | done    |
-| P14V-02 | Scope-safe checkpoint and clean reproduction       | P14V-01                            | Reviewed coherent commits; clean separate checkout initializes submodules, installs with `npm ci`, and passes the technical RC gate                                                | pending |
+| P14V-02 | Scope-safe checkpoint and clean reproduction       | P14V-01                            | Reviewed coherent commits; clean separate checkout initializes submodules, installs with `npm ci`, and passes the technical RC gate                                                | done - `d3696de` |
 | P14V-03 | Hosted CI validation                               | P14V-02                            | Change-lane and manual full technical-RC workflows pass on the same SHA with retained run IDs/URLs                                                                                 | pending |
-| P14V-04 | Progression-policy validity                        | P14V-02                            | Current four failures classified; legal death/resource recovery represented; policy and game failures separated                                                                    | provisional: 4/4 in dirty worktree |
+| P14V-04 | Progression-policy validity                        | P14V-02                            | Current four failures classified; legal death/resource recovery represented; policy and game failures separated                                                                    | done - clean candidate 4/4 |
 | P14V-05 | Fixed 32-seed progression corpus                   | P14V-04                            | Reproducible aggregate report exists and no verified game-origin hard/soft lock remains unresolved                                                                                 | runner ready; corpus pending |
 | P14V-06 | Unassisted production playtests                    | P14V-05                            | At least 3 valid unique, same-revision records pass the strengthened gate; normally continue to 5 and up to 8 if outcomes conflict                                                 | pending |
 | P14V-07 | Real screen-reader Space and ending                | P14V-02                            | Candidate-revision runbook passes on the normal clock, including a complete nonvisual flight and ending, with no pending observations                                              | pending |

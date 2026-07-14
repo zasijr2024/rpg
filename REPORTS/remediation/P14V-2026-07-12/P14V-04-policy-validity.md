@@ -1,12 +1,12 @@
 # P14V-04 Progression Policy Validity
 
-Date: 2026-07-12  
-Updated: 2026-07-14  
-Repository revision: `8b0938e963ba19df82779431f5aeaa4ff8ec06dd` plus the dirty Phase 9-14/P14V worktree  
-Environment: Windows, Node `25.4.0`, npm `11.7.0`, Vitest `4.1.10`  
-Final aggregate command: `PHASE14_STUDY_SEEDS=4`, `PHASE14_STUDY_START=0`, `PHASE14_STUDY_TRACE=0`, `npx vitest run --config vitest.progression.config.ts --reporter=dot` from `REMAKE/`
+Date: 2026-07-12
+Updated: 2026-07-14
+Candidate revision: `d3696de28218bb6c7645302398e1a4b5fe7cba18`
+Environment: Windows, Node `25.4.0`, npm `11.7.0`, Vitest `4.1.10`
+Final clean aggregate command: `npm run study:progression`, invoked by `npm run gate:rc` from `F:\ADR20-P14V-02\REMAKE`
 
-Status: **policy-valid in the dirty worktree; formal P14V-04 evidence awaits the P14V-02 frozen revision**. This is diagnostic policy evidence, not player completion evidence and not P14V-05's retained 32-seed corpus.
+Status: **DONE - policy-valid result reproduced on the exact clean P14V-02 candidate**. This is diagnostic policy evidence, not player completion evidence and not P14V-05's retained 32-seed corpus.
 
 ## Before
 
@@ -138,7 +138,7 @@ Final aggregate result:
 | Completion median                | 435,625,000 ms |
 | Completion p90 / max             | 514,696,000 ms |
 
-The aggregate command exited `0` after 686.74 seconds wall time. All four seeds reached `executioner`, `ship`, `space`, and `complete`; no result reported a bottleneck or failure class. The run contains legal deaths and ordinary rollback/retry evidence, including the formerly Workshop-blocked seed's trap-backed scale recovery.
+The original aggregate command exited `0` after 686.74 seconds wall time. All four seeds reached `executioner`, `ship`, `space`, and `complete`; no result reported a bottleneck or failure class. The run contains legal deaths and ordinary rollback/retry evidence, including the formerly Workshop-blocked seed's trap-backed scale recovery.
 
 Post-run verification on the same dirty worktree:
 
@@ -146,10 +146,21 @@ Post-run verification on the same dirty worktree:
 - `npx eslint src/tests/engine/progression-distribution.test.ts src/engine/outside/OutsideRuntime.ts`: passed;
 - `npx vitest run src/tests/engine/economy-cadence.test.ts src/tests/engine/outside-runtime.test.ts src/tests/engine/event-runtime/executioner-command.test.ts --reporter=dot`: 3 files and 26 tests passed.
 
-This closes the known policy defects in the original four seeds, but it does not authorize a Release Candidate claim. The worktree is dirty and the P14V-02 exact clean revision does not yet exist, so this result is provisional and must be reproduced after candidate freeze.
+## Clean-Candidate Reproduction (2026-07-14)
+
+The exact P14V-02 candidate reproduced the same result from the separate clean checkout as part of the uninterrupted technical RC gate:
+
+- revision: `d3696de28218bb6c7645302398e1a4b5fe7cba18`;
+- source state: detached clean checkout with the pinned `ORIGINAL` submodule initialized;
+- command: `npm run gate:rc`, including its `npm run study:progression` stage;
+- Vitest result: 1 file and 1 test passed; study body `658609ms`, stage duration `660.11s`;
+- aggregate: 4 seeds, 4 completed, completion rate 1.00, 11 legal deaths, 6,748 incidental events, 439 combats, 0 classified failures, and 0 unclassified failures;
+- milestones: every seed reached `executioner`, `ship`, `space`, and `complete`;
+- enclosing technical RC gate: exit `0`, `Technical Release Candidate: PASS`.
+
+This clean reproduction closes P14V-04. It does not establish a player completion rate or product pacing decision. Those claims remain owned by P14V-06 and P14V-08.
 
 ## Next Work
 
-1. Freeze and cleanly reproduce the candidate under P14V-02, then rerun this exact four-seed command on that revision.
-2. Run the implemented `npm run study:progression:corpus` P14V-05 writer/aggregator on that frozen revision, retaining its one versioned 32-seed summary with the exact revision and environment.
-3. Keep human completion, pacing, and balance claims out of this diagnostic; those remain P14V-06/P14V-08 evidence and decisions.
+1. Run the implemented `npm run study:progression:corpus` P14V-05 writer/aggregator on the frozen revision, retaining its one versioned 32-seed summary with the exact revision and environment.
+2. Keep human completion, pacing, and balance claims out of this diagnostic; those remain P14V-06/P14V-08 evidence and decisions.

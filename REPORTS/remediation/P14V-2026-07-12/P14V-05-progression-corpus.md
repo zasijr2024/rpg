@@ -1,8 +1,8 @@
 # P14V-05 Fixed Progression Corpus
 
-Status: `WAITING_FOR_P14V_02_CANDIDATE`
+Status: `READY_TO_RUN_ON_CANDIDATE`
 
-The fail-closed corpus runner is implemented, but no formal 32-seed result is recorded. P14V-05 depends on P14V-04 being reproduced on the exact clean P14V-02 candidate. Do not copy the dirty-worktree smoke or provisional four-seed result into the final fields below.
+The fail-closed corpus runner is implemented, and P14V-02/P14V-04 froze and validated candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`. No formal 32-seed result is recorded yet. Run the corpus from that clean candidate checkout; do not copy the dirty-worktree smoke or four-seed result into the final fields below.
 
 ## Execution Contract
 
@@ -15,7 +15,7 @@ The fail-closed corpus runner is implemented, but no formal 32-seed result is re
 
 ## Final Evidence
 
-- Revision: `PENDING`
+- Revision: `d3696de28218bb6c7645302398e1a4b5fe7cba18`
 - Starting worktree: `PENDING`
 - Node/npm/platform: `PENDING`
 - Exact command: `PENDING`

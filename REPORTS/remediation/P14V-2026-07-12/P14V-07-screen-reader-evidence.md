@@ -1,16 +1,16 @@
 # P14V-07 Screen-Reader Evidence
 
-Status: `WAITING_FOR_P14V_02_CANDIDATE`  
+Status: `WAITING_FOR_SCREEN_READER_OPERATOR`
 Overall result: `PENDING`
 
-P14V-01 supplied the tested normal-clock, console-free `?manualFixture=space-realtime` Space fixture. Do not record final observations until P14V-02 freezes the candidate revision. The frozen `testHarness=1&testSeed=space-slice` route remains automation-only and cannot satisfy the one-minute flight contract.
+P14V-01 supplied the tested normal-clock, console-free `?manualFixture=space-realtime` Space fixture, and P14V-02 froze candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`. Final observations may now be recorded only by a real screen-reader operator against that candidate. The frozen `testHarness=1&testSeed=space-slice` route remains automation-only and cannot satisfy the one-minute flight contract.
 
 ## Candidate Environment
 
 | Field                                      | Recorded value |
 | ------------------------------------------ | -------------- |
-| Git revision                               | `PENDING`      |
-| Worktree state                             | `PENDING`      |
+| Git revision                               | `d3696de28218bb6c7645302398e1a4b5fe7cba18` |
+| Worktree state                             | clean detached P14V-02 candidate checkout |
 | Build mode and URL per scenario            | `PENDING`      |
 | Real-time Space fixture proof/URL          | `PENDING`      |
 | Operating system                           | `PENDING`      |
@@ -34,9 +34,9 @@ P14V-01 supplied the tested normal-clock, console-free `?manualFixture=space-rea
 
 | Check                                     | Exact command/result |
 | ----------------------------------------- | -------------------- |
-| Cross-browser accessibility lane          | `PENDING`            |
-| Served-production active-Space lazy route | `PENDING`            |
-| Normal candidate integration gate         | `PENDING`            |
+| Cross-browser accessibility lane          | `npm run test:e2e:release`: 30/30 passed across Chromium, Firefox, and WebKit inside the clean RC gate |
+| Served-production active-Space lazy route | `npm run test:e2e:production`: 15/15 passed, including active-Space loading across all three engines |
+| Normal candidate integration gate         | `npm run gate:rc`: exit `0`; `Technical Release Candidate: PASS` |
 
 ## Defects, Retries, And Exceptions
 

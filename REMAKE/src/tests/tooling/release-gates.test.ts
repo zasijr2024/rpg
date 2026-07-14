@@ -88,7 +88,7 @@ describe("release gate separation", () => {
     expect(statuses.get("RA-P2-05")).toBe("done");
     expect(statuses.get("RA-P2-06")).toBe("done");
     expect(statuses.get("RA-P2-07")).toBe("done");
-    expect(statuses.get("P14R-06")).toContain("pending p14v-02/p14v-07");
+    expect(statuses.get("P14R-06")).toContain("pending p14v-07");
     expect(parsePackageStatuses(releaseReadiness).get("P14V-01")).toBe("done");
   });
 
@@ -267,9 +267,7 @@ describe("release gate separation", () => {
     expect(phaseOwnedOpenIds(phase14Planning, "P14V-2026-07-12")).toEqual([
       "P14R-06",
       "P14R-09",
-      "P14V-02",
       "P14V-03",
-      "P14V-04",
       "P14V-05",
       "P14V-06",
       "P14V-07",

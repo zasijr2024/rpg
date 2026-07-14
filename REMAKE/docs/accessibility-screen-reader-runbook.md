@@ -2,7 +2,7 @@
 
 This runbook records the required `manual-a11y` follow-up for `P14V-07`. The historical `RA-P2-04` record covers Room, World, and Combat on the 2026-07-10 worktree and must not be rewritten as current Space evidence. An accessibility-tree snapshot, axe scan, or DOM assertion does not count as a real screen-reader pass. The operator must hear or read the screen reader's actual output and record it in `REPORTS/remediation/P14V-2026-07-12/P14V-07-screen-reader-evidence.md`.
 
-Fixture status: **ready**. `?manualFixture=space-realtime` is development-only, opens a Ship-ready state with a resilient hull, starts the normal session clock, exposes no `__adrTest` API, and is covered by `manual-space-fixture.spec.ts`. Final operator evidence still waits for the candidate revision frozen by P14V-02; until that pass is recorded, describe the feed as implemented and automated, **not screen-reader verified**.
+Fixture status: **ready on frozen candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`**. `?manualFixture=space-realtime` is development-only, opens a Ship-ready state with a resilient hull, starts the normal session clock, exposes no `__adrTest` API, and is covered by `manual-space-fixture.spec.ts`. Final evidence now waits only for a real screen-reader operator; until that pass is recorded, describe the feed as implemented and automated, **not screen-reader verified**.
 
 ## Required Environment
 
@@ -47,7 +47,7 @@ Open `http://127.0.0.1:41730/?testHarness=1&testSeed=stim-lifecycle`.
 
 ### 4. Nonvisual Space Flight And Ending
 
-After P14V-02 freezes the candidate, start the deterministic development server, open `http://127.0.0.1:41730/?manualFixture=space-realtime`, and confirm the evidence banner states that the normal session clock is running and no console test API is exposed. Do not inspect the Canvas, use a mouse, drive time from the console, or let a facilitator control the game.
+At frozen candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`, start the deterministic development server, open `http://127.0.0.1:41730/?manualFixture=space-realtime`, and confirm the evidence banner states that the normal session clock is running and no console test API is exposed. Do not inspect the Canvas, use a mouse, drive time from the console, or let a facilitator control the game.
 
 1. Confirm `An Old Starship` is open with the fixture-provided hull, then choose `lift off`. The prior-warning state is already seeded, so flight begins directly. Confirm focus enters the `space flight` region and the heading, hull, altitude, four direction controls, and `turn spatial flight feed on` are discoverable.
 2. Activate `turn spatial flight feed on`. Confirm it announces exactly one concise initial status containing all of: ship column/row and x/y, nearest-debris direction and pixel distance, and `collision threat`.

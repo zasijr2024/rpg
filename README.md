@@ -17,7 +17,7 @@ Important status:
 - `ORIGINAL/` is a pinned submodule at the source baseline commit.
 - The active remake implementation branch is `remake/parity`.
 - `main` is the stable planning/reference baseline.
-- Phase 14 parity and every code-level recommendation in the latest roast are implemented in the active worktree, but no clean Release Candidate revision or tag is claimed.
+- Phase 14 parity and every code-level recommendation in the latest roast are implemented; candidate `d3696de` passes the clean technical Release Candidate gate, but no hosted result, public sign-off, or tag is claimed.
 - `P14V-2026-07-12` owns evidence-gate hardening, clean/hosted-CI reproduction, policy and human pacing evidence, real screen-reader Space evidence, licensing/product decisions, and final tag verification.
 
 Do not modify `ORIGINAL/` during remake work.

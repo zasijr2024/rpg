@@ -164,7 +164,7 @@ Goal: recreate the pinned latest web version of _A Dark Room_ in a modern, stabl
 
 ## Post-Parity Instructions
 
-Phase 14 parity and code remediation are closed. New work must start as an explicit post-parity package, preserve the pinned parity baseline, and state whether it changes source behavior. Execute `P14V-2026-07-12` before expansion: evidence-gate and collection prerequisites, coherent clean checkpoint, local/hosted technical RC proof, policy-valid progression corpus, strict human cohort, normal-clock real-screen-reader Space/ending, license/NOTICE and original-mode decision, then P14V-aware clean tag verification. Do not reopen a completed roadmap phase to hide expansion, redesign, or an unlabelled rebalance.
+Phase 14 parity and code remediation are closed. Candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18` passes the local technical RC gate from a separate clean checkout, and its four-seed policy diagnostic is valid; it is not yet public-sign-off evidence. Continue `P14V-2026-07-12` before expansion with hosted CI, the retained 32-seed corpus, strict human cohort, normal-clock real-screen-reader Space/ending, license/NOTICE and original-mode decision, then P14V-aware clean tag verification. Any behavior-changing fix returns to clean candidate reproduction. Do not reopen a completed roadmap phase to hide expansion, redesign, or an unlabelled rebalance.
 
 ## Historical Phase Instructions (Superseded)
 

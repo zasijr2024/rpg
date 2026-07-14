@@ -62,7 +62,7 @@ The pinned pacing trace ends at simulated `12:16:02`. It proves reachability and
 - `phase-14-randomized-world.test.ts` runs 64 production seeds and verifies exact dimensions, village placement, every unconditional landmark count, and reachability.
 - Trap, population, event branches, combat hit/stun/heal, loot, setpiece branches, Executioner specials, debris, and prestige have deterministic seed cases.
 - The event parser graph is mutation-sensitive rather than count-only.
-- At Phase 14 acceptance, no multi-seed full-game policy distribution existed. The later roast remediation added a real-command diagnostic whose original policy completed 0/4; subsequent P14V policy/runtime corrections provisionally complete the same four seeds in the dirty worktree. Clean-candidate reproduction and the fixed 32-seed corpus remain required, and neither automated result is human evidence.
+- At Phase 14 acceptance, no multi-seed full-game policy distribution existed. The later roast remediation added a real-command diagnostic whose original policy completed 0/4; subsequent P14V policy/runtime corrections complete the same four seeds, and candidate `d3696de` reproduced 4/4 from a clean checkout. The fixed 32-seed corpus remains required, and neither automated result is human evidence.
 
 ## Behavior And Discovery Evidence
 

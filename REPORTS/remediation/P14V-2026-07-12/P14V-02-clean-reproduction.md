@@ -1,90 +1,63 @@
 # P14V-02 Scope Review And Clean Reproduction
 
-Date opened: 2026-07-14  
-Program: `P14V-2026-07-12`  
-Current base revision: `8b0938e963ba19df82779431f5aeaa4ff8ec06dd`  
-Status: **PENDING — path inventory recorded; ownership, commits, and clean reproduction are not complete**
+Date opened: 2026-07-14
+Date completed: 2026-07-14
+Program: `P14V-2026-07-12`
+Candidate revision: `d3696de28218bb6c7645302398e1a4b5fe7cba18`
+Status: **DONE - the reviewed candidate passes the technical RC gate from a separate clean checkout**
 
-This is a live fail-closed record. Nothing below is a clean-candidate claim until the final execution fields are completed against one committed revision from a separate clean checkout.
+P14V-02 freezes the code candidate above. The documentation-only closure commit that records this result is intentionally later and does not replace the tested code revision. No push, hosted workflow, tag, public sign-off, human-playtest claim, or screen-reader claim is part of this package.
 
-## Working-Tree Inventory
+## Scope Review And Checkpoints
 
-Commands run from the repository root:
+The opening worktree contained 105 changed tracked paths and 202 untracked paths spanning Phase 9-14 gameplay parity, release evidence tooling, reports, generated artifacts, visual baselines, and the repository-local roast skill. The four deleted aggregate tests were reviewed with their split-suite replacements, historical reports were retained with their current indexes, all 54 changed/new visual baselines were reviewed at the four target viewports, and the roast skill was kept isolated from runtime ownership.
 
-```text
-git status --porcelain=v1
-git diff --stat
-git diff --check
-git ls-files --others --exclude-standard
-git submodule status
-```
+The work was organized into coherent local commits rather than one aggregate checkpoint:
 
-Inventory at opening:
+- `5c444ef` - repository audit-skill improvements;
+- `4a55df1` - canonical parity data;
+- `b04c40c` - Phase 9-14 gameplay parity;
+- `7ac182c` - release-readiness evidence gates;
+- `dfc8154` - Phase 14 readiness evidence;
+- `6b8b859` and `ec2c111` - deterministic LF artifacts and clean text checkout policy;
+- `ad09a48` and `2e73e8a` - neutral fresh-save driver and production-lane isolation;
+- `2d12ead` - reviewed capped 4K room baseline;
+- `42b7220` and `59f4e8a` - atomic production and lazy-recovery save setup;
+- `d3696de` - non-overlapping, target-sized Hyper navigation control.
 
-- 105 tracked paths changed: 101 modified and 4 deleted;
-- 202 untracked files;
-- 307 changed or untracked paths in total;
-- tracked diff: 12,685 insertions and 21,574 deletions across 105 paths;
-- `git diff --check`: no whitespace errors; Git reported expected LF-to-CRLF checkout warnings on tracked text files;
-- `ORIGINAL` submodule status: `-1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7`, meaning it is not initialized in this checkout. P14V-02's clean reproduction must initialize submodules recursively.
-
-The four tracked deletions are large former aggregate tests. They have apparent split-suite replacements and must be staged with those replacements, never as isolated deletions:
-
-| Deleted aggregate | Replacement area requiring joint review |
-| --- | --- |
-| `src/tests/content/event-data-coverage.test.ts` | `src/tests/content/event-data/` plus parser/parity tests |
-| `src/tests/engine/event-runtime.test.ts` | `src/tests/engine/event-runtime/` |
-| `src/tests/engine/game-session.test.ts` | `src/tests/engine/game-session/` |
-| `src/tests/e2e/app.spec.ts` | the expanded contract, slice, accessibility, production, and release E2E suites |
-
-## Scope Buckets
-
-The current work is not safe as one undifferentiated checkpoint. Review and staging should use these ownership boundaries:
-
-1. **Canonical extraction and source data** — `DATA/`, canonical manifests/parity graph, extraction tooling, original content tables, parser coverage, source-baseline documentation, and their generated copies. Generated artifacts must be regenerated and compared in the same checkpoint as their source/tool changes.
-2. **Phase 9–13 gameplay parity** — setpieces, Executioner, Ship, Fabricator, Space/ending, resource authority, domain facades, runtime/UI surfaces, and their focused unit/browser tests.
-3. **Phase 14 QA and roast remediation** — save recovery, background clock behavior, lazy-route containment, accessibility/Space feed, performance/bundle budgets, production/release Playwright lanes, visual baselines, and corresponding regression tests.
-4. **P14V evidence implementation** — phase-aware closure, progression policy/corpus tooling, strict playtest contracts, manual real-time Space fixture, CI workflow, release-gate documentation, and P14V evidence records.
-5. **Project documentation and audit evidence** — phase status files, ledgers, changelog, parity/audit reports, remediation closure records, and repository indexes. These must describe the exact code checkpoint they accompany.
-6. **Repository audit-skill development** — `TOOLS/SKILLS/roast/**` and its indexes. This is not required to run the remake and should remain a separately owned checkpoint unless the maintainer explicitly decides it belongs in the Phase 14 history.
-
-The 54 modified/untracked visual PNG baselines belong with the UI behavior and visual test that produced them. They require visual-review confirmation; passing snapshot comparisons alone does not establish reviewer ownership.
-
-## Dirty-Tree Preflight
-
-This preflight reduces checkpoint risk but does not satisfy clean reproduction:
-
-- focused P14V tooling contracts: **18/18 passed** across 3 files;
-- full unit/content suite: **513/513 passed** across 73 files;
-- normal-clock manual Space fixture: **4/4 passed** across the target Chromium viewports;
-- static gates: Parity Complete `READY`, Production Beta `READY`, Technical Release Candidate `BLOCKED (1)` by the dirty tree;
-- `git diff --check`: passed, with checkout line-ending warnings only.
-
-These results cover the current uncommitted working state. They must be rerun from the clean candidate and cannot be cited as P14V-02 completion.
-
-## Required Maintainer Decisions
-
-- Confirm that the repository audit-skill edits belong in this branch; otherwise preserve them for a separate checkpoint without deleting them.
-- Confirm that the three standalone historical audit reports and 25 historical RA closure records belong in the repository history.
-- Confirm the four aggregate-test deletions are intentional replacements after reviewing test ownership/coverage.
-- Review the 54 visual baselines at all four target viewports.
-- Choose coherent commit boundaries. Commit, push, workflow dispatch, and tag creation have not been performed by this implementation pass.
+Clean-candidate iterations exposed and corrected real reproduction defects before the final run: checkout line endings changed generated bytes and Prettier results; a Playwright helper imported a test file; production-only suites leaked into the desktop lane; the 4K action cap and its baseline disagreed; WebKit could race autosave during production fixture setup; and the Hyper control overlapped the policy notice and missed WebKit's target-size audit. Each fix was committed before recreating or rerunning the candidate.
 
 ## Clean-Reproduction Record
 
-Complete only after the ownership decisions and coherent commits exist:
-
-| Field | Required value |
+| Field | Recorded value |
 | --- | --- |
-| Candidate revision | `PENDING` |
-| Source checkout status | `PENDING` |
-| Separate clean checkout path | `PENDING` |
-| Clean checkout `git status --short` | `PENDING` |
-| Recursive submodule initialization | `PENDING` |
-| Node/npm/OS | `PENDING` |
-| `npm ci` | `PENDING` |
-| Chromium/Firefox/WebKit installation | `PENDING` |
-| `npm run gate:rc` | `PENDING` |
-| Technical RC result | `PENDING` |
+| Candidate revision | `d3696de28218bb6c7645302398e1a4b5fe7cba18` |
+| Source checkout status | branch checkout clean at the candidate revision |
+| Separate clean checkout path | `F:\ADR20-P14V-02` (detached worktree) |
+| Clean checkout `git status --short` | empty before and after the gate |
+| Recursive submodule initialization | `ORIGINAL` initialized at `1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7` |
+| Node/npm/OS | Node `v25.4.0`; npm `11.7.0`; Windows NT `10.0.19045.0` |
+| `npm ci` | passed; 180 packages installed; audit reported 0 vulnerabilities |
+| Chromium/Firefox/WebKit installation | passed with `npx playwright install chromium firefox webkit` |
+| `npm run gate:rc` | exit `0`; 1,434.4 seconds wall time |
+| Technical RC result | **PASS** |
 
-Exit remains blocked until every field above is populated for the same exact candidate revision and the clean technical RC gate passes.
+## Final Gate Evidence
+
+The uninterrupted final command ran from `F:\ADR20-P14V-02\REMAKE` against the exact revision above. Its durable log was retained outside the repository for this implementation session. The gate reported:
+
+- parity artifacts, negative type fixtures, lint, formatting, production build, and bundle/performance verification: passed;
+- unit/content: 73 files and 513 tests passed;
+- desktop Chromium parity: 400 passed and 148 intentionally skipped across 1366, 1920, 2560, and true-4K projects;
+- production performance: 1 passed; production dependency audit: 0 vulnerabilities;
+- served-production browser smoke: 15/15 across Chromium, Firefox, and WebKit;
+- complete production spine: 1/1 passed;
+- progression policy diagnostic: 1/1 passed in 658.61 seconds, reproducing 4/4 completions with 11 legal deaths and no failures;
+- release browser/real-zoom/accessibility matrix: 30/30 across Chromium, Firefox, and WebKit;
+- complete dependency audit: 0 vulnerabilities.
+
+Final executable verdict: `Technical Release Candidate: PASS`.
+
+## Exit
+
+P14V-02 is complete for candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`. P14V-03 hosted CI and P14V-07 real assistive-technology evidence may now run against this revision. The clean four-seed result also satisfies P14V-04's reproduction prerequisite, so P14V-05 is the next local engineering package. Any behavior-changing candidate fix invalidates this record and returns the program to P14V-02.
