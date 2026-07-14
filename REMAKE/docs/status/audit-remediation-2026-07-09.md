@@ -1,6 +1,6 @@
 # Audit Remediation Status
 
-Last updated: 2026-07-12 00:31 +02:00
+Last updated: 2026-07-14
 
 Authority: `REPORTS/remake_full_browsergame_roasting_audit_2026-07-09_21-11-34.md`
 
@@ -12,7 +12,7 @@ The historical RA remediation program is complete: P0, P1, and all eight P2 pack
 
 - ID: none active in the historical RA program; `P14V-02`, `P14V-04`, and `P14V-05` are complete in the separate validation ledger, with operator-owned P14V-06/P14V-07 next
 - Name: RA remediation closed; see `REMAKE/docs/planning.md` for P14V
-- State: all RA packages complete; no closure tag is claimed because the worktree remains dirty.
+- State: all RA packages complete. P14V later reproduced clean technical candidate `d3696de`; no final closure tag is claimed because hosted, human, assistive-technology, decision, and tag packages remain open.
 - Final Phase 14 checkpoint: 69 unit-test files / 483 tests; cumulative Beta gate passed; 381 Chromium parity executions passed with 139 expected skips; 9 served-production and 27 release-browser executions passed; dependency audits found zero vulnerabilities.
 - Closure command: P14V-01 extended `npm run closure:status` and `closure:verify-tag` to fail closed for open RA/P14R/P14V packages while keeping the executable RC gate explicitly technical.
 
@@ -256,4 +256,4 @@ The historical RA remediation program is complete: P0, P1, and all eight P2 pack
 
 ## Exit From Hold
 
-`RA-P0-01` through `RA-P0-08` and `RA-P1-01` through `RA-P1-16` are complete with focused tests and green integration gates. The H-08 parser-specific hold on Phase 9/12 breadth is lifted. The overall audit verdict remains `HOLD` at `Prototype` readiness while the production-readiness packages remain open.
+At this historical RA checkpoint, `RA-P0-01` through `RA-P0-08` and `RA-P1-01` through `RA-P1-16` were complete with focused tests and green integration gates, the H-08 parser-specific hold on Phase 9/12 breadth was lifted, and the overall audit verdict remained `HOLD` at `Prototype` readiness. The current state is the later Production Beta implementation and P14V evidence program described at the top of this document and in `REMAKE/docs/planning.md`.

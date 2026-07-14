@@ -6,7 +6,7 @@ Scope: every recommendation left open by the latest full prototype roast
 
 ## Outcome
 
-All code, architecture, UI, product-decision, automation, and evidence-capture recommendations are implemented. The work does not fabricate evidence that requires other people: the repository still needs real unassisted human sessions and a recorded Narrator/NVDA Space flight before claiming those two experiences are verified. Release Candidate cleanliness also remains a separate commit/tag operation.
+All code, architecture, UI, product-decision, automation, and evidence-capture recommendations are implemented. The work does not fabricate evidence that requires other people: the repository still needs real unassisted human sessions and a recorded Narrator/NVDA Space flight before claiming those two experiences are verified. P14V later established clean technical candidate `d3696de`; hosted proof, product sign-off, and the final clean tag remain separate operations.
 
 ## Recommendation Closure Matrix
 
@@ -45,16 +45,16 @@ Until those records exist, describe uncontrolled human pacing and real-screen-re
 
 ## Release-Readiness Handoff
 
-Execution now moves to `phase-14-release-readiness-plan-2026-07-12.md` under program `P14V-2026-07-12`. The order is:
+At handoff, execution moved to `phase-14-release-readiness-plan-2026-07-12.md` under program `P14V-2026-07-12`. The sequence below is the original dependency order: steps 1, 2, and 4 are now complete; step 3 is blocked on hosted repository access; step 5 awaits human operators; and step 6 remains gated by those results.
 
 1. make the evidence contracts honest: Phase 14-aware closure, diagnostic study naming, a strict same-revision human cohort, and a normal-clock manual Space fixture;
 2. create a scope-reviewed checkpoint and reproduce the technical RC gate from a separate clean checkout;
 3. prove the change lane and manually dispatched full technical-RC lane in hosted GitHub Actions on that same SHA;
-4. repair and classify the current brittle progression policy before retaining a fixed 32-seed corpus;
+4. repair and classify the then-brittle progression policy before retaining a fixed 32-seed corpus;
 5. collect at least three same-revision unassisted production sessions, normally continuing to five and up to eight if results remain inconsistent, while a real operator independently repeats the complete screen-reader runbook including Space and the ending;
 6. record the source-authentic balance/release decision, close the remake-license and NOTICE requirements, then re-run the clean local/hosted gates and tag the exact approved revision.
 
-The current automated RC command is necessary but does not close the human or assistive-technology packages, and the historical closure parser does not yet understand P14R/P14V status. Evidence artifacts belong under `REPORTS/remediation/P14V-2026-07-12/`.
+The automated RC command is necessary but does not close the human or assistive-technology packages. P14V-01 later made the closure parser fail closed on open P14R/P14V status. Evidence artifacts belong under `REPORTS/remediation/P14V-2026-07-12/`.
 
 ## Integration Verification
 
@@ -69,4 +69,4 @@ The current automated RC command is necessary but does not close the human or as
 
 The production spine itself found two false semantic rejections that short save smokes missed. Builder income is timer-owned and may omit worker `timeLeft`; Ship direction stores signed `-30..30` coordinates relative to the village. Both legitimate completed-run shapes now restore and are regression-tested.
 
-Static Phase 14 closure remains blocked while the worktree is dirty by design. No clean closure tag is claimed. `P14V-01 Honest evidence gates and collection tooling` is complete; the next package is the maintainer-owned P14V-02 scope-safe checkpoint and clean reproduction. This implementation pass did not commit, push, dispatch CI, or tag.
+At this remediation integration checkpoint, static Phase 14 closure remained blocked while the worktree was dirty by design. That pass did not commit, push, dispatch CI, or tag. P14V-02 later created and reproduced clean technical candidate `d3696de`, and P14V-04/P14V-05 closed the policy and corpus packages. No hosted run, public closure decision, or final tag is claimed.

@@ -2,11 +2,11 @@
 
 Status: **accepted on 2026-07-11** against the pinned desktop gameplay/UI parity scope.
 
-Delivery boundary: `Parity Complete` and `Production Beta` executable command suites pass. `Release Candidate` is not claimed: static preflight correctly blocks the current dirty worktree, and no clean closure tag was created.
+Delivery boundary at acceptance: `Parity Complete` and `Production Beta` executable command suites passed. `Release Candidate` was not claimed at that checkpoint because static preflight correctly blocked the then-dirty worktree, and no clean closure tag was created. P14V later froze clean production candidate `d3696de` and passed the technical RC gate; public sign-off and a final tag remain separate and open.
 
 Product verdict at acceptance: the separate full roast placed Release Candidate on `HOLD` at strong Alpha. Phase acceptance means the defined source parity contract is closed; it did not by itself erase persistence, bundle-headroom, CI, nonvisual-Space, or uncontrolled-pacing risks.
 
-Post-audit addendum: the implementation recommendations named in that roast were remediated later on 2026-07-11. See `phase-14-roast-remediation-2026-07-11.md` for the superseding code/test status. The remaining clean/CI, progression-policy, human, screen-reader, decision, and tag work is ordered in `phase-14-release-readiness-plan-2026-07-12.md`.
+Post-audit addendum: the implementation recommendations named in that roast were remediated later on 2026-07-11. See `phase-14-roast-remediation-2026-07-11.md` for the superseding code/test status. P14V-02, P14V-04, and P14V-05 subsequently closed clean reproduction, policy validity, and the retained corpus. Hosted CI, human, screen-reader, decision, and tag work remains ordered in `phase-14-release-readiness-plan-2026-07-12.md`.
 
 ## Acceptance Matrix
 
@@ -133,4 +133,4 @@ Run from `REMAKE/` on 2026-07-11:
 
 ## Closure Decision
 
-Phase 14 is complete for the declared desktop parity scope. The high-priority persistence warning and every other code-level roast recommendation are now implemented. Public Release Candidate sign-off follows the separate `P14V-2026-07-12` validation plan: clean reproduction, hosted CI, policy-valid distribution evidence, unassisted sessions, a real screen-reader Space/ending pass, an explicit balance decision, and a verified clean tag.
+Phase 14 is complete for the declared desktop parity scope. The high-priority persistence warning and every other code-level roast recommendation are now implemented. P14V has since completed clean reproduction, policy validation, and the retained fixed corpus on candidate `d3696de`. Public Release Candidate sign-off still requires hosted CI, unassisted sessions, a real screen-reader Space/ending pass, an explicit balance/license/NOTICE decision, and a verified clean tag.

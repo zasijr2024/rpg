@@ -6,7 +6,7 @@ Program: `P14V-2026-07-12`
 Candidate revision: `d3696de28218bb6c7645302398e1a4b5fe7cba18`
 Status: **DONE - the reviewed candidate passes the technical RC gate from a separate clean checkout**
 
-P14V-02 freezes the code candidate above. The documentation-only closure commit that records this result is intentionally later and does not replace the tested code revision. No push, hosted workflow, tag, public sign-off, human-playtest claim, or screen-reader claim is part of this package.
+P14V-02 freezes the production-behavior candidate above. Later evidence work updates documents and release-gate assertions, retains the corpus and production-artifact records, and adds collection tooling; it does not change production engine/UI behavior or replace the tested revision. No push, hosted workflow, tag, public sign-off, human-playtest claim, or screen-reader claim is part of this package.
 
 ## Scope Review And Checkpoints
 

@@ -37,9 +37,11 @@ npm run closure:verify-tag -- <tag>
 
 `gate:list` reports all three static readiness states without failing merely because work remains. Gate execution exits `0` only when all inherited prerequisites and commands pass, `1` when the gate is blocked or a command fails, and `2` for invalid configuration or invocation. Add `-- --json` for machine-readable output or `-- --dry-run` to list the command plan after a successful static preflight.
 
-Candidate evidence must come from the clean-checkout procedure in `git-versioning.md`: initialize submodules, install from the lockfile with `npm ci`, install the release browsers, and run the gate on the exact reviewed SHA. Passing commands from the current dirty implementation worktree are integration evidence, not a clean candidate claim.
+Candidate evidence must come from the clean-checkout procedure in `git-versioning.md`: initialize submodules, install from the lockfile with `npm ci`, install the release browsers, and run the gate on the exact reviewed SHA. Passing commands from a dirty implementation worktree are integration evidence, not a clean candidate claim.
 
 `closure:status` prints program `P14V-2026-07-12`, the exact Git revision, every non-`done` RA/P14R/P14V package ID, current worktree state, and the static result (with blockers) of every release gate. `closure:verify-tag -- <tag>` reads both ledgers and the checklists from the tag itself and fails unless the tag resolves to `HEAD`, the worktree is clean, and the tagged ledgers have zero open IDs.
+
+P14V-06 uses `npm run artifact:identity` to identify the complete served `dist/` rather than a single entry file. The `sha256-tree-v1` identity covers each sorted relative path, byte length, and file SHA-256; `-- --dir=<candidate-dist> --expect=<artifact-id>` fails if the operator is about to serve any different file set or content.
 
 ## Executed Checks
 

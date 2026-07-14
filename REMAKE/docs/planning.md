@@ -33,6 +33,14 @@ Evidence labels: `fresh-run`, `scenario-seeded`, `headless`, `browser`, `visual`
 - Report archive: current through the `P14V-2026-07-12` evidence index
 - Planning baseline: synchronized 2026-07-14
 
+### Repository reconciliation - 2026-07-14
+
+- Pre-update audit point: branch `remake/parity` was clean at `588443e` (`docs: record remaining P14V blockers`). The three commits after frozen production candidate `d3696de` record clean-candidate closure, retain the corpus, and record remaining blockers.
+- Candidate boundary: `git diff d3696de..588443e` contains evidence/runbook documents, the retained corpus JSON, and release-gate assertion updates; it contains no production engine, UI, package, gate configuration, script, or workflow change. Therefore `d3696de` remains the tested production-behavior candidate even though later evidence commits exist.
+- History continuity: the reflog from `d3696de` through `588443e` contains commits only. No reset, rebase, checkout, revert, or other Git-recorded reversal appears. Git cannot prove that an unstaged editor buffer or never-staged file was not discarded, so the defensible claim is "no reversal evidenced," not "reversal impossible."
+- Sequence check: P14V-01, P14V-02, P14V-04, and P14V-05 closed in dependency order. P14V-03 was not skipped; it is blocked because no remote is configured. P14V-06 and P14V-07 are ready for their independent human operators. P14V-08 and P14V-09 correctly remain gated by those prerequisites.
+- Repetition check: P14V-02 required several clean-candidate retries after line-ending, Playwright isolation, baseline, autosave-race, and target-size defects were found. Those retries followed the package failure rule and produced new commits before the final uninterrupted gate; no already-accepted package was reopened or silently redone.
+
 ## Control Package
 
 | ID         | Package                              | Source     | Exit criteria                                                                                                                      | Status |
@@ -211,7 +219,7 @@ Authority: `docs/status/phase-14-release-readiness-plan-2026-07-12.md`. These pa
 | P14V-03 | Hosted CI validation                               | P14V-02                            | Change-lane and manual full technical-RC workflows pass on the same SHA with retained run IDs/URLs                                                                                 | blocked - no configured remote |
 | P14V-04 | Progression-policy validity                        | P14V-02                            | Current four failures classified; legal death/resource recovery represented; policy and game failures separated                                                                    | done - clean candidate 4/4 |
 | P14V-05 | Fixed 32-seed progression corpus                   | P14V-04                            | Reproducible aggregate report exists and no verified game-origin hard/soft lock remains unresolved                                                                                 | done - retained 32-seed artifact |
-| P14V-06 | Unassisted production playtests                    | P14V-05                            | At least 3 valid unique, same-revision records pass the strengthened gate; normally continue to 5 and up to 8 if outcomes conflict                                                 | ready for operators; 0/3 |
+| P14V-06 | Unassisted production playtests                    | P14V-05                            | At least 3 valid unique, same-revision records pass the strengthened gate; normally continue to 5 and up to 8 if outcomes conflict                                                 | cohort/artifact frozen; 0/3 sessions |
 | P14V-07 | Real screen-reader Space and ending                | P14V-02                            | Candidate-revision runbook passes on the normal clock, including a complete nonvisual flight and ending, with no pending observations                                              | ready for operator |
 | P14V-08 | Release, balance, and public-distribution decision | P14V-03, P14V-05, P14V-06, P14V-07 | Dated `GO`/`HOLD` classifies evidence, resolves license/NOTICE, and preserves original mode unless a separate ruleset is explicitly scoped                                         | HOLD - prerequisites pending |
 | P14V-09 | Final clean gate and tag                           | P14V-08                            | Final SHA passes local/hosted technical RC gates and P14V-aware tag verification; every document points to the same evidence                                                       | waiting for P14V-08 |

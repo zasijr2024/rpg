@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "id": "p14v-example-session-01",
   "participantId": "p14v-example-participant-01",
-  "cohortId": "p14v-example-cohort",
+  "cohortId": "p14v-2026-07-14-d3696de-original-01",
   "recordedAt": "2026-07-12T10:00:00.000Z",
-  "revision": "0123456789abcdef0123456789abcdef01234567",
+  "revision": "d3696de28218bb6c7645302398e1a4b5fe7cba18",
   "ruleset": "original",
   "experienceStatus": "first-time",
   "operatorId": "operator-example",
@@ -12,7 +12,7 @@
   "unassisted": true,
   "environment": {
     "artifactKind": "production-build",
-    "artifactId": "sha256:replace-with-built-artifact-digest",
+    "artifactId": "sha256:619c6a8eefc27000a99c621a3bb3e6c656034830f2531eccc7dc1da881060e1e",
     "browser": "replace with browser and version",
     "os": "replace with OS and version"
   },

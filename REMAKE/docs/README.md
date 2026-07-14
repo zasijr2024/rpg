@@ -6,7 +6,7 @@ Current readiness:
 
 - Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope; see `status/phase-14-full-parity-qa.md`.
 - The connected visible-control route runs from fresh Room through World, canonical Mines, Executioner Blueprint, Fabricator, Ship, Space, and score ending in Chromium, Firefox, and WebKit.
-- Parity Complete, Production Beta, and the technical Release Candidate gate pass on clean candidate `d3696de`; public sign-off additionally requires the remaining hosted-CI, corpus, human, real-screen-reader, licensing/decision, and tag packages in `P14V-2026-07-12`.
+- Parity Complete, Production Beta, and the technical Release Candidate gate pass on clean candidate `d3696de`; P14V-05's 32-seed corpus is retained, while public sign-off still requires hosted CI, human, real-screen-reader, licensing/decision, and tag packages in `P14V-2026-07-12`.
 - Fresh-run pacing evidence is reproducible but controlled; see `status/fresh-save-pacing.md` for the deterministic milestone trace, the original 0/4 and clean-candidate 4/4 policy diagnostics, and the retained 32-seed P14V corpus. None is a player completion rate.
 - Parser-backed parity measurement now exposes 2,547 stable event/scene/button/transition/effect/reward requirements in `DATA/parity-graph.json`.
 - Executioner parity is finalized against its complete 798-requirement source graph, with organic World entry/clear consequences and exhaustive headless branch contracts.

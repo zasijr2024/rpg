@@ -5,9 +5,11 @@ Program: `P14V-2026-07-12`
 Base revision: `8b0938e963ba19df82779431f5aeaa4ff8ec06dd`  
 Worktree: **dirty**
 
-Status: **implementation complete; clean-candidate reproduction remains P14V-02 work**.
+Historical checkpoint status: **implementation complete; clean-candidate reproduction remained P14V-02 work at this checkpoint**.
 
-This record closes the missing P14V-01 implementation note. It proves that the evidence contracts and their focused tests exist in the current working tree. Because the implementation is not committed, it is not a clean-revision Release Candidate claim and must not be reused as P14V-02, hosted-CI, human-playtest, or real-screen-reader evidence.
+Current synchronization: P14V-02 later committed, scope-reviewed, and reproduced production candidate `d3696de` from a separate clean checkout; P14V-04 and P14V-05 also closed on that candidate. The dirty-tree facts below remain the historical P14V-01 execution record and are not candidate evidence.
+
+This record closes the missing P14V-01 implementation note. It proves that the evidence contracts and their focused tests existed in the working tree at this checkpoint. Because that implementation was not yet committed, this record is not a clean-revision Release Candidate claim and must not be reused as P14V-02, hosted-CI, human-playtest, or real-screen-reader evidence.
 
 ## Contract Results
 
@@ -66,4 +68,4 @@ Run from `REMAKE/` on 2026-07-14, Windows, Node `v25.4.0`:
 
 P14V-01's exit criterion is met in the current implementation: automation states its limits, open Phase 14 evidence blocks closure, invalid or mixed human records fail closed, and the required normal-clock Space observation is runnable without console controls.
 
-The next package remains P14V-02. A maintainer must review the dirty tree, authorize coherent commits, and reproduce the resulting exact revision in a separate clean checkout before any candidate-level evidence is claimed.
+At this checkpoint, the next package was P14V-02: review the dirty tree, create coherent commits, and reproduce the resulting exact revision in a separate clean checkout before any candidate-level evidence was claimed. That package later completed on `d3696de`; see `P14V-02-clean-reproduction.md`.

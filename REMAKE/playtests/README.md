@@ -2,7 +2,7 @@
 
 This folder is the authority for the human-session evidence requested by the Phase 14 roast and `P14V-06`. Automation, developer-guided runs, and sessions using `?debug=1` or `?testHarness=1` do not qualify.
 
-Collection tooling status: **ready for operators on candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`**. P14V-05 retained the separate 32-seed diagnostic corpus. Schema version 2 and the cohort validator reject duplicate session/participant IDs, mixed cohort identity, revision, ruleset or artifact, invalid active-play totals, inconsistent milestones, exclusions, and contradictory completion/abandonment records. Choose and hash one exact production build before session 1, then keep that artifact identity and the `original` ruleset fixed for the cohort.
+Collection tooling status: **ready for operators on candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`**. P14V-05 retained the separate 32-seed diagnostic corpus. P14V-06 has frozen cohort `p14v-2026-07-14-d3696de-original-01` and production artifact `sha256:619c6a8eefc27000a99c621a3bb3e6c656034830f2531eccc7dc1da881060e1e`; from the evidence-tooling checkout, verify the exact served candidate `dist/` with `npm run artifact:identity -- --dir=<candidate-dist> --expect=<artifact ID>` before every session. Schema version 2 and the cohort validator reject duplicate session/participant IDs, mixed cohort identity, revision, ruleset or artifact, invalid active-play totals, inconsistent milestones, exclusions, and contradictory completion/abandonment records.
 
 ## Cohort Contract
 
@@ -17,7 +17,7 @@ Collection tooling status: **ready for operators on candidate `d3696de28218bb6c7
 
 ## Protocol
 
-1. Serve a clean production build and record its exact revision, artifact identity, ruleset, browser, OS, and collection operator.
+1. Serve the frozen production build only after its directory identity matches the recorded artifact ID. Record the exact revision, artifact identity, ruleset, browser, OS, and collection operator.
 2. Give exactly one neutral sentence: **“A Dark Room is a minimalist text survival game.”** Do not explain controls, optimal workers, map routes, late-game goals, or the ending.
 3. Permit technical assistance only for browser/host failures and record it. Gameplay guidance invalidates the session.
 4. Record active foreground play across sittings; exclude breaks and closed-page time. Record each sitting's active minutes.
