@@ -1,7 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
 
-process.env.ADR_FRESH_SPINE_LIBRARY = "1";
-
 export default defineConfig({
   testDir: "./src/tests/e2e",
   testMatch: "**/production-complete-spine.spec.ts",

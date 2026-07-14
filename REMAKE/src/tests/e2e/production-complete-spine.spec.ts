@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { driveFreshSaveSpine } from "./fresh-save-spine.spec";
+import { driveFreshSaveSpine } from "./fresh-save-spine";
 
 const SAVE_KEY = "adr-remake-dev-save";
 const FIXTURE_URL = "http://127.0.0.1:41733/?testHarness=1";
