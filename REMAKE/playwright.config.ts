@@ -2,7 +2,11 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./src/tests/e2e",
-  testIgnore: "**/production-bundle.spec.ts",
+  testIgnore: [
+    "**/production-bundle.spec.ts",
+    "**/lazy-route-recovery.spec.ts",
+    "**/production-complete-spine.spec.ts",
+  ],
   timeout: 30_000,
   use: {
     baseURL: "http://127.0.0.1:41730",

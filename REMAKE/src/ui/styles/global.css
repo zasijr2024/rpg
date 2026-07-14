@@ -1514,6 +1514,10 @@ select {
     font-size: 1.05rem;
   }
 
+  .roomActions .buttonGrid {
+    max-height: 296px;
+  }
+
   .workerRow {
     grid-template-columns: minmax(0, 1fr) 42px 68px;
     min-height: 68px;
