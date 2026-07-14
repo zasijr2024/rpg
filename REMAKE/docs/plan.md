@@ -1,6 +1,6 @@
 # A Dark Room Remake Plan
 
-Last updated: 2026-07-08
+Last updated: 2026-07-12
 
 Primary goal: recreate the latest web version of _A Dark Room_ in a modern, stable engine and tech stack while preserving the original vision intact. After the remake reaches full parity, add optimizations, improvements, new features, and expansions step by step.
 
@@ -8,7 +8,7 @@ Design authority: `ANALYSE/authors_vision_and_success.md`
 
 Data authority: `DATA/00-extraction-index.md`
 
-Machine parity authority: `DATA/canonical-manifest.json`
+Machine parity authorities: `DATA/canonical-manifest.json` and `DATA/parity-graph.json`
 
 Pinned source baseline: `REMAKE/docs/source-baseline.md`
 
@@ -16,6 +16,7 @@ Original source authority: `ORIGINAL/`
 
 Supporting control documents:
 
+- active audit-remediation packages: `REMAKE/docs/planning.md`
 - deferred scope: `REMAKE/docs/deferred.md`
 - parity checklist: `REMAKE/docs/parity-checklist.md`
 - technical decisions: `REMAKE/docs/tech-decisions.md`
@@ -23,6 +24,9 @@ Supporting control documents:
 - content model: `REMAKE/docs/content-model.md`
 - deviations log: `REMAKE/docs/deviations.md`
 - license and attribution: `REMAKE/docs/license-attribution.md`
+- active release-readiness validation: `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`
+
+Current delivery status: all `RA-P0`, `RA-P1`, `RA-P2`, and code-level `P14R` audit-remediation work is complete, and Phase 14 Full Parity QA is accepted. Parity Complete and Production Beta command suites pass. Public Release Candidate sign-off is not claimed: `P14V-2026-07-12` must first repair evidence-gate/collection semantics, freeze and reproduce a clean candidate, prove hosted CI, validate the progression policy/corpus, collect real human and screen-reader evidence, resolve license/NOTICE and balance decisions, and verify the final tag. New work remains an explicit post-parity package rather than reopening a completed roadmap phase.
 
 ## Source Baseline
 
@@ -47,7 +51,7 @@ The first completion target is gameplay/UI parity excluding explicitly deferred 
 
 Parity does not include active audio playback, music playback, ambient audio, mobile support, durable save versioning, save migration, original save import, active localization, new content, or balance changes. Those are deferred by `REMAKE/docs/deferred.md`.
 
-During parity, save/load is development-only. Use the localStorage key `adr-remake-dev-save`; pre-parity saves are disposable and may be invalidated at any time. Do not promise save compatibility until Post-Parity Phase A.
+The original parity plan treated save/load as disposable development tooling under `adr-remake-dev-save`. The production-readiness override `RA-P2-02` now supports schema-1 envelopes plus the explicit unversioned remake migrations listed in `docs/deferred.md`; original-browser import remains deferred.
 
 ## Non-Negotiable Design Constraints
 
@@ -664,7 +668,7 @@ Acceptance criteria:
 
 Current status:
 
-Phase 7 is finalized for the Path/outfitting scope as of 2026-07-08. Buying Compass reveals `A Dusty Path`, emits the original `the compass points ...` message, exposes the Compass store tooltip, supplies can be added/removed with original weight/capacity helpers and original-style arrow controls, Cured Meat gates embark, perks render from original perk data, and embark opens the active World slice. Full original World arrival, map generation, ship placement, landmark distribution, and home-return world-state consequences remain Phase 8 scope.
+Phase 7 is finalized for the Path/outfitting scope as of 2026-07-08. Buying Compass reveals `A Dusty Path`, emits the original `the compass points ...` message, exposes the Compass store tooltip, supplies can be added/removed with original weight/capacity helpers and original-style arrow controls, Cured Meat gates embark, perks render from original perk data, and embark opens the active World slice. Original World arrival, map generation, ship placement, landmark distribution, and home-return world-state consequences are covered by the finalized Phase 8 foundation.
 
 Phase 7 kickoff position:
 
@@ -700,12 +704,12 @@ Acceptance criteria:
 
 Current status:
 
-Phase 8 has a player-facing foundation slice. Compass purchase now creates an original-shaped 61x61 World map, original landmark counts/radii, original visibility mask, and stored ship direction; embark activates the original village position, renders a compact ASCII viewport, supports button and keyboard movement, consumes food/water counters, can trigger the existing World encounter/setpiece bridge, and can return to Path from the village. This does not yet complete roads, outpost behavior, mine unlocks, ship discovery consequences, fabricator discovery, executioner reachability, danger, starvation/dehydration death loops, or full map UI parity.
+Phase 8 is finalized for the scoped World Exploration foundation as of 2026-07-09. Compass purchase now creates an original-shaped 61x61 World map, original landmark counts/radii, original visibility mask, and stored ship direction; Scout map purchases reveal original radius-5 diamond areas in the persisted World mask, update `seenAll`, and have browser coverage from an active World expedition through visible map reveal, original notification, and fully revealed button hiding; safe village return now also evaluates the persisted mask and commits `seenAll` after normal exploration reveals the last hidden tile; embark activates the original village position, renders the full 61x61 World map through the persisted visibility mask with blank hidden tiles, current-position `@`, original tooltip metadata for the wanderer/village/visible unconsumed landmarks, supports button, pure-UI/browser-covered keyboard, original map-click, and original swipe movement, emits original forest/field/barrens terrain-transition narration into the visible World notification log with browser coverage for Forest to Field to Barrens movement, advances food/water and random-fight ticks only on original travel tiles with browser-covered random-fight delay, encounter start, and fight-move reset, auto-returns safely when movement enters the village tile, auto-enters unconsumed landmark setpieces when movement reaches landmark tiles, can trigger the existing World encounter/setpiece bridge, and can return to Path from the village. The active World slice now also applies original mine-road drawing for cleared mine tiles, marks active cleared mines visited, covers organic Iron/Coal/Sulphur Mine traversal from World movement through setpiece combat into road/visited consequences, carries organic Iron/Coal/Sulphur Mine clearing through road travel back to safe-return building and worker unlock state, covers generated-map Iron/Coal/Sulphur Mine entry and safe return from the Compass-generated World map with browser-covered generated Iron Mine routing from real Compass generation through visible tooltip, entry, and original combat start, has browser coverage for visible Mine tooltip labeling and movement-based Mine setpiece entry plus Coal Mine clear through village safe return into visible `coal miner` unlock, converts cleared Cave/Town/City landmarks and the final cleared Battleship into road-connected Outposts with organic Cave/Town/City clear coverage, focused Command Deck Battleship clear coverage, and immediate converted-Outpost water/use-state/re-entry coverage, marks one-off landmarks visited including organic Borehole Alien Alloy salvage with browser-covered visible label, movement-based entry, loot transfer, and used-entry hiding, Battlefield equipment salvage with browser-covered visible label, movement-based entry, loot transfer, and used-entry hiding, browser-covered Swamp wanderer talk with visible label, Charm gate, safe return, visible `gastronome`, and used-entry hiding, browser-covered Old House occupied entry with combat completion and used-entry hiding, browser-covered Destroyed Village cache entry with prestige-store transfer, `previous.stores` clearing, and used-entry hiding, browser-covered Crashed Ship salvage with visible label, movement-based entry, road drawing, and used-entry hiding, and Old House supplies/water-refill loot, applies active setpiece water replenishment, consumes active Outposts by coordinate once per expedition while routing original Cured Meat supplies into the outfit, has browser coverage for movement-based active Outpost entry, visible water refill, scene loot, used-Outpost entry hiding, preserved non-interactive `P` map glyph, safe return, re-embark, restored Outpost tooltip/entry, and same-Outpost reuse after the expedition reset, commits iron/coal/sulphur mine building unlocks on safe village return, implements the original food/water movement loop for `slow metabolism`, `desert rat`, `gastronome`, starvation/dehydration death, death counters, and survival perk unlocks, has browser coverage for World starvation status and dehydration death through movement into Room return, World-tab closure, and `the world fades`, applies original `FIGHT_DELAY`/`stealthy` random encounter cadence plus danger threshold notifications in the visible World notification log, exposes active danger/starvation/thirst conditions in the World status panel with browser-covered movement-driven danger/safer status and notification transitions, covers organic first-visit Executioner intro reachability from World movement through device discovery with browser-covered Ravaged Battleship label-to-entry, covers organic return-visit Executioner antechamber routing into Engineering/Medical/Martial wing entry events with browser-covered return-visit antechamber entry, visible wing choices, Command Deck gating before and after wing completion, Medical Wing entry, and Command Deck entry, organic Engineering Assembly/R&D clear into the deck flag, organic Medical guardians/strategy/cold-storage clear into the deck flag, organic Martial armory/training-complex clear into the deck flag, focused Command Deck clear and Battleship-to-Outpost conversion, and commits original safe-return Ship/Fabricator discovery state. Phase 8 deliberately stops at those World-side Ship/Fabricator discovery consequences; player-facing Ship controls remain Phase 10 and player-facing Fabricator controls remain Phase 11. Broader Outpost/setpiece content moves to Phase 9, player-facing Ship/Fabricator modules remain Phase 10/11, exhaustive Executioner traversal remains Phase 12, and full original World UI parity QA remains Phase 14.
 
-Phase 8 constraints inherited from Phase 7:
+Phase 8 closure guardrails:
 
 - Preserve the finalized Path/outfitting contracts: Compass reveal, outfit reservation, safe return, capacity, water, armour, and repeated embark behavior must not regress while World expands.
-- Treat original map/mask/landmark generation as the Phase 8 baseline, but do not claim World parity until roads, visibility persistence/rendering, danger, outposts, mine unlocks, ship discovery, fabricator discovery, executioner reachability, and death/perk behavior are implemented from player traversal.
+- Treat original map/mask/landmark generation, full mask-rendered 61x61 World map output, original map tooltip metadata including browser-covered Mine, Borehole, Battlefield, Swamp, Old House, Destroyed Village, Crashed Ship, and Ravaged Battleship label-to-entry behavior, original map-click movement, original swipe movement, browser-covered Scout map-reveal purchases and fully revealed button hiding, safe-return map-completion checks, browser-covered terrain-transition narration, travel-tile supply/fight gating including browser-covered random-fight cadence, village-tile auto-return, unconsumed-landmark auto-entry, current road/visited landmark consequences, organic and browser-covered Borehole/Battlefield salvage, organic and browser-covered Swamp wanderer perk unlock, organic Old House supplies/water refill with browser-covered occupied entry, organic and browser-covered Destroyed Village cache collection, browser-covered Crashed Ship discovery, organic Iron/Coal/Sulphur Mine clear traversal and browser-covered Coal Mine safe-return worker unlock, generated-map Iron/Coal/Sulphur Mine reachability with browser-covered generated Iron Mine routing, organic Cave/Town/City/Battleship clear-to-Outpost traversal, converted-Outpost water/use-state behavior, browser-covered active per-expedition Outpost water/supplies/re-entry/glyph-preservation behavior, organic Executioner intro/wing-entry/Engineering-clear/Medical-clear/Martial-clear/Command Deck reachability with browser-covered return-visit antechamber, wing-entry gating, and Command Deck gating/entry, safe-return mine-building, browser-covered food death/status return, water death/perk, danger/starvation/thirst condition status, fight-delay, and safe-return Ship/Fabricator discovery contracts as the finalized Phase 8 baseline. Do not pull player-facing Ship/Fabricator module UI, broad Phase 9 setpiece work, exhaustive Phase 12 Executioner work, or Phase 14 full-parity QA back into Phase 8.
 - Keep phase-specific notes in `docs/status/phase-8-world.md` instead of bloating this plan section.
 
 Deliverables:
@@ -734,6 +738,8 @@ Acceptance criteria:
 
 ### Phase 9: Setpieces and Dungeons
 
+Current status: implementation finalized on 2026-07-11. All 13 parser-backed canonical Setpiece events are represented with original scene flow, rewards, World-state consequences, organic entry, and player-facing evidence; see `docs/status/phase-9-setpieces.md`. The repository-wide parity/release verdict remains `HOLD` for later-phase scope.
+
 Deliverables:
 
 - all setpiece events
@@ -758,6 +764,10 @@ Acceptance criteria:
 
 ### Phase 10: Ship Module
 
+Scope note: Phase 8 only unlocks Ship discovery state from World safe return and initializes the original base hull/thrusters. The player-facing Ship tab, controls, costs, and lift-off gating belong here.
+
+Current status: finalized on 2026-07-11. The audit-remediation thin slices `RA-P1-11` and `RA-P1-13` implement the guarded Ship tab, hull/engine display, original arrival notification, exact one-Alien-Alloy operations, isolated UI domain, validated save persistence, original hull-gated lift-off, one-time departure warning, post-crash cooldown, and live Space handoff. `RA-P1-14` proves fresh-save Ship reachability inside the complete deterministic ending route. See `docs/status/phase-10-ship.md` for completion evidence.
+
 Deliverables:
 
 - ship unlock
@@ -775,6 +785,10 @@ Acceptance criteria:
 - ship state persists in current parity save shape
 
 ### Phase 11: Fabricator Module
+
+Scope note: Phase 8 only unlocks Fabricator discovery state from the Executioner flag and emits the original builder notification on safe return. The player-facing Fabricator tab, craftables, blueprint gates, quantities, and fabrication costs belong here.
+
+Current status: finalized on 2026-07-11. The audit-remediation thin slice `RA-P1-12` implements the guarded Fabricator tab, original arrival notification, all nine original recipes, redeemed-Blueprint visibility, exact costs, Upgrade maxima, original quantities, visible store results, isolated UI domain, and validated save persistence. `RA-P1-14` proves representative fresh-save Blueprint acquisition, safe-return redemption, and Fabricator use inside the complete deterministic ending route; exhaustive Blueprint acquisition breadth remains Phase 12 scope. See `docs/status/phase-11-fabricator.md` for completion evidence.
 
 Deliverables:
 
@@ -794,6 +808,8 @@ Acceptance criteria:
 
 ### Phase 12: Executioner Content
 
+Current status: finalized on 2026-07-11. The complete pinned Executioner source denominator is locked at 6 events, 103 scenes, 203 buttons, 226 transitions, 196 effects, and 64 rewards. The remake represents that graph as 38 deterministic routed variants with all 16 Executioner combat definitions, original deck gating and completion consequences, special statuses/explosion behavior, all six Blueprint rewards, Fabricator redemption, organic World traversal, and browser-visible entry/Command Deck coverage. See `docs/status/phase-12-executioner.md` for completion evidence.
+
 Deliverables:
 
 - executioner world landmark
@@ -810,6 +826,8 @@ Acceptance criteria:
 - blueprint rewards integrate with Fabricator
 
 ### Phase 13: Space Flight and Ending
+
+Current status: finalized on 2026-07-11. The deterministic, serializable Canvas ascent now preserves frame-scaled cardinal/diagonal movement, exact thruster scaling and bounds, source asteroid start/end travel, altitude-dependent waves, glyph-footprint collisions, hull/crash behavior, title regions, the sixty-second escape, score persistence, randomized prestige-store carryover, Fleet Beacon ending, and prestige-preserving restart. Audio remains explicitly deferred.
 
 Deliverables:
 
@@ -833,6 +851,8 @@ Acceptance criteria:
 - ending flow matches original, excluding deferred audio
 
 ### Phase 14: Full Parity QA
+
+Status: accepted 2026-07-11. See `REMAKE/docs/status/phase-14-full-parity-qa.md`, `REMAKE/docs/status/phase-14-roast-remediation-2026-07-11.md`, `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`, `REPORTS/phase14_data_parity_report_2026-07-11.md`, and `REPORTS/current_prototype_full_roasting_audit_2026-07-11.md`.
 
 Deliverables:
 
@@ -858,15 +878,32 @@ Acceptance criteria:
 
 Only after Phase 14 is accepted:
 
-### Post-Parity Phase A: Save Versioning and Migration
+### Active Post-Parity Program: Release-Readiness Validation
 
-- introduce explicit save schema version
-- add migration framework
-- add backup/restore tools
-- add original-save import if desired
-- add tests for every migration
+Program `P14V-2026-07-12` is the immediate priority before feature expansion:
 
-Recommendation: do this immediately after parity, before new content, because expansions will need durable saves.
+- make the distinction between technical RC automation and product/public sign-off executable and Phase 14-aware;
+- strengthen the human cohort schema/gate and provide a normal-clock, console-free manual Space fixture before recruiting operators;
+- create coherent reviewed commits and reproduce the technical RC gate from a clean checkout;
+- prove both GitHub Actions lanes on the exact candidate SHA;
+- classify the brittle four-seed policy, then retain a fixed 32-seed diagnostic corpus;
+- collect at least three strict unassisted sessions, normally continuing to five and up to eight if results conflict;
+- complete a real screen-reader Space flight and ending;
+- preserve original mode while the evidence is interpreted, resolve the remake license/NOTICE, record `GO` or `HOLD`, and only then cut a P14V-aware clean tag.
+
+See `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`. Feature phases A-G do not outrank this release-evidence program.
+
+### Post-Parity Phase A: Save Evolution And Original Import
+
+Schema-1 checksummed saves, atomic staging/backup recovery, quarantine, supported legacy-remake migrations, semantic validation, visible persistence health, retry, and recovery export were pulled forward and are already implemented.
+
+- preserve and extend the implemented visible/recoverable persistence contract;
+- extend semantic/domain validation whenever new persisted state is added;
+- keep recovery export compatible with every supported schema;
+- add original-browser save import if desired;
+- add tests for every new schema or migration.
+
+Recommendation: the silent-storage blocker is closed; evolve save formats only through versioned migrations and retain the current recovery evidence.
 
 ### Post-Parity Phase B: Audio, Music, and Ambience
 
@@ -1058,6 +1095,15 @@ Mandatory boundaries:
 
 See `REMAKE/docs/content-model.md`.
 
+### Post-Parity Phase G: Release Hardening and Bundle Optimization
+
+- Implemented: the original event catalog is an enforced production chunk, repeated immutable strings are pooled, and Fabricator/Ship/Space retain primary and fresh-retry lazy boundaries.
+- Implemented: the initial-entry budget is tightened to 480,000 B raw / 125,000 B gzip without increasing aggregate budgets; the latest integrated build emitted 416,217 B raw / 119,037 B gzip.
+- Implemented: save-preserving lazy-route recovery and build-external complete production progression are cross-browser/production tested.
+- Remaining: prove the workflow in hosted CI on a clean candidate and keep future measured chunk changes within the executable budgets.
+
+Recommendation: preserve the measured boundary and budget checks. Do not reopen bundle architecture without a real startup/cache benefit and the same production recovery evidence.
+
 ## License and Attribution
 
 The original project is tracked as MPL-2.0 via `ORIGINAL/LICENSE.md`. The remake must preserve original license notices and track source-derived files.
@@ -1069,6 +1115,8 @@ Phase 0 must verify:
 - remake license decision is recorded before public distribution
 - `ORIGINAL/` is treated as immutable reference source
 
+Current status: the original license is preserved, but the final remake-code license and required NOTICE/attribution artifact remain open. `P14V-08` must close them before public distribution; a technical RC result alone is insufficient.
+
 See `REMAKE/docs/license-attribution.md`.
 
 ## Documentation Deliverables
@@ -1078,7 +1126,7 @@ Create and maintain:
 - `REMAKE/docs/plan.md` - this plan
 - `REMAKE/docs/parity-checklist.md` - exact feature/data checklist
 - `REMAKE/docs/tech-decisions.md` - accepted architecture decisions
-- `REMAKE/docs/deferred.md` - deferred audio/mobile/save migration/new content notes
+- `REMAKE/docs/deferred.md` - deferred audio/mobile/original-save-import/new-content notes
 - `REMAKE/docs/deviations.md` - any difference from original behavior
 - `REMAKE/docs/content-model.md` - how to add future data
 - `REMAKE/docs/ui-spec.md` - visual and layout acceptance baseline

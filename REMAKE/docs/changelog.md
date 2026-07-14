@@ -1,8 +1,1450 @@
 # Changelog
 
+- Added the P14V-05 fixed-corpus runner: deterministic shards emit a versioned result contract, aggregation rejects missing/duplicate/extra/mutated seeds and unclassified outcomes, the final JSON records the exact revision/environment/command, and formal runs fail closed on a dirty worktree. A one-seed dirty-worktree smoke completed through the production-command route and was deleted after validating the writer; it is not retained as corpus evidence.
+- Continued P14V-04 by splitting Executioner into committed device, Engineering/kinetic-armour, and Martial expeditions; corrected a won-combat continuation loop; replaced full-session progression reads with transient domain snapshots; batched ordinary Path supply commands; and added opt-in live checkpoint tracing for long deterministic seeds. The latest retained focused run is still classified policy evidence, and an over-budget rerun is not claimed as an outcome.
+- Began Phase 14 release-readiness implementation with P14V-01: technical RC/product sign-off are explicitly separated; tag closure parses RA/P14R/P14V; progression is labelled diagnostic; human evidence uses a strict version-2 same-cohort validator; and a console-free normal-clock Space fixture is available for the eventual screen-reader pass.
+
+### Planned - Phase 14 Release-Readiness Validation
+
+- Added `P14V-2026-07-12`, an evidence-gated sequence from honest closure/collection tooling through clean reproduction, hosted CI, progression-policy validation, a fixed 32-seed corpus, unassisted playtests, real screen-reader Space/ending evidence, public-distribution/product decisions, and final tag verification.
+- Recorded that the current automated RC/closure tools do not yet enforce P14R/P14V operator evidence, the four-seed progression command is diagnostic despite 0/4 completion, and the version-1 human gate is not sufficient for a same-revision decision cohort.
+- Blocked final operator collection until P14V-01 strengthens the playtest schema/validator and replaces the frozen Space test harness with a normal-clock, console-free manual fixture.
+- Set the human evidence policy to three preliminary sessions, normally continuing to five unique first-time participants and up to eight only when outcomes remain materially inconsistent.
+- Added a new P14V evidence index and screen-reader template without fabricating observations, and preserved the historical RA-P2-04 record through a forward link only.
+- Elevated the unresolved remake license and required NOTICE/attribution artifact into the public-distribution decision gate.
+- This documentation package made no commit, push, pull request, workflow dispatch, tag, balance change, human record, or assistive-technology claim.
+
+### Remediated - Phase 14 Full Prototype Roast
+
+- Made persistence failure durable and actionable: session snapshots expose health, blocked reads/writes fall back to an in-memory recovery generation, the UI warns until recovery, and players can retry or export a checksummed recovery document.
+- Added semantic restore invariants for bounded integer stores, exact score state, population/worker/capacity relationships, 61x61 World maps, unlock dependencies, runtime lifecycles, and backup fallback. Supported store and cumulative-score arithmetic now remain exact safe integers.
+- Split the immutable event catalog out of the interactive entry, pooled repeated production strings, tightened the entry budget to 480 kB raw / 125 kB gzip, and added recoverable fresh-URL retry boundaries for Fabricator, Ship, and Space.
+- Added repository GitHub Actions for clean install, parity artifacts, types, unit/content, lint, format, build, audit, and production Chromium smoke on changes, with the full clean-tree cross-browser Release Candidate gate scheduled and manually dispatchable.
+- Added an optional nonvisual Space feed with position, nearest-debris bearing/distance, collision urgency, and escape direction; strengthened the score/homefleet endings; defined a true-4K physical-density policy; regenerated and inspected the affected visual matrix.
+- Retained bounded open-tab catch-up as the explicit product rule and now announces that a closed page earns nothing on first resume.
+- Added a scheduled multi-seed real-command progression study, a de-identified unassisted-human-session schema/summarizer, and an external production complete-spine fixture that reaches and restores the ending without shipping test controls.
+- The production complete spine exposed and corrected two semantic-validator false rejections hidden by short save smokes: timer-owned Builder income legitimately omits worker `timeLeft`, and World `shipPosition` is a signed village-relative compass vector rather than an absolute map index.
+- Preserved source-authentic dominant strategies in the original ruleset by explicit decision; any future rebalance must be a separately named mode backed by collected player evidence.
+- Added `docs/status/phase-14-roast-remediation-2026-07-11.md`. Real human pacing sessions and a recorded real-screen-reader Space flight remain honestly unverified until operators supply them.
+
+### Finalized - Phase 14 Full Parity QA And Prototype Roast
+
+- Closed the parity ledger at 284 complete items, 3 linked intentional deviations, and zero open/partial items; added an AST-backed full event identity/title/string/graph contract for 48 source events, 274 scenes, 462 buttons, 542 transitions, 869 effects, 352 rewards, 2,547 requirements, and 2,791 edges.
+- Restored the original organic thief sink and Hyper x2 mode, suspended passive income during Space, generated World before Nomad Compass headings, separated ship coordinates from the Crashed Ship flag, and corrected active-flight save validation for the real `-40..740` debris domain.
+- Hardened modal background isolation, compact-control tab recovery, Space midpoint contrast, source-exact Executioner text, 64-seed World generation/reachability, canonical Cave/Coal browser routes, and Space keyboard evidence.
+- Expanded the visual matrix to 72 baselines: 18 states at each of 1366, 1920, 2560, and 3840, including true full-viewport framing plus event, combat, Space midpoint, and ending evidence.
+- Added a served-production Chromium/Firefox/WebKit lane for save/reload, blocked storage, and Fabricator/Ship/active-Space lazy routes; repaired Windows/Node 25 execution in the cumulative release-gate runner.
+- Added `docs/status/phase-14-full-parity-qa.md`, `REPORTS/phase14_data_parity_report_2026-07-11.md`, and `REPORTS/current_prototype_full_roasting_audit_2026-07-11.md`.
+- Final verification: cumulative Production Beta gate passed with 69 files / 483 unit tests, 381 Chromium parity executions with 139 expected skips, production build/performance and zero production vulnerabilities; served-production passed 9/9; release Chromium/Firefox/WebKit passed 27/27; complete dependency audit found zero vulnerabilities. Release Candidate remains blocked by the dirty worktree.
+
+### Finalized - Phase 13 Space Flight and Ending
+
+- Replaced representative input with frame-scaled held-key movement, including source thruster scaling, diagonal normalization, bounds, and persisted active controls.
+- Corrected asteroid travel from the source `-40px` start through `740px`, retained altitude-dependent timing/waves and RNG duration, and aligned collision with the glyph footprint and ship point.
+- Added the source Fleet Beacon ending and wait gate, randomized 24-store prestige reduction, total-score persistence, and restart semantics that clear the completed run while preserving prestige.
+- Added deterministic star/ascent rendering and document-title region changes on the restrained Canvas surface; audio remains deferred by project scope.
+- Added `docs/status/phase-13-space-ending.md`. Full parity QA remains Phase 14.
+- Verification passed 64 files / 470 unit tests, lint, production build/bundle/performance checks, and the Chromium 1366 Space/ending browser contract.
+
+### Finalized - Phase 12 Executioner Content
+
+- Locked the pinned `ORIGINAL/script/events/executioner.js` denominator at 798 requirements: 6 events, 103 scenes, 203 buttons, 226 transitions, 196 effects, and 64 rewards.
+- Finalized 38 deterministic routed Executioner variants spanning the Ravaged Battleship intro, antechamber, Engineering, Medical, Martial, and Command Deck content, including every branch represented in focused runtime contracts.
+- Verified all 16 Executioner combat definitions, health and timed specials, unstable-automaton explosion behavior, healing-machine costs, wing completion flags, Fleet Beacon reward, and final Battleship-to-Outpost conversion.
+- Verified Hypo, Kinetic Armour, Plasma Rifle, Disruptor, Glowstone, and Stim Blueprint acquisition plus safe-return redemption into Fabricator recipe visibility; the cleared-storage browser spine retains an organic Blueprint-to-ending proof.
+- Added `docs/status/phase-12-executioner.md` and a source-graph denominator guard. Broader Space/ending parity remains Phase 13 and full parity QA remains Phase 14.
+- Focused verification passed 9 files / 62 unit tests, all four Chromium 1366 Executioner browser contracts, and the cleared-storage fresh ending spine; final integration passed 64 files / 467 unit tests, parser parity, lint, formatting, the production build, bundle-boundary verification, and performance bundle budgets.
+
+### Finalized - Phase 11 Fabricator Module
+
+- Promoted the connected `RA-P1-12` and `RA-P1-14` Fabricator baseline into the finalized roadmap phase after Phase 10 completion.
+- Expanded source-data coverage from representative recipes to the complete ordered nine-recipe contract, including every name, type, build message, Alien Alloy cost, Blueprint requirement, Upgrade maximum, and quantity.
+- Verified guarded unlock and original tab placement, first-arrival notification, redeemed-Blueprint display, hidden gated recipes, exact atomic spending, Hypo quantity five, capped Upgrades, visible stores, and validated save persistence.
+- Repaired the cleared-storage ending spine after canonical Phase 9 migration by using the cost-bearing Iron Mine `go inside` control and Coal Mine `continue` choices; organic Blueprint acquisition, redemption, Fabricator crafting, Ship, and ending coverage is green again.
+- Added `docs/status/phase-11-fabricator.md`; exhaustive Executioner/Blueprint breadth remains Phase 12, broader Space/ending parity remains Phase 13, and full parity QA remains Phase 14.
+- Focused verification passed 3 files / 34 unit tests and both Chromium 1366 Fabricator/fresh-save browser journeys; final integration passed 63 files / 466 unit tests, parser parity, lint, formatting, the production build, bundle-boundary verification, and performance bundle budgets.
+
+### Finalized - Phase 10 Ship Module
+
+- Promoted the connected `RA-P1-11`, `RA-P1-13`, and `RA-P1-14` Ship baseline into the finalized roadmap phase after Phase 9 completion.
+- Verified the guarded Ship tab, original hull/engine display, one-Alien-Alloy hull and engine operations, first-arrival and insufficient-alloy notifications, atomic spending, and validated save persistence against `ORIGINAL/script/ship.js`.
+- Verified original positive-hull lift-off gating, one-time departure warning, linger behavior, live Space handoff, crash return, and 120-second cooldown through focused runtime/session and browser journeys.
+- Added `docs/status/phase-10-ship.md`; Phase 11 Fabricator, Phase 12 exhaustive Executioner content, Phase 13 broader Space/ending parity, and Phase 14 full parity QA remain outside this phase.
+- Focused verification passed 3 files / 31 unit tests and both Chromium 1366 Ship/Space browser journeys; final integration passed 63 files / 466 unit tests, parser parity, lint, formatting, the production build, bundle-boundary verification, and performance bundle budgets.
+
+### Finalized - Phase 9 Canonical Swamp Setpiece
+
+- Closed the three-scene `ADR-EVENT-SETPIECES-SWAMP` graph against canonical `setpiece.swamp`, preserving its exact text, notification, transitions, one-Charm cost, `gastronome` perk reward, and visited-landmark effect.
+- Retained organic World routing and coordinate-scoped consumed state through the existing World transaction boundary.
+- Added exact source-scene and full 13-event inventory coverage, then strengthened focused EventRuntime, organic GameSession, and Chromium 1366 assertions for the complete wanderer route, carried-Charm consumption, perk acquisition, and consumed-landmark hiding.
+- This is the thirteenth and final canonical Phase 9 Setpiece event; no Phase 9 content slices remain.
+- Focused verification passed 3 files / 31 unit tests and the Chromium 1366 Swamp World contract; final integration passed 63 files / 466 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Outpost Setpiece
+
+- Closed the one-scene `ADR-EVENT-SETPIECES-OUTPOST` graph against canonical `setpiece.outpost`, preserving its exact text, notification, guaranteed Cured Meat loot, leave transition, water refill, and replenishment notification.
+- Tightened the effect bridge to record only the active coordinate as used, removing the unrelated one-shot landmark water flag while retaining hidden repeat entry, the visible `P` glyph, safe-return reset, and reuse after re-embark.
+- Added exact source-scene coverage and strengthened focused EventRuntime, organic GameSession, and Chromium 1366 browser assertions for the canonical effect and coordinate-scoped reuse contract.
+- Focused verification passed 3 files / 32 unit tests and both Chromium 1366 Outpost World contracts; final integration passed 63 files / 464 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Destroyed Village Cache Setpiece
+
+- Migrated the complete three-scene `ADR-EVENT-SETPIECES-CACHE` graph from the Phase 8 semantic scaffold key `setpiece.destroyed-village` to canonical `setpiece.cache`.
+- Preserved the exact source text, notification, `enter`/`take`/`leave` transitions, visited effect, and full previous-run prestige-store transfer and clearing behavior.
+- Routed organic World Cache entry to the canonical key, added exact scene/button coverage, strengthened focused EventRuntime and organic GameSession assertions, and extended the Chromium 1366 contract with both cache-state flags.
+- Focused verification passed 3 files / 29 unit tests and the Chromium 1366 canonical Destroyed Village World contract; final integration passed 63 files / 463 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Iron Mine Setpiece
+
+- Closed the three-scene `ADR-EVENT-SETPIECES-IRONMINE` graph against canonical `setpiece.ironmine`, restoring the exact `go inside` label and one-Torch entry cost while preserving the Beastly Matriarch combat, loot, notifications, and cleared-mine ending.
+- Retained organic World routing and coordinate-scoped road, visited-landmark, safe-return building, and iron-miner unlock consequences through the existing World boundary.
+- Added exact scene/button/cost coverage, strengthened focused EventRuntime and organic GameSession assertions, and added Chromium 1366 generated-entry plus full clear/safe-return worker-unlock evidence.
+- Focused verification passed 3 files / 24 unit tests and both Chromium 1366 canonical Iron Mine World contracts; final integration passed 63 files / 463 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Coal Mine Setpiece
+
+- Closed the five-scene `ADR-EVENT-SETPIECES-COALMINE` graph against canonical `setpiece.coalmine`, preserving its exact entry text, notifications, two Man combats, Chief combat, loot tables, original `attack`/`continue`/`run` choices, and cleared-mine ending.
+- Retained organic World routing and coordinate-scoped road, visited-landmark, safe-return building, and coal-miner unlock consequences through the existing World boundary.
+- Added exact scene/button coverage and strengthened focused EventRuntime, organic GameSession, and Chromium 1366 assertions through visible source text, original combat choices, clearing, and safe-return worker unlock.
+- Focused verification passed 3 files / 24 unit tests and the Chromium 1366 canonical Coal Mine World contract; final integration passed 63 files / 463 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Sulphur Mine Setpiece
+
+- Closed the five-scene `ADR-EVENT-SETPIECES-SULPHURMINE` graph against canonical `setpiece.sulphurmine`, preserving its exact entry text, notifications, two Soldier combats, Veteran combat, loot tables, original `attack`/`continue`/`run` choices, and cleared-mine ending.
+- Retained organic World routing and coordinate-scoped road, visited-landmark, safe-return building, and sulphur-miner unlock consequences through the existing World boundary.
+- Added exact scene/button coverage, strengthened focused EventRuntime and organic GameSession assertions, and a Chromium 1366 traversal through visible original combat choices and safe-return worker unlock.
+- Focused verification passed 3 files / 31 unit tests and the Chromium 1366 canonical Sulphur Mine World contract; final integration passed 63 files / 463 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Crashed Ship Setpiece
+
+- Migrated the one-scene `ADR-EVENT-SETPIECES-SHIP` graph from the Phase 8 scaffold key `setpiece.crashed-ship` to canonical `setpiece.ship`.
+- Preserved its exact text, Ship discovery and visited effects, original misspelled `leavel` action key with visible `salvage` label, leave transition, organic World routing, and original road drawing.
+- Added exact source-scene coverage and strengthened focused EventRuntime, organic GameSession, and Chromium 1366 browser assertions.
+- Focused verification passed 4 files / 42 unit tests and the Chromium 1366 canonical Crashed Ship World contract; final integration passed 63 files / 463 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Borehole Setpiece
+
+- Closed the one-scene `ADR-EVENT-SETPIECES-BOREHOLE` graph against canonical `setpiece.borehole`, preserving its exact text, visited effect, guaranteed one-to-three Alien Alloy salvage, and leave transition.
+- Retained organic World routing and coordinate-scoped consumption through the existing World consequence boundary, and aligned the registry with the original Battlefield-before-Borehole source order.
+- Added explicit source-scene and strengthened Chromium 1366 browser assertions alongside the existing focused EventRuntime and organic GameSession contracts.
+- Focused verification passed 4 files / 42 unit tests and the Chromium 1366 canonical Borehole World contract; final integration passed 63 files / 463 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Battlefield Setpiece
+
+- Closed the one-scene `ADR-EVENT-SETPIECES-BATTLEFIELD` graph against canonical `setpiece.battlefield`, preserving its exact text, visited effect, six-entry probabilistic salvage table, and leave transition.
+- Retained organic World routing and coordinate-scoped consumption through the existing World consequence boundary.
+- Added explicit source-scene and focused runtime routing/loot assertions; existing GameSession and Chromium 1366 World contracts provide organic movement, salvage, capacity, and consumed-landmark evidence.
+- Focused verification passed 3 files / 32 unit tests and the Chromium 1366 Battlefield World contract; final integration passed 63 files / 463 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Old House Setpiece
+
+- Migrated the complete four-scene Old House graph from `ADR-EVENT-SETPIECES-HOUSE` to canonical `setpiece.house`, preserving all three entry outcomes, exact loot, water replenishment, visited-landmark effects, and Squatter combat.
+- Routed organic World House entry to the canonical key and retired the older `setpiece.old-house` scaffold key while preserving coordinate-scoped landmark consumption.
+- Added exact scene-key and World-routing assertions; the existing branch, session, and browser contracts now prove all engine branches plus visible organic occupied-combat entry.
+- Focused verification passed 4 files / 40 unit tests and the Chromium 1366 Old House World browser contract; final integration passed 63 files / 462 unit tests, parser parity, lint, formatting, production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical City Setpiece
+
+- Added the canonical 52-scene original City graph from `ADR-EVENT-SETPIECES-CITY`, preserving all four entry routes, Torch costs, chance branches, 18 combat placements, intermediate loot, and 15 dungeon endings.
+- Routed organic World City entry to `setpiece.city` while retaining focused City events as regression scaffolds; canonical completion now preserves `game.cityCleared` and clears the active coordinate through `game.world.cityCleared`.
+- Added complete scene-key/data coverage, a headless organic World-to-Outpost route through chained tower combat, and Chromium 1366 coverage for visible original post-combat choices.
+- Final integration passed 461 unit tests, parser parity, lint, formatting, TypeScript/production build, bundle-boundary verification, and performance bundle budgets.
+
+### Continued - Phase 9 Canonical Town Setpiece
+
+- Added the canonical 23-scene original Town graph from `ADR-EVENT-SETPIECES-TOWN`, preserving all three entry routes, Torch costs, chance branches, seven combat scenes, intermediate loot, and six dungeon endings.
+- Routed organic World Town entry to `setpiece.town` while retaining the focused Town events as regression scaffolds, and kept clearing coordinate-scoped through `game.world.townCleared` and the World consequence boundary.
+- Added content, headless runtime, organic World-to-Outpost, and Chromium 1366 browser coverage for the canonical graph and visible schoolhouse combat choices.
+- Final integration passed 461 unit tests, parser parity, lint, formatting, TypeScript/production build, bundle-boundary verification, and performance bundle budgets.
+
+### Started - Phase 9 Canonical Cave Setpiece
+
+- Confirmed that the completed audit remediation lifts the Phase 9 breadth hold while the broader parity/release verdict correctly remains `HOLD`.
+- Added the canonical 13-scene original Cave graph with exact Torch costs, chance branches, combats, loot endings, and coordinate-scoped dungeon clearing, then routed organic World Cave entry to it.
+- Added player-facing post-combat Setpiece choices so branching fights expose the original `continue` and `leave cave` actions.
+- Verified the clean pre-change baseline with 460 unit tests, parity generation, lint, formatting, and production build; focused implementation evidence passed 38 tests and all four Chromium 1366 expedition-resource scenarios, then the final 460-test, parity, lint, format, production-build, bundle-boundary, and bundle-budget gates passed.
+
+### Closed - RA-P2-08 Reproducible Phase Closure
+
+- Added `closure:status`, a deterministic remediation report with the exact revision, open RA package IDs, worktree state, and the static result of every cumulative release gate.
+- Added tag verification that reads the ledger from the tag and rejects a non-HEAD tag, dirty worktree, or any open phase-owned package ID. No closure tag is claimed from the currently dirty worktree.
+- Verified with 460 unit tests, lint, negative type fixtures, formatting, production build/budget checks, and all 21 Chromium/Firefox/WebKit release-browser executions.
+
+### Closed - RA-P2-07 Performance Budgets
+
+- Added versioned raw and gzip budgets for initial/total JavaScript, CSS, and each lazy entry; every production build now verifies them against the emitted Vite manifest.
+- Added a production-only Chromium budget test for startup time, individual and cumulative Long Tasks, idle Long Tasks, and idle event-loop delay. The measurement JSON is retained as test evidence.
+- Added the focused performance command to the Production Beta release gate. The baseline production build and focused browser performance run passed; `RA-P2-08 Reproducible phase closure` is now active.
+
+### Closed - RA-P2-06 Production Bundle Boundary
+
+- Added a compile-time Vite boundary that retains browser harnesses, debug Settings, deterministic seeds, and risk spikes in the dev server while removing their imports and markers from production output.
+- Moved Spike Lab code and CSS behind a development-only dynamic import and lazy-loaded the Fabricator, Ship, and Space views into three explicit production chunks.
+- Added a production-manifest verifier to `npm run build`; it fails if dev/test sources or markers re-enter emitted assets or if a late-game view stops being a dynamic entry.
+- Preserved Space keyboard focus across asynchronous mounting and restored the shared production canvas style exposed by visual regression coverage. The remaining main-chunk warning was assigned to `RA-P2-07 Performance budgets` for measured regression enforcement.
+
+### Closed - RA-P2-05 Test Ownership Split
+
+- Split the former cross-domain browser, EventRuntime, GameSession, and event-data test monoliths into named Room/Event/World and Engine/Content domain-contract files.
+- Added a deterministic tooling guard that rejects restored monolith paths, oversized unit test files, and any Playwright test without a declared evidence label.
+- Every browser test now declares `fresh-run`, `scenario-seeded`, `headless`, `browser`, `visual`, or `manual-a11y` evidence. The integration checkpoint passed 457 unit tests, lint, formatting, build, and 330 Playwright executions with 130 intentional skips in 4.1 minutes. `RA-P2-06 Production bundle boundary` is now active.
+
+### Closed - RA-P2-04 Accessibility Release Evidence
+
+- Added axe-core WCAG 2.0/2.1/2.2 A/AA release smokes for the fresh Room/live log, compact World model, and active Combat dialog in desktop Chromium, Firefox, and WebKit. Every execution attaches a machine-readable JSON result.
+- Added a dedicated `test:e2e:a11y` command and included the same tests in `test:e2e:release`; the focused matrix passed all 9 executions with zero violations.
+- Added a real-screen-reader runbook and explicit evidence record. Oliver completed every Room, World, and Combat scenario with Windows 10 Narrator and Edge 150 on Windows 10 Pro 22H2; all announcements and focus transitions passed with no anomalies.
+- Automated integration checkpoint: 455 unit tests, lint, build, 7 release-gate tooling tests, and all 21 Release Candidate browser executions passed; the release matrix completed in 5.3 minutes.
+- Archived the complete automated and `manual-a11y` evidence in `RA-P2-04-closure.md`. `RA-P2-05 Test ownership split` is now active.
+
+### Closed - RA-P2-03 Browser And Real Zoom Matrix
+
+- Added a dedicated Release Candidate Playwright configuration for desktop Chromium, Firefox, and WebKit. `test:e2e:release` now owns only the fresh spine, save/background, modal-focus, and World real-zoom contracts; the pinned Chromium parity matrix is unchanged.
+- Added full-viewport release artifacts. World is exercised at effective 100/125/150/200-percent browser zoom viewports without CSS `zoom`, while fresh spine, save/background, and focus attach their own full-viewport PNG evidence.
+- Extended the controlled fresh-save ending spine to every release browser and recorded browser-specific timeout treatment for slower WebKit visible-control execution. `RA-P2-04 Accessibility release evidence` is now active.
+
+### Closed - RA-P2-02 Save backup, recovery and migration tests
+
+- Wrapped production autosaves in a checksummed schema-1 document, retained one last committed backup generation, made staging explicitly non-loadable, and made reset clear primary, staging, and backup together.
+- Added deterministic quarantine and recovery for corrupt JSON, checksum damage, malformed/future schemas, and semantically invalid engine/session payloads; backup restore happens only after validation and cannot create a retry loop.
+- Added explicit migrations for existing unversioned session-v2, engine-v2, and legacy remake state saves, plus focused storage/session and Chromium reload evidence. `RA-P2-03 Browser and real zoom matrix` is now active.
+- Final integration gate: 43 unit-test files / 455 tests, parity artifacts, negative type fixtures, lint, formatting, and production build passed; 306 Playwright tests passed with 130 expected skips in 5.4 minutes.
+
+### Closed - RA-P2-01 Release gate separation
+
+- Added a versioned `release-gates.json` authority and executable hierarchical runner for `Parity Complete`, `Production Beta`, and `Release Candidate`, with human-readable and JSON reports.
+- Made unresolved parity checklist items, missing remediation-package evidence, invalid deviation links, duplicate/unknown gate configuration, and Release Candidate worktree dirtiness deterministic blockers before expensive commands run.
+- Added focused tooling regression coverage and documented the cumulative gate meanings, ownership split, commands, and truthful current `HOLD` result. `RA-P2-02 Save backup, recovery and migration tests` is now active.
+- Final integration gate: 42 unit-test files / 446 tests, parity check, negative type fixtures, lint, formatting, and build passed; 302 Playwright tests passed with 130 expected skips in 5.0 minutes.
+
+### Closed - RA-P1-16 Typed domain facades
+
+- Added typed Economy, World, and Combat state boundaries with discriminated mutation commands and readonly/frozen read models; migrated Outside, World, and Combat runtimes away from direct `StateStore` access.
+- Removed generic `state.set`/`state.add` production commands and added architecture enforcement plus negative compile fixtures for arbitrary paths, invalid payloads, invalid domain unions, and read-model mutation.
+- Added deterministic facade coverage, including the regression distinction between stored Crashed Ship coordinates and completed Ship discovery; the focused Ship browser contract and full fresh-run/World/Combat matrix remain green.
+- Final integration gate: 439 unit tests; negative compile fixtures, lint, formatting, and build; and 302 Playwright tests passed with 130 expected skips (4.8 minutes).
+
+### Closed - RA-P1-15 Parser parity graph
+
+- Replaced regex-only event-title extraction with a TypeScript AST graph covering all 48 events, 274 scenes, 462 buttons, 542 transitions, 869 effects, and 352 rewards under 2,547 stable requirement IDs and 2,791 explicit edges.
+- Removed the duplicate recursive event scan, reducing the canonical inventory from 130 records to 123 unique files, and expanded SHA-256 source-drift coverage from six selected files to all 123.
+- Added reproducible `parity:generate`/`parity:check` commands, zero-duplicate/unresolved-transition diagnostics, and mutation-sensitive tests for transitions, effects, rewards, and missing targets.
+- Final integration gate: 434 unit tests; parity check, lint, formatting, and build; and 302 Playwright tests passed with 130 expected skips (4.8 minutes).
+
+### Closed - RA-P1-14 Fresh-save spine and pacing
+
+- Added a deterministic Chromium 1366 cleared-storage route that uses visible controls plus controlled clock/RNG to connect Room/Outside, Compass, generated Iron/Coal Mines, Steelworks and expedition upgrades, radius-28 Executioner Blueprint acquisition, safe-return redemption, Fabricator crafting, radius-28 Crashed Ship discovery, reinforcement, lift-off, Space, and ending.
+- Asserted and attached the named 1x pacing baseline from the 30-second Builder arrival through the 12:16:02 ending without calling direct state-mutation or forced-event APIs; documented the original-source comparison boundary in `docs/status/fresh-save-pacing.md`.
+- Made repeated entries in the compact visible-landmark list use unique React keys, removing warnings exposed by the long generated-map route without changing the accessible model.
+- Final integration gate: 429 unit tests; lint, formatting, and build; and 302 Playwright tests passed with 130 expected skips (4.8 minutes).
+
+### Closed - RA-P1-13 Thin Space and Ending slice
+
+- Added original hull-gated lift-off with the one-time departure warning, a serializable sixty-second Space ascent, altitude regions, asteroid waves and collisions, crash return/cooldown, escape, original score calculation, and ending surface.
+- Added a restrained Canvas playfield with keyboard/button flight controls, active-flight save restoration, deterministic Runtime coverage, a Chromium visible-control route through the ending, and four desktop Space visual baselines.
+- Final integration gate: 429 unit tests; lint, formatting, and build; and 301 Playwright tests passed with 127 expected skips (4.8 minutes).
+
+### Closed - RA-P1-12 Thin playable Fabricator slice
+
+- Added a guarded, persisted `A Whirring Fabricator` location with one-time original arrival narration, all nine original recipes, Blueprint visibility gates, exact Alien Alloy costs, Upgrade maxima, and original fabrication quantities.
+- Added deterministic Runtime/save coverage, a Chromium player-action route from safe-return Blueprint redemption through `hypo (x5)` fabrication, and four desktop Fabricator visual baselines.
+- Final integration gate: 424 unit tests; lint, formatting, and build; and 296 Playwright tests passed with 124 expected skips (4.7 minutes).
+
+### Closed - RA-P1-11 Thin playable Ship slice
+
+- Added a guarded, persisted `An Old Starship` location with original base hull/thrusters, one-time arrival narration, exact Alien Alloy reinforcement/engine costs, and an isolated UI subscription domain.
+- Added deterministic Runtime/save coverage, a Chromium player-action route from World salvage and Ship discovery through hull reinforcement, and four desktop Ship visual baselines.
+- Final integration gate: 417 unit tests; lint, formatting, and build; and 291 Playwright tests passed with 121 expected skips (4.7 minutes).
+
+### Closed - RA-P1-10 Compact control semantics
+
+- Raised Path and Worker stepper hit areas to 24x24px while preserving the compact arrow treatment; each four-action group now has one tab stop and Arrow/Home/End navigation.
+- Added focusable, described supply and worker details; converted location navigation to the roving tab/tabpanel pattern; and exposed notifications as polite live logs.
+- Added fresh-run and scenario-seeded Chromium contracts plus refreshed the four-viewport Path and Outside visual baselines.
+- Final integration gate: 411 unit tests; lint, formatting, and build; and 286 Playwright tests passed with 118 expected skips (4.6 minutes).
+
 All notable remake implementation changes are recorded here.
 
+## 2026-07-10
+
+### Fixed - RA-P1-09 Focus Ownership Lifecycle
+
+- World now receives focus after keyboard embark. When an event ends or World crosses into a return/death destination, focus moves to the active Room, Path, Outside, World, or Settings region instead of falling to the document body.
+- The event dialog now repairs focus when a combat action is disabled or removed, prioritizes visible event actions over loot-drop toggles, and contains accidental focus escape even when every action is temporarily cooling down.
+
+### Verified - RA-P1-09 Focus Ownership Lifecycle
+
+- Keyboard-only Chromium coverage proves embark into World, combat cooldown, victory, event close/return, combat death, and World return preserve a meaningful focused owner.
+- `npm test` (411 passed); `npm run lint`; `npm run format:check`; and `npm run build` passed.
+- `npm run test:e2e` passed with 278 tests and 118 expected skips (4.7 minutes).
+
+### Closed - RA-P1-09 Focus Ownership Lifecycle
+
+- The focus lifecycle contract and full integration gate are green. `RA-P1-10 Compact control semantics` is active.
+
+### Fixed - RA-P1-08 Compact Accessible World Model
+
+- Removed the 61x61 visual World grid and its landmark spans from the accessibility tree while preserving the visual map plus pointer, swipe, and keyboard controls.
+- Added a cached compact World model with current position/terrain, health/water/food, village distance/direction, boundary-valid movement options, and up to three nearest visible landmarks.
+- Added declarative accessibility browser coverage and a deterministic hidden-tile boundary test; existing World layout and subscription selectors now target the exact World region.
+
+### Verified - RA-P1-08 Compact Accessible World Model
+
+- `npm test` (411 passed); `npm run lint`; `npm run format:check`; and `npm run build` all passed.
+- `npm run test:e2e` passed with 270 tests and 118 expected skips (5.6 minutes), including the new Chromium accessibility scenario.
+
+### Closed - RA-P1-08 Compact Accessible World Model
+
+- The focused product, accessibility, and integration gates are green. `RA-P1-09 Focus ownership lifecycle` is active.
+
+### Fixed - RA-P1-07 Dedicated World Layout
+
+- Moved World out of the Room/Path shell into a dedicated wide composition: a readable primary ASCII map sits beside a stable status, landmark, movement, and notification sidebar.
+- Increased World cell legibility from compressed 12px/7px/1px geometry to 15px monospace tiles with 11px line height, while preserving the full 61x61 map, original glyphs, click/swipe/keyboard movement, and visibility mask.
+- Added responsive World stacking for genuinely constrained viewports without reintroducing the old compact map contract.
+
+### Verified - RA-P1-07 Dedicated World Layout
+
+- `npx playwright test src/tests/e2e/world-layout.spec.ts --project=chromium-1366 --project=chromium-1920` (2 passed; scenario-seeded player movement at 100/125/150/200% zoom)
+- Regenerated and passed World visual baselines at Chromium 1366, 1920, 2560, and 3840.
+- `npm test` (410 passed)
+- `npm run lint`, `npm run build`, `npm run format:check`
+- `npm run test:e2e` (269 passed, 115 expected skips; 4.4 minutes)
+
+### Closed - RA-P1-07 Dedicated World Layout
+
+- The required World composition, zoom, and integration contracts are green. `RA-P1-08 Compact accessible World model` is active.
+
+### Fixed - RA-P1-06 Domain UI Subscriptions
+
+- Replaced the 250 ms root reducer refresh with `useSyncExternalStore` subscriptions for navigation, Room, Outside, Path, World, Settings, and Event UI domains.
+- Unmounted location domains are neither snapshotted nor notified; remounting builds a fresh current snapshot instead of reusing stale inactive data.
+- Catch-up retains 250 ms simulation steps but publishes UI changes once per outer realtime tick, and stable deep comparison preserves the cached World-row reference fast path.
+- Added per-domain snapshot, notification, and committed-render diagnostics to the declarative browser harness.
+
+### Verified - RA-P1-06 Domain UI Subscriptions
+
+- `npx vitest run src/tests/engine/domain-ui-subscriptions.test.ts src/tests/engine/game-session.test.ts src/tests/engine/world-snapshot-cache.test.ts` (74 passed)
+- `npx playwright test src/tests/e2e/domain-ui-subscriptions.spec.ts --project=chromium-1366` (1 passed; scenario-seeded player movement)
+- Browser render counters prove a World move rerenders World while navigation/Root, Room, Outside, Path, and Settings remain unchanged.
+- `npm test` (410 passed)
+- `npm run lint`, `npm run build`, `npm run format:check`
+- `npm run test:e2e` (267 passed, 113 expected skips; 4.3 minutes)
+
+### Closed - RA-P1-06 Domain UI Subscriptions
+
+- The domain subscription and full integration contracts are green. `RA-P1-07 Dedicated World layout` is active.
+
+### Reopened - RA-P1-04 Background Catch-up Debt
+
+- Independent review reproduced that a five-minute catch-up batch skipped update-gated Builder income: batched execution ended with 0 wood while continuous 250 ms advancement ended with 54.
+- Reproduced that stop/restart discarded undrained debt: 9000 ms of a 10-second jump disappeared after the first bounded one-second batch.
+- The original raw-clock and saved-clock tests did not cover full-session update semantics or reload while debt remained.
+
+### Fixed - RA-P1-04 Corrective Rework
+
+- Realtime debt is now serialized as elapsed-time segments with the time scale that was active when each segment arose.
+- Stop, autosave, reload, and running in-game restore preserve undrained debt; a running restore resets its wall-time baseline without restarting the driver or double-counting pre-load time.
+- Production catch-up drains ten seconds per outer tick and advances the headless simulation in normal 250 ms steps while retaining one UI refresh and autosave decision per outer driver tick.
+
+### Verified - RA-P1-04 Corrective Rework
+
+- `npx vitest run src/tests/engine/clock.test.ts src/tests/engine/atomic-save.test.ts` (15 passed)
+- Builder batch-versus-continuous regression: identical level and 54 wood after five minutes
+- Twenty ten-second headless batch probes: about 5.69 ms median and 12.48 ms p95; the rejected five-minute batch measured about 187 ms
+- `npx playwright test src/tests/e2e/background-catch-up.spec.ts --project=chromium-1366` (1 passed, fresh-run with reload)
+- Running LocalStorage restore: 4 viewport cases passed after the first integration run exposed and prompted correction of that boundary
+- `npm test` (407 passed)
+- `npm run lint`, `npm run build`, `npm run format:check`
+- Final `npm run test:e2e` rerun (266 passed, 110 expected skips; 4.4 minutes)
+
+### Reclosed - RA-P1-04 Background Catch-up Debt
+
+- The corrected full-session, lifecycle, reload, and integration contracts are green. `RA-P1-06 Domain UI subscriptions` remains active.
+
+### Fixed - RA-P1-05 World Snapshot Cache
+
+- World map and mask structures are now validated once per object reference instead of once for every rendered cell.
+- The derived 61x61 World rows are cached across warm snapshots and invalidated by grid replacement, movement, reveals, landmark conversion, and used-Outpost presentation changes.
+- Invalid map or mask data falls back to a complete safe hidden-grid snapshot.
+
+### Verified - RA-P1-05 World Snapshot Cache
+
+- `npx vitest run src/tests/engine/world-snapshot-cache.test.ts` (3 passed; warm headless snapshot below 2 ms)
+- `npm test` (403 passed)
+- `npm run lint`, `npm run build`, `npm run format:check`
+- `npm run test:e2e` (266 passed, 110 expected skips; 4.4 minutes)
+
+### Closed - RA-P1-05 World Snapshot Cache
+
+- The complete integration matrix is green. `RA-P1-06 Domain UI subscriptions` is active.
+
+### Fixed - RA-P1-04 Background Catch-up Debt
+
+- Realtime suspension time is now accumulated as debt and drained in bounded five-minute batches instead of discarding everything beyond the first batch.
+- Added deterministic coverage proving that a one-hour suspension eventually produces exactly the same timeout and interval outcomes as continuous advancement.
+- Added a fresh-run Chromium 1366 contract that simulates a one-hour production-tab suspension and observes the complete elapsed hour through the atomic autosave without direct state mutation.
+
+### Verified - RA-P1-04 Background Catch-up Debt
+
+- `npx vitest run src/tests/engine/clock.test.ts` (6 passed)
+- `npx playwright test src/tests/e2e/background-catch-up.spec.ts --project=chromium-1366` (1 passed, fresh-run)
+- `npm test` (400 passed)
+- `npm run lint`, `npm run build`, `npm run format:check`
+- `npm run test:e2e` (266 passed, 110 expected skips; 5.2 minutes)
+
+### Closed - RA-P1-04 Background Catch-up Debt
+
+- The complete integration matrix is green. `RA-P1-05 World snapshot cache` is active.
+
+### Fixed - RA-P1-01 Stim Expiry Lifecycle
+
+- Added the original three-second Stim boost timer to the CombatRuntime lifecycle, including explicit `playerBoostExpiresAt` snapshot data, cleanup on combat closure, and remainder-only restoration.
+- Added deterministic 2999/3000 ms boundary coverage and a restore contract captured after 2000 ms.
+- Added the declarative `testSeed=stim-lifecycle` browser fixture and a Chromium 1366 UI contract that observes a 1-second boosted weapon cooldown before expiry and the normal 2-second cooldown afterward without direct test-state mutation.
+
+### Verified - RA-P1-01 Focused Evidence
+
+- `npm test -- src/tests/engine/combat-runtime.test.ts` (31 passed)
+- `npx playwright test src/tests/e2e/stim-lifecycle.spec.ts --project=chromium-1366` (1 passed)
+- `npm test` (390 passed)
+- `npm run lint`
+- `npm run build`
+- `npm run format:check`
+
+### Pending - RA-P1-01 Integration Gate
+
+- `npm run test:e2e` (257 passed, 107 expected skips; 5.5 minutes)
+
+### Closed - RA-P1-01 Stim Expiry Lifecycle
+
+- The complete Playwright matrix is green, so the Stim lifecycle package is complete and `RA-P1-02 Production RNG lifecycle` is active.
+
+### Fixed - RA-P1-02 Production RNG Lifecycle
+
+- Production sessions now seed Mulberry32 with `crypto.getRandomValues`; explicit seeds remain reproducible.
+- Dev snapshots include validated RNG lifecycle state and restore it before clock-driven runtime lifecycles.
+- Test-harness sessions explicitly retain their stable seed, while the production-RNG browser contract uses real entropy and proves distinct generated World maps.
+
+### Verified - RA-P1-02 Production RNG Lifecycle
+
+- `npm test` (394 passed)
+- `npx playwright test src/tests/e2e/rng-production.spec.ts --project=chromium-1366` (1 passed)
+- `npm run lint`, `npm run build`, `npm run format:check`
+- `npm run test:e2e` (258 passed, 110 expected skips)
+
+### Closed - RA-P1-02 Production RNG Lifecycle
+
+- The Save/Load population contract now expects the resumed RNG sequence (`6/8`), replacing the prior reset-seed artifact (`5/8`). `RA-P1-03 Atomic save foundation` is active.
+
+### Added - RA-P1-03 Atomic Save Foundation
+
+- Production sessions now load the current disposable save automatically at startup, save after player commands, and checkpoint realtime timer progress every ten game seconds.
+- Added staged localStorage commits that preserve the last good primary value when a replacement write is interrupted.
+- Added full Engine/Session lifecycle validation before mutation, rollback on an unexpected restore failure, and explicit RNG-first restoration before clock, timer, and event lifecycles.
+- Corrupt JSON and structurally invalid snapshots now move to a quarantine key and reset the active save slot instead of crashing or partially restoring gameplay.
+- Kept durable schema compatibility, migrations, backups, and recovery guarantees deferred to `RA-P2-02`.
+
+### Verified - RA-P1-03 Atomic Save Foundation
+
+- `npx vitest run src/tests/engine/atomic-save.test.ts` (5 passed)
+- `npx playwright test src/tests/e2e/atomic-save.spec.ts --project=chromium-1366` (1 passed, fresh-run)
+- `npm test` (399 passed)
+- `npm run lint`, `npm run build`, `npm run format:check`
+- `npm run test:e2e` (262 passed, 110 expected skips; 5.2 minutes)
+
+### Closed - RA-P1-03 Atomic Save Foundation
+
+- The validated disposable autosave foundation is green across the complete integration matrix. `RA-P1-04 Background catch-up debt` is active.
+
+## 2026-07-09
+
+### Added - RA-P0-08 Organic Worker Cadence Evidence
+
+- Added a fresh-run Chromium contract that lights the fire, gathers wood, builds a Hut, waits for population, and verifies the player-visible aggregate Gatherer payout remains unchanged at 9 seconds and pays exactly at 10 seconds.
+- The route uses only UI actions, controlled test time, and read-only browser assertions; it does not call the state-mutation harness.
+
+### Verified - RA-P0-08 Organic Worker Cadence Evidence
+
+- `npx playwright test src/tests/e2e/app.spec.ts --project=chromium-1366 --grep "fresh-run: a player-created gatherer"` (1 passed)
+- `npm run lint`
+- `npm run build`
+- `npm run format:check`
+- `npm run test:e2e` (252 passed, 92 expected skips)
+
+### Added - RA-P0-08 Organic Torch and Landmark Evidence
+
+- Added fresh-run browser routes that organically progress through a Tannery and Workshop to craft a Torch, then find a real generated Cave through read-only map routing.
+- Proved the Cave's Torch cost rejects a home-only Torch and accepts the same Torch after the player carries it on the Path.
+- Added fresh-run generated-Cave isolation coverage: UI fist combat clears one Cave, converts that coordinate to an Outpost, and reaches a distinct still-enterable Cave without direct state mutation.
+
+### Verified - RA-P0-08 Organic Torch and Landmark Evidence
+
+- `npx playwright test src/tests/e2e/app.spec.ts --project=chromium-1366 --grep "fresh-run: a (home|carried) torch"` (2 passed)
+- `npx playwright test src/tests/e2e/app.spec.ts --project=chromium-1366 --grep "fresh-run: clearing one generated Cave"` (1 passed)
+
+### Closed - RA-P0-08 P0 Contract Suite
+
+- Added declarative, test-harness-only browser seeds for the Blueprint Commit boundary. The browser now carries all six source-backed blueprints through safe village return and independently proves death discards them before commit, without direct state mutation in the test.
+- Kept the distinction explicit: seed-backed commit/discard verification closes P0; player-reachable Blueprint acquisition remains P1-14 fresh-save-spine work.
+
+### Verified - RA-P0-08 P0 Contract Suite
+
+- `npm test` (390 passed)
+- `npm run format:check`
+- `npm run lint`
+- `npm run build`
+- `npm run test:e2e` (256 passed, 104 expected skips)
+
+### Changed - Audit Intake and Remediation Tracking
+
+- Archived the current full browsergame audit as `REPORTS/remake_full_browsergame_roasting_audit_2026-07-09_21-11-34.md` and indexed it as the current key report.
+- Added `docs/planning.md` with atomic P0/P1/P2 report packages, dependencies, exit criteria, focused test requirements, and mandatory browser verification.
+- Added `docs/status/audit-remediation-2026-07-09.md` and placed Phase 9 content expansion on hold until the P0 expedition contracts are repaired.
+- Kept `docs/plan.md` as the long-term remake plan while making `docs/planning.md` the active remediation ledger.
+
+### Verified - Audit Intake
+
+- Confirmed there were no repository references to the former root `REPORT` path.
+- Confirmed the archived report retains its original creation timestamp and content length.
+
+### Added - RA-P0-01 Expedition Transaction Boundary
+
+- Added a typed, serializable expedition transaction facade for position, HP, water, carried inventory, food/water/fight cadence, World draft commit, and World draft rollback.
+- Routed the World runtime's active expedition resource access through the facade while retaining later behavior changes for their dedicated report packages.
+- Added focused transaction tests for typed state ownership, commit, rollback, and nested-expedition rejection.
+
+### Verified - RA-P0-01 Expedition Transaction Boundary
+
+- `npm test -- src/tests/engine/expedition-transaction.test.ts src/tests/engine/game-session.test.ts` (70 passed)
+- `npm run build`
+- `npm run lint`
+- `npm run format:check`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "plays organically from fresh room to Path, World movement, and return without resource injection" --project=chromium-1920` (1 passed)
+- `npx playwright test src/tests/e2e/app.spec.ts -g "keeps Compass to Path to World contract at viewport extremes" --project=chromium-1366` (1 passed)
+
+### Fixed - RA-P0-04 Worker Income Cadence
+
+- Preserved each worker income source's existing countdown when worker definitions are synchronized.
+- Initialized new worker income records at their configured delay instead of treating a missing countdown as immediately due.
+- Corrected the obsolete debug-income test that expected a payout after one second.
+- Added a focused economy cadence suite and a separate scenario-seeded browser contract.
+
+### Verified - RA-P0-04 Worker Income Cadence
+
+- `npx vitest run src/tests/engine/economy-cadence.test.ts src/tests/engine/outside-runtime.test.ts src/tests/content/outside-data.test.ts` (26 passed)
+- `npm run build`
+- `npm run lint`
+- `npm run format:check`
+- `npx playwright test src/tests/e2e/economy-cadence.spec.ts --project=chromium-1366` (1 passed)
+
+### Fixed - RA-P0-02 Expedition Resource Authority
+
+- Routed encounter, setpiece, and executioner costs through the active expedition's carried inventory, water, and HP while preserving Room, Outside, Global, and Marketing event costs on home stores.
+- Unified World travel and combat HP through the expedition transaction and kept carried combat medicine isolated from home stock.
+- Updated existing Scout and Swamp browser contracts to distinguish Room-origin costs from genuinely carried World supplies.
+- Added focused Torch, Charm, Grenade, Medicine, water, HP, consecutive-combat, and Room-cost authority coverage.
+
+### Verified - RA-P0-02 Expedition Resource Authority
+
+- `npm test -- src/tests/engine/resource-authority.test.ts src/tests/engine/event-runtime.test.ts` (135 passed)
+- `npx playwright test src/tests/e2e/expedition-resources.spec.ts --project=chromium-1366` (3 passed)
+- `npm test` (382 passed)
+- `npm run build`
+- `npm run lint`
+- `npm run format:check`
+- `npm run test:e2e` (247 passed, 77 skipped)
+
+### Fixed - RA-P0-03 Encounter Resumes World
+
+- Routed terminal wilderness-encounter victory through CombatRuntime's existing scene-continuation outcome instead of the safe-return path.
+- Preserved the active expedition draft, position, HP, water, carried supplies, and newly taken loot when leaving a won encounter.
+- Kept setpiece terminal behavior, safe village return, and all death callbacks outside this package.
+- Added engine coverage for the continuation callback, event close, session location, retained loot, and a successful subsequent World move.
+- Added a fresh-run Chromium contract that reaches Compass through UI progression, triggers the encounter through the sixth World move, wins with visible controls, takes loot, leaves, and performs a seventh move.
+
+### Verified - RA-P0-03 Encounter Resumes World
+
+- `npm test -- src/tests/engine/game-session.test.ts src/tests/engine/event-runtime.test.ts src/tests/engine/combat-runtime.test.ts src/tests/engine/resource-authority.test.ts` (232 passed)
+- `npx playwright test src/tests/e2e/app.spec.ts --project=chromium-1366 --grep "fresh-run: encounter victory"` (1 passed)
+- `npm test` (383 passed)
+- `npm run build`
+- `npm run lint`
+- `npm run format:check`
+- `npm run test:e2e` (248 passed, 80 skipped)
+
+### Fixed - RA-P0-05 Atomic Death and Cooldown
+
+- Added one idempotent expedition death-abort boundary that restores the embark-time World draft before closing the expedition.
+- Routed World survival death, Combat death, and lethal World-event HP costs through the same rollback, outfit-loss, Room-return, and cooldown contract.
+- Blocked Path embark while World is active or the original 120-second death cooldown remains active.
+- Added the visible Path embark countdown using the existing stable cooldown-button treatment.
+- Added deterministic rollback, idempotence, lethal Combat/Event, and `119999/120000` boundary tests.
+- Added a fresh-run Chromium contract that mutates an Old House, dies in its combat, verifies rollback and the visible cooldown, then re-embarks and sees the restored House.
+
+### Verified - RA-P0-05 Atomic Death and Cooldown
+
+- `npm test -- src/tests/engine/death-rollback.test.ts src/tests/engine/expedition-transaction.test.ts src/tests/engine/resource-authority.test.ts src/tests/engine/game-session.test.ts src/tests/engine/combat-runtime.test.ts src/tests/engine/event-runtime.test.ts` (240 passed)
+- `npx playwright test src/tests/e2e/app.spec.ts --project=chromium-1366 --grep "fresh-run: death rolls back"` (1 passed)
+- `npm test` (387 passed)
+- `npm run build`
+- `npm run lint`
+- `npm run format:check`
+- `npm run test:e2e` (249 passed, 83 skipped)
+
+### Changed - Phase 8 Scope Closure
+
+- Marked Phase 8 World Exploration as finalized for its scoped foundation: original World generation, movement, visibility, survival, random encounters, landmark-entry bridges, roads, Outpost use-state, mine safe-return consequences, and World-side Ship/Fabricator discovery consequences.
+- Moved broader setpiece/outpost content to Phase 9, player-facing Ship/Fabricator modules to Phase 10/11, exhaustive Executioner content to Phase 12, and full World parity QA to Phase 14.
+
+### Verified - Phase 8 Scope Closure
+
+- `git diff --check`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser World Random Fight Cadence
+
+- Added a Playwright-only RNG sequence hook for deterministic browser coverage of World random-fight movement.
+- Added browser coverage proving movement does not trigger a random World encounter before the original fight delay, then triggers a World-selected encounter from normal movement after the delay and resets `game.world.fightMove`.
+
+### Verified - Phase 8 Browser World Random Fight Cadence
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "random World fight" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Destroyed Village Cache
+
+- Added Playwright coverage for visible `A Destroyed Village` World labeling, movement-based cache entry, original `enter`/`take` scene flow, prestige-store transfer, `previous.stores` clearing, and post-visit entry hiding.
+- Narrowed the one-off landmark browser gap by bringing the Destroyed Village cache from organic GameSession coverage onto the player-facing World surface.
+
+### Verified - Phase 8 Browser Destroyed Village Cache
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "Destroyed Village cache" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Executioner Command Deck Gate
+
+- Added Playwright coverage for entering the already-cleared Executioner antechamber through normal World movement when Engineering, Medical, and Martial deck flags are complete.
+- Proved the browser hides completed wing choices, exposes `command deck`, and enters the Command Deck route from the World-routed antechamber.
+
+### Verified - Phase 8 Browser Executioner Command Deck Gate
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "command deck through World movement" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Executioner Return Visit
+
+- Added Playwright coverage for returning to an already discovered Ravaged Battleship through normal World movement.
+- Proved the browser-visible Executioner antechamber route exposes Engineering/Medical/Martial wing choices, keeps Command Deck hidden until wing flags are complete, and can enter the Medical Wing from the World-routed antechamber.
+
+### Verified - Phase 8 Browser Executioner Return Visit
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "executioner antechamber through World movement" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Outpost Glyph Blocking
+
+- Extended active Outpost browser coverage to prove that a used Outpost keeps its visible `P` map glyph while hiding its tooltip/entry for the current expedition.
+- Extended the safe-return reset browser route to prove the same Outpost tooltip/entry returns after re-embark.
+
+### Verified - Phase 8 Browser Outpost Glyph Blocking
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "active World Outpost|resets used World Outposts" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Generated Mine Route
+
+- Added a test-harness state reader for Playwright-only inspection of generated World maps without replacing the generated map.
+- Added Playwright coverage that buys a Compass, reads the real generated World map, routes through browser movement to a generated Iron Mine, proves the visible generated `Iron Mine` tooltip, enters the mine, and reaches the original combat start.
+
+### Verified - Phase 8 Browser Generated Mine Route
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "generated World mine" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Swamp Wanderer
+
+- Added Playwright coverage for visible `A Murky Swamp` World labeling, movement-based entry, Charm-gated wanderer talk, post-visit landmark hiding, safe return, and visible `gastronome` perk display on Path.
+- Narrowed the one-off landmark browser gap while preserving the existing organic GameSession assertions for Charm spending and visited-map consequences.
+
+### Verified - Phase 8 Browser Swamp Wanderer
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "Swamp wanderer route" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Old House Entry
+
+- Added Playwright coverage for visible `An Old House` World labeling, movement-based entry, deterministic occupied-branch combat completion, and post-visit landmark hiding.
+- Kept Old House supplies and water-refill assertions in the existing organic GameSession coverage while adding player-facing browser coverage for the visible World route.
+
+### Verified - Phase 8 Browser Old House Entry
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "Old House through World movement" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Crashed Ship Discovery
+
+- Added Playwright coverage for visible `A Crashed Starship` World labeling, movement-based entry into `A Crashed Ship`, original salvage action, post-discovery entry hiding, and visible road drawing.
+- Kept the coverage inside Phase 8's World-side Ship discovery boundary without introducing player-facing Ship UI.
+
+### Verified - Phase 8 Browser Crashed Ship Discovery
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "Crashed Ship" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Battlefield Salvage
+
+- Added Playwright coverage for a visible `A Battlefield` World landmark, movement-based entry into `A Forgotten Battlefield`, deterministic scene loot pickup, and post-visit landmark hiding.
+- Narrowed the one-off landmark browser gap beyond Borehole by proving the Battlefield salvage route on the player-facing World surface.
+
+### Verified - Phase 8 Browser Battlefield Salvage
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "Battlefield landmark" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Terrain Narration
+
+- Added Playwright coverage for visible original World terrain-transition narration from real movement through Forest to Field to Barrens.
+- Locked the active World notification log against regressions where movement notifications existed in engine state but were not visible during travel.
+
+### Changed - Post-Parity Bundle Optimization Tracking
+
+- Added a Post-Parity release-hardening phase entry for revisiting Vite chunking after parity surfaces stabilize.
+- Kept current Vite chunk-size warnings documented as non-blocking during Phase 8 parity work.
+
+### Verified - Phase 8 Browser Terrain Narration
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "terrain narration" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser World Notifications
+
+- Exposed World-scoped notifications on the active World view using the shared notification log component so movement narration, danger, safer, starvation, thirst, and world-fade messages are visible while travelling.
+- Extended the movement-driven danger browser test to prove the original `dangerous to be this far from the village without proper protection` and `safer here` notifications appear from real World movement.
+
+### Verified - Phase 8 Browser World Notifications
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "danger and safer transitions" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Outpost Expedition Reset
+
+- Added Playwright coverage for using an active World Outpost, safely returning to the village, embarking again, and re-entering the same Outpost after the per-expedition used state resets.
+- Narrowed the Outpost polish gap by proving the reset contract on the player-facing World route instead of only through GameSession state coverage.
+
+### Verified - Phase 8 Browser Outpost Expedition Reset
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "resets used World Outposts" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser World Danger Movement
+
+- Added Playwright coverage for reaching the original unarmoured World danger threshold through real movement, proving the browser shows `danger` at distance 8 and removes the visible World condition after moving back to distance 7.
+- Narrowed the generated-map/player-facing interaction polish gap by covering the movement-driven danger status transition instead of only direct World status injection.
+
+### Verified - Phase 8 Browser World Danger Movement
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "danger and safer transitions" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser World Dehydration Death
+
+- Added Playwright coverage for a real World travel move while already thirsting with no water, proving the browser returns to the Room, closes the World tab, and surfaces the original `the world fades` notification on dehydration death.
+- Closed the browser-side gap between engine-level World thirst/dehydration death coverage and player-facing World movement death behavior.
+
+### Verified - Phase 8 Browser World Dehydration Death
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "dehydration death" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npx playwright test`
+
+### Added - Phase 8 Browser Executioner World Entry
+
+- Added Playwright coverage for a visible `A Ravaged Battleship` World map landmark and movement-based entry into the first-visit Executioner intro event.
+- Narrowed the remaining Executioner Phase 8 gap by proving the player-facing World bridge into the Battleship, while keeping exhaustive wing traversal and Fabricator UI in later scoped work.
+
+### Verified - Phase 8 Browser Executioner World Entry
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "executioner battleship through World movement" --project=chromium-1366`
+
+### Added - Phase 8 Browser World Starvation Death
+
+- Added Playwright coverage for repeated World movement without Cured Meat, proving the browser surface shows the starvation condition, returns to the Room on World starvation death, closes the World tab, and surfaces the original `the world fades` notification.
+- Closed the browser-side gap between engine-level World starvation/death coverage and player-facing World movement/death behavior.
+
+### Verified - Phase 8 Browser World Starvation Death
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "World starvation death" --project=chromium-1366`
+
+### Added - Phase 8 Browser Mine Safe Return
+
+- Added Playwright coverage for clearing a Coal Mine entered through normal World movement, resolving the full mine combat chain, leaving the cleared mine, returning safely to the village, and seeing the unlocked `coal miner` worker on the Outside panel.
+- Closed the browser-side gap between Mine label-to-entry coverage and safe-return mine building/worker unlock consequences for the current Phase 8 slice.
+
+### Verified - Phase 8 Browser Mine Safe Return
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "coal mine and unlocks" --project=chromium-1366`
+
+### Added - Phase 8 Browser One-Off Landmark Visit
+
+- Added Playwright coverage for a player-facing World movement path into a visible Borehole landmark, proving the full 61x61 map exposes the original `A Borehole` tooltip label, starts the original `A Huge Borehole` setpiece, transfers Alien Alloy scene loot, and hides the landmark entry after the one-off visited consequence.
+- Narrowed the remaining generated-map/player-facing map interaction gap by covering a non-mine, non-Outpost one-off landmark through normal World movement in the browser.
+
+### Verified - Phase 8 Browser One-Off Landmark Visit
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "one-off World landmark" --project=chromium-1366`
+
+### Added - Phase 8 Browser Mine Landmark Entry
+
+- Added Playwright coverage for a player-facing World movement path into a visible Mine landmark, proving the full 61x61 map exposes the original `Coal Mine` tooltip label and that moving onto the mine starts the original `The Coal Mine` setpiece through the World bridge.
+- Narrowed the remaining generated-map/player-facing map interaction gap by covering landmark-label-to-auto-entry behavior in the browser instead of only direct setpiece triggering.
+
+### Verified - Phase 8 Browser Mine Landmark Entry
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "World mine landmark" --project=chromium-1366`
+
+### Added - Phase 8 Browser Active Outpost Use
+
+- Added Playwright coverage for entering an active World Outpost through normal World movement, proving the browser surface opens the original Outpost event, applies water replenishment to the visible World status, exposes original Cured Meat scene loot, and hides the landmark entry after the Outpost is used for the current expedition.
+- Narrowed the remaining Outpost Phase 8 gap to broader traversal polish rather than the core active-use browser contract.
+
+### Verified - Phase 8 Browser Active Outpost Use
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "active World Outpost" --project=chromium-1366`
+
+### Added - Phase 8 Browser Scout Map Reveal
+
+- Added Playwright coverage for buying the Scout `buy map` action from an active World expedition, proving the player-facing event dialog can spend the original map resources, reveal the visible World map, and surface the original map-uncover notification after returning to the Room view.
+- Verified that a fully revealed World state hides the Scout `buy map` button in the browser while leaving the scouting training option available, closing the Scout map player-facing interaction gap for the current World slice.
+
+### Verified - Phase 8 Browser Scout Map Reveal
+
+- `npx playwright test src/tests/e2e/app.spec.ts -g "buys the Scout map" --project=chromium-1366`
+
+### Added - Phase 8 Organic Executioner Martial Clear
+
+- Added GameSession regression coverage for organically routing from World movement into the return-visit Ravaged Battleship antechamber, clearing the Martial armory/training-complex path through grenade door access, weapon loot, turret combat, plasma-rifle blueprint loot, murderous-robot combat, and setting the original `game.world.martial` deck flag.
+- Hardened the shared long-combat test helper so Shield is reserved for active dangerous enemy statuses instead of being consumed as a generic low-health action before energised attacks.
+- Verified that the cleared Martial wing is removed from the return antechamber while Engineering and Medical remain available, closing the remaining organic Executioner wing-clear coverage gap for Phase 8.
+
+### Verified - Phase 8 Organic Executioner Martial Clear
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- src/tests/engine/game-session.test.ts -t "martial wing organically"`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Executioner Medical Clear
+
+- Added GameSession regression coverage for organically routing from World movement into the return-visit Ravaged Battleship antechamber, clearing the Medical guardians/strategy-room/cold-storage path through turret, medic, quadruped, unstable-automaton, malformed-experiment combat, and setting the original `game.world.medical` deck flag.
+- Verified that the cleared Medical wing is removed from the return antechamber while Engineering and Martial remain available, narrowing the remaining Executioner Phase 8 traversal gap to Martial organic clear and broader polish.
+
+### Verified - Phase 8 Organic Executioner Medical Clear
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- src/tests/engine/game-session.test.ts -t "medical wing organically"`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Executioner Engineering Clear
+
+- Added GameSession regression coverage for organically routing from World movement into the return-visit Ravaged Battleship antechamber, clearing the Engineering Assembly/R&D path through welder, guard, turret, hypo-blueprint, and unstable-prototype combat, and setting the original `game.world.engineering` deck flag.
+- Verified that the cleared Engineering wing is removed from the return antechamber while Medical and Martial remain available, narrowing the remaining Executioner Phase 8 traversal gap to deeper Medical/Martial organic clears and broader polish.
+
+### Verified - Phase 8 Organic Executioner Engineering Clear
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- src/tests/engine/game-session.test.ts -t "engineering wing organically"`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Executioner Wing Entry
+
+- Added GameSession regression coverage for organically entering the return-visit Ravaged Battleship antechamber from World movement and routing into the Engineering, Medical, and Martial wing entry events.
+- Narrowed the remaining Executioner Phase 8 gap from basic wing reachability to deeper wing traversal polish beyond the already covered intro, wing entry, and Command Deck clear paths.
+
+### Verified - Phase 8 Organic Executioner Wing Entry
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- src/tests/engine/game-session.test.ts -t "executioner antechamber into"`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 World Keyboard Movement Coverage
+
+- Extracted the World keyboard movement mapping for Arrow keys and WASD into a pure UI helper while preserving the existing `WorldView` behavior.
+- Added pure UI regression coverage for original-compatible Arrow/WASD movement keys and ignored non-movement keys.
+- Added browser coverage proving focused World movement with keyboard input moves away from the village and returns safely with the original village-tile auto-return contract.
+
+### Verified - Phase 8 World Keyboard Movement Coverage
+
+- `npm test -- src/tests/ui/world-view.test.ts`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "moves the World map with keyboard input" --project=chromium-1366`
+
+### Added - Phase 8 Converted Outpost Use Coverage
+
+- Added shared GameSession regression coverage for immediately using organically converted Cave/Town/City/Battleship Outposts after the active clear consequence.
+- Verified original converted-Outpost water refill, coordinate-specific used-Outpost state, hidden landmark state, and repeat-entry blocking for the current expedition across dungeon and final Battleship conversions.
+
+### Verified - Phase 8 Converted Outpost Use Coverage
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "Town clinic|City sniper|executioner command deck organically"`
+
+### Added - Phase 8 Generated-Map Mine Reachability
+
+- Added GameSession regression coverage that buys the Compass, uses the generated original World map, locates generated Iron/Coal/Sulphur Mines, enters each through normal World movement from an adjacent tile, clears the setpiece, applies original road/visited consequences, returns safely to the village, and commits original mine building plus worker unlock state on safe return.
+- Narrowed the remaining generated-map mine gap to broader player-facing map interaction/UI polish instead of mine reachability or mine-safe-return consequences.
+
+### Verified - Phase 8 Generated-Map Mine Reachability
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "reaches a generated"`
+
+### Added - Phase 8 Organic Mine Safe-Return Coverage
+
+- Added GameSession regression coverage for organically clearing Coal and Sulphur Mine landmarks, leaving the setpiece, following the active mine road back to the village, and committing original mine building plus worker unlock state on safe return.
+- Closed the previous organic safe-return coverage gap where Iron Mine had the full return-to-village contract while Coal and Sulphur only covered active road/visited consequences.
+
+### Verified - Phase 8 Organic Mine Safe-Return Coverage
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "building and worker unlocks after organic"`
+
+### Added - Phase 8 Organic Executioner Reachability
+
+- Added GameSession regression coverage for reaching the Ravaged Battleship by stepping onto an original Executioner World tile instead of triggering the event directly.
+- Covered the focused first-visit Executioner intro path through ancient-beast combat, automated-turret combat, device discovery, `game.world.executioner` state, and safe-return Fabricator discovery notification.
+- Added organic return-visit Executioner coverage for routing from the World tile into the antechamber, entering Command Deck after the three wing flags are set, defeating the immortal wanderer, setting `game.world.executionerCleared`, and converting the active Battleship tile into a road-connected Outpost.
+- Kept broader Executioner traversal parity out of Phase 8 closure until the remaining player traversal routes are explicitly covered.
+
+### Verified - Phase 8 Organic Executioner Reachability
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "executioner intro organically"`
+- `npm test -- src/tests/engine/game-session.test.ts -t "executioner command deck organically"`
+
+### Changed - Phase 8 Ship/Fabricator Scope Boundary
+
+- Decided that Phase 8 owns only World-side Ship/Fabricator discovery consequences: Ship direction, Ship unlock/base state on safe return, and Fabricator unlock notification from Executioner discovery.
+- Kept player-facing Ship controls in Phase 10 and player-facing Fabricator controls in Phase 11, so Phase 8 can close around World exploration instead of expanding into late-game module UI.
+- Updated the plan, context, status, parity checklist, UI spec, and technical decisions to make this boundary explicit.
+
+### Added - Phase 8 World Condition Status UI
+
+- Exposed original World `danger`, `starvation`, and `thirst` runtime flags through the World snapshot.
+- Added a compact player-facing World status row for active danger, starvation, and thirst conditions without changing the original notification, movement, or death/perk rules.
+- Added pure UI label coverage, session snapshot coverage for danger transitions, and browser coverage for the visible World condition status row.
+
+### Verified - Phase 8 World Condition Status UI
+
+- `npm test -- src/tests/ui/world-view.test.ts src/tests/engine/game-session.test.ts`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "World danger and supply condition status" --project=chromium-1366`
+
+### Added - Phase 8 World Map Swipe Movement
+
+- Added original World map swipe movement on the 61x61 ASCII map through pointer drag gestures, mapping left/right/up/down swipes to the same directions as the original handlers.
+- Suppressed the follow-up click after a recognized swipe so one drag cannot accidentally apply both swipe movement and map-click movement.
+- Added pure UI coverage for swipe direction thresholds plus browser coverage for swipe-to-move and swipe-back village auto-return.
+
+### Verified - Phase 8 World Map Swipe Movement
+
+- `npm test -- src/tests/ui/world-view.test.ts`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "swiping the World map" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 World Map Tooltips
+
+- Added original-style World map tooltip metadata for the current `Wanderer`, visible `The Village`, and visible unconsumed landmark cells on the 61x61 ASCII map.
+- Rendered labelled map cells as landmark spans with original-style stronger glyph styling while keeping the full ASCII map geometry stable.
+- Extended engine and browser coverage for tooltip labels, including visited landmark glyphs that correctly stop exposing landmark tooltips.
+
+### Verified - Phase 8 World Map Tooltips
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "full World map"`
+- `npm test -- src/tests/ui/world-view.test.ts`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "clicking the World map" --project=chromium-1366`
+- `npx playwright test src/tests/e2e/room-visual.spec.ts -g "world movement visual"`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 World Map Click Movement
+
+- Ported the original World map click-quadrant movement behavior onto the player-facing 61x61 ASCII map.
+- Added pure UI coverage for the original diagonal click quadrants plus browser coverage proving map-click east movement and village-tile auto-return by clicking back west.
+
+### Verified - Phase 8 World Map Click Movement
+
+- `npm test -- src/tests/ui/world-view.test.ts`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "clicking the World map" --project=chromium-1366`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Full World Map Rendering
+
+- Replaced the player-facing 9x9 World viewport snapshot with the original full 61x61 mask-rendered World map surface while preserving hidden tiles as blank space, current-position `@`, and single-character glyphs for visited landmarks.
+- Tightened the World map CSS to keep the full ASCII map, status, and movement controls inside the established desktop visual baseline.
+- Updated browser flows to rely on the implemented original village-tile auto-return contract instead of clicking an obsolete manual return after stepping back onto the village.
+
+### Verified - Phase 8 Full World Map Rendering
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "full World map"`
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "Compass to Path to World contract" --project=chromium-1366`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "Compass to Path to World contract" --project=chromium-3840`
+- `npx playwright test src/tests/e2e/app.spec.ts -g "fresh room to Path" --project=chromium-1920`
+- `npx playwright test src/tests/e2e/room-visual.spec.ts -g "world movement visual"`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Converted Outpost Use
+
+- Extended the organic Cave clear regression so the newly converted road-connected Outpost can be entered immediately during the same expedition.
+- Locked converted Outposts against regressions where dungeon clears changed the map glyph but the resulting Outpost did not replenish water, record coordinate-specific used state, or block repeat entry for the current expedition.
+
+### Verified - Phase 8 Converted Outpost Use
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "organically cleared Cave"`
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic City Sniper To Outpost
+
+- Added GameSession regression coverage for stepping onto a City landmark, deterministically routing to `setpiece.city-sniper`, clearing the sniper combat route, setting `game.world.citySniperCleared`, and converting the active World tile into a road-connected Outpost.
+- Locked the organic City dungeon-to-Outpost path against regressions where direct cleared flags converted City tiles correctly but the player-facing World traversal skipped combat clear or map conversion.
+
+### Verified - Phase 8 Organic City Sniper To Outpost
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "City sniper"`
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Town Clinic To Outpost
+
+- Added GameSession regression coverage for stepping onto a Town landmark, deterministically routing to `setpiece.town-clinic`, spending the original Torch cost, taking Medicine scene loot, setting `game.world.townClinicCleared`, and converting the active World tile into a road-connected Outpost.
+- Locked the organic Town dungeon-to-Outpost path against regressions where direct cleared flags converted Town tiles correctly but the player-facing World traversal skipped Torch cost, loot, or map conversion.
+
+### Verified - Phase 8 Organic Town Clinic To Outpost
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "Town clinic"`
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Cave Clear To Outpost
+
+- Added GameSession regression coverage for stepping onto a Cave landmark, auto-entering the routed `setpiece.cave-depths` event, clearing the beast and cave-lizard combat chain, setting `game.world.caveDepthsCleared`, and converting the active World tile into a road-connected Outpost.
+- Locked the organic dungeon-to-Outpost path against regressions where direct cleared flags converted Cave tiles correctly but the player-facing World traversal failed to reach or apply the clear consequence.
+
+### Verified - Phase 8 Organic Cave Clear To Outpost
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "organically cleared Cave"`
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Old House Supplies
+
+- Added GameSession regression coverage for stepping onto an Old House landmark, auto-entering the routed setpiece, taking the original supplies branch, applying water replenishment through the session update boundary, taking scene loot, and marking the landmark visited during active World exploration.
+- Locked the organic Old House supplies path against regressions where focused EventRuntime loot and direct water flags worked but the player-facing World auto-entry path skipped refill, loot, or landmark consumption.
+
+### Verified - Phase 8 Organic Old House Supplies
+
+- `npm test -- src/tests/engine/game-session.test.ts -t "Old House"`
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Swamp Wanderer
+
+- Added GameSession regression coverage for stepping onto a Swamp landmark, auto-entering the routed setpiece, spending the original Charm cost with the wanderer, unlocking `gastronome`, and applying the visited-map consequence during the active World expedition.
+- Locked the organic Swamp path against regressions where focused EventRuntime traversal granted the perk but the player-facing World auto-entry path skipped the perk, Charm cost, or landmark consumption.
+
+### Verified - Phase 8 Organic Swamp Wanderer
+
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Destroyed Village Cache
+
+- Added GameSession regression coverage for stepping onto a Destroyed Village cache landmark, auto-entering the routed setpiece, collecting the underground cache, transferring original prestige stores, clearing `previous.stores`, and applying the visited-map consequence during the active World expedition.
+- Locked the organic cache path against regressions where focused EventRuntime traversal moved prestige stores correctly but the player-facing World auto-entry path skipped cache collection or landmark consumption.
+
+### Verified - Phase 8 Organic Destroyed Village Cache
+
+- `npm test -- src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Battlefield Salvage
+
+- Added GameSession regression coverage for stepping onto a Battlefield landmark, auto-entering the routed setpiece, rolling original salvage loot, taking selected original supplies into the outfit, and applying the visited-map consequence during the active World expedition.
+- Locked the organic Battlefield path against regressions where focused EventRuntime scene loot worked but the player-facing World auto-entry path skipped salvage or landmark consumption.
+
+### Verified - Phase 8 Organic Battlefield Salvage
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Borehole Salvage
+
+- Added GameSession regression coverage for stepping onto a Borehole landmark, auto-entering the routed setpiece, taking original Alien Alloy scene loot into the outfit, and applying the visited-map consequence during the active World expedition.
+- Locked the organic Borehole path against regressions where focused EventRuntime scene loot worked but the player-facing World auto-entry path skipped salvage or landmark consumption.
+
+### Verified - Phase 8 Organic Borehole Salvage
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Crashed Ship Discovery
+
+- Added GameSession regression coverage for stepping onto a Crashed Ship landmark, auto-entering the routed setpiece, salvaging it, and applying original Crashed Ship road plus visited-map consequences during the active World expedition.
+- Locked the organic Ship-discovery path against regressions where direct flag injection drew roads but the player-facing World setpiece route failed to mark the ship discovered.
+
+### Verified - Phase 8 Organic Crashed Ship Discovery
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Outpost Supplies
+
+- Added GameSession regression coverage for stepping onto an Outpost from World movement, auto-entering the routed setpiece, taking original Cured Meat scene loot into the outfit, replenishing water, and marking the coordinate-specific Outpost used for the current expedition.
+- Locked the organic Outpost path against regressions where focused EventRuntime scene loot worked but the player-facing World auto-entry path skipped supplies or used-state consequences.
+
+### Verified - Phase 8 Organic Outpost Supplies
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Mine Safe-Return Unlock
+
+- Added GameSession regression coverage for clearing an Iron Mine through organic World movement, following the generated mine road back to the village, and committing the original mine building plus worker unlock state on safe return.
+- Locked the end-to-end mine contract against regressions where active road/visited consequences passed but `World.goHome()` mine-building consequences were only covered by direct flag injection.
+
+### Verified - Phase 8 Organic Mine Safe-Return Unlock
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Coal and Sulphur Mine Traversal
+
+- Added GameSession regression coverage for stepping onto Coal Mine and Sulphur Mine landmarks, auto-entering their routed setpieces, clearing their chained combat scenes, and applying original mine road plus visited-map consequences during the active World expedition.
+- Added a local combat helper for deterministic multi-stage mine setpiece traversal without changing production runtime behavior.
+
+### Verified - Phase 8 Organic Coal and Sulphur Mine Traversal
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Organic Mine Clear Traversal
+
+- Added GameSession regression coverage for stepping onto an Iron Mine landmark, auto-entering the routed setpiece, clearing the beastly matriarch through combat, and applying original mine road plus visited-map consequences during the active World expedition.
+- Locked the organic player-facing path against regressions where focused mine setpiece flags were set but the active World road/visited consequences were only covered through direct state injection.
+
+### Verified - Phase 8 Organic Mine Clear Traversal
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Landmark Auto Entry
+
+- Aligned World movement with original `World.doSpace()` landmark handling so stepping onto an unconsumed landmark tile starts its routed setpiece immediately.
+- Updated Outpost traversal regressions for automatic entry while preserving used-Outpost re-entry blocking and per-expedition reset coverage.
+
+### Verified - Phase 8 Landmark Auto Entry
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Village Auto Return
+
+- Aligned World movement with original `World.doSpace()` village handling so stepping back onto the village tile performs the safe home return immediately.
+- Added GameSession regression coverage proving movement into the village closes the active World expedition, returns carried supplies, and emits the safe-return notification.
+
+### Verified - Phase 8 Village Auto Return
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
 ## 2026-07-08
+
+### Added - Phase 8 Travel Tile Supply Gating
+
+- Aligned World movement with original `World.doSpace()` travel gating so food, water, and random-fight ticks only run on travel tiles, not when entering the village or landmark tiles.
+- Updated safe-return and survival regression coverage to use explicit travel-tile paths, and added coverage proving village/Outpost movement does not advance supply counters.
+
+### Verified - Phase 8 Travel Tile Supply Gating
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Terrain Movement Narration
+
+- Added the original World terrain transition notifications for forest/field/barrens movement in both directions.
+- Added GameSession regression coverage for all six original terrain transition messages during deterministic World movement.
+
+### Verified - Phase 8 Terrain Movement Narration
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Safe-Return Map Completion
+
+- Added the original `World.goHome()` map-completion check so safe village return evaluates the persisted World mask and sets `game.world.seenAll` after normal exploration reveals the last hidden tile.
+- Added GameSession regression coverage for uncovering the final hidden mask tile through movement and committing `seenAll` on safe return.
+
+### Verified - Phase 8 Safe-Return Map Completion
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Outpost Expedition Reset
+
+- Reset active used-Outpost coordinates on each World embark so Outposts are consumed once per expedition instead of permanently across safe returns.
+- Added GameSession regression coverage proving an Outpost used during one safe expedition is available again after returning home and embarking again.
+
+### Verified - Phase 8 Outpost Expedition Reset
+
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm run format:check`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Executioner Clear Consequence
+
+- Added the original final Command Deck `clearDungeon` consequence for focused Executioner command routes: defeating the immortal wanderer now marks the Battleship cleared.
+- Wired cleared Executioner world state into active World map consequences so the Ravaged Battleship tile becomes a road-connected Outpost.
+- Added EventRuntime and GameSession regression coverage for the final Executioner clear flag and active World map conversion.
+
+### Verified - Phase 8 Executioner Clear Consequence
+
+- `npm run format:check`
+- `npm test -- --run src/tests/engine/game-session.test.ts src/tests/engine/event-runtime.test.ts`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Landmark Clear Consequences
+
+- Added original active World `clearDungeon` consequences for cleared Cave/Town/City setpieces: the current landmark becomes a road-connected Outpost instead of remaining re-enterable.
+- Added original visited-map handling for non-dungeon landmarks, including Old House, Swamp, Borehole, Battlefield, Destroyed Village cache, and Crashed Ship; Crashed Ship discovery now also draws its original road during active exploration.
+- Added active World water replenishment consumption for setpiece flags such as Outpost and Old House, and covered the newly wired Cave/Town/City clear flags in EventRuntime tests.
+- Added session regression coverage for dungeon-to-Outpost road conversion, Crashed Ship road/visited consequences, and non-dungeon visited plus water refill behavior.
+
+### Verified - Phase 8 Landmark Clear Consequences
+
+- `npm run format:check`
+- `npm test -- --run src/tests/engine/game-session.test.ts src/tests/engine/event-runtime.test.ts`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Scout Map Reveal Bridge
+
+- Wired the Scout `buy map` event into the World runtime capability boundary so map purchases reveal a random hidden World mask tile with the original radius-5 diamond uncover behavior.
+- Added World `seenAll` testing after Scout map purchases so the buy-map button disappears once the persisted visibility mask is fully revealed.
+- Added session regression coverage proving Scout map purchases spend resources, send the original notification, update `game.world.mask`, and hide the map button at full reveal.
+
+### Verified - Phase 8 Scout Map Reveal Bridge
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- --run src/tests/engine/game-session.test.ts src/tests/engine/event-runtime.test.ts`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Ship and Fabricator Discovery State
+
+- Added original safe-return Ship discovery consequences: `features.location.spaceShip` unlock plus base Ship hull/thruster initialization.
+- Added original safe-return Fabricator discovery consequences from the Executioner world flag, including the original builder notification.
+- Added session regression coverage for Ship/Fabricator discovery commit and preserving existing Ship upgrade state on later safe returns.
+
+### Verified - Phase 8 Ship and Fabricator Discovery State
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 World Danger and Fight Cadence
+
+- Ported original World random encounter cadence using `FIGHT_DELAY`, `FIGHT_CHANCE`, and the `stealthy` perk before routing into the existing terrain/distance encounter bridge.
+- Switched World distance calculations to original Manhattan distance for encounter bands, danger thresholds, and the visible World distance value.
+- Added original danger and safer notifications when crossing armour/distance thresholds.
+- Added session regression coverage for delayed fight triggering, `stealthy` chance suppression, and danger/safer notification transitions.
+
+### Verified - Phase 8 World Danger and Fight Cadence
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 World Supply Death Loop
+
+- Ported the original World food/water movement loop for `slow metabolism`, `desert rat`, Cured Meat healing, `gastronome`, starvation, thirst, world-fade death, death counters, and tenth-death survival perk unlocks.
+- Added session regression coverage for travel healing, perk-adjusted food cadence, starvation room-return death, and dehydration-based `desert rat` unlock.
+
+### Verified - Phase 8 World Supply Death Loop
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Outpost and Mine Return Consequences
+
+- Added original safe-return mine building unlocks for cleared iron, coal, and sulphur mines so Outside worker unlock state can follow World exploration.
+- Added active Outpost use consequences: World water refills to the current max, used Outposts are tracked by coordinate, and consumed Outposts no longer expose landmark entry.
+- Added session regression coverage for mine building unlocks, worker unlock state, active Outpost replenishment, and repeat-entry blocking.
+
+### Verified - Phase 8 Outpost and Mine Return Consequences
+
+- `npm run format:check`
+- `npm run lint`
+- `npm test -- --run src/tests/engine/game-session.test.ts`
+- `npm test`
+- `npm run build`
+
+### Added - Phase 8 Mine Road Consequences
+
+- Ported the original World mine-road drawing algorithm, including closest road/village/outpost anchor search and L-shaped terrain-to-road conversion.
+- Added visited-marker handling for cleared mine tiles while keeping the compact World ASCII viewport to one glyph per cell.
+- Wired active World exploration so cleared mine flags apply original road and visited-map consequences through the session update boundary.
+
+### Verified - Phase 8 Mine Road Consequences
+
+- `npm test -- --run src/tests/content/world-data.test.ts`
+- `npm test -- --run src/tests/engine/game-session.test.ts`
 
 ### Added - Phase 7 Roast Report Recommendations
 

@@ -1,6 +1,6 @@
 ﻿# Deferred Scope Contract
 
-Last updated: 2026-07-06
+Last updated: 2026-07-12
 
 This file locks what is intentionally not part of the first remake target.
 
@@ -43,24 +43,24 @@ Allowed during parity:
 
 ### Saves
 
-Deferred:
+Completed by the production-readiness override (`RA-P2-02`):
 
-- durable save schema versioning
-- migration framework
-- migration from old remake saves
+- checksummed storage schema version 1 under `adr-remake-dev-save`
+- one-generation committed backup, quarantine, and deterministic recovery
+- explicit migration from unversioned session-v2, engine-v2, and legacy remake state snapshots
+
+Still deferred:
+
 - original browser save import
-- compatibility promises for pre-parity saves
+- migration from any remake format not listed above
 
-Allowed during parity:
+Compatibility boundary:
 
-- one dev-only save shape
-- localStorage key: `adr-remake-dev-save`
-- dev-only export/import controls if useful
-- save round-trip tests for the current shape
+- Schema-1 envelopes and the three named unversioned remake inputs are supported.
+- Unknown or future schemas are quarantined and may recover the last supported backup; they are never guessed or silently downgraded.
+- Original-browser import remains separate future work.
 
-Mandatory warning:
-
-Pre-parity saves are disposable. They may be invalidated at any time until Post-Parity Phase A implements versioning and migration.
+The older blanket warning that every pre-parity save is disposable is superseded by this explicit support list. No compatibility is promised outside it.
 
 ### Localization
 
@@ -94,7 +94,11 @@ Allowed during parity:
 - validation tools for future content packs
 - strict separation between original and expansion content
 
+Post-parity balance evidence does not silently lift this deferral for original mode. Under `TD-017`, any rebalance must be separately named, save-compatible by explicit decision, and scoped only after the P14V progression and human evidence is interpreted.
+
 ## Release Gate
+
+The executable and cumulative `Parity Complete`, `Production Beta`, and technical `Release Candidate` definitions live in `REMAKE/docs/release-gates.md` and `REMAKE/release-gates.json`. Public sign-off additionally follows `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`, including human/assistive-technology evidence and the open license/NOTICE requirement.
 
 No deferred system may enter the active target until:
 
@@ -102,5 +106,3 @@ No deferred system may enter the active target until:
 - `REMAKE/docs/deviations.md` is complete
 - `REMAKE/docs/parity-checklist.md` is complete
 - Post-Parity Phase A save versioning is implemented if the change affects persisted state
-
-

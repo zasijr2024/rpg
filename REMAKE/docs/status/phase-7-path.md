@@ -1,5 +1,7 @@
 # Phase 7 Path Status
 
+Audit override: the recorded Path/outfit baseline remains implemented, but its safe World/combat-return contract is reopened by findings C-01, C-02, and C-03. Current remediation authority is `REMAKE/docs/planning.md`.
+
 Phase 7 is finalized for the Path/outfitting scope as of 2026-07-08.
 
 Completed scope:

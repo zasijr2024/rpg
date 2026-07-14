@@ -1,6 +1,6 @@
 # UI Specification
 
-Last updated: 2026-07-08
+Last updated: 2026-07-11
 
 Purpose: define a measurable minimalist desktop UI target for implementation and phase gates. This prevents "modernized" from turning into visually noisy or over-explained.
 
@@ -28,7 +28,7 @@ Browser zoom checks:
 
 Initial recommended tokens:
 
-- root font size: browser default, do not scale directly by viewport width
+- root font size: browser default through normal desktop/zoom layouts; use the physical-density exception below for a true 4K/1x CSS viewport
 - main reading width: `min(72ch, calc(100vw - 4rem))`
 - event panel max width: active play column width, currently `min(470px, viewport-safe width)`
 - stores/resources side panel width: `220px` in the original-near desktop shell
@@ -43,6 +43,18 @@ Initial recommended tokens:
 
 These values can change only after screenshot review.
 
+### Physical-Density / Large-Desktop Policy
+
+A 3840x2160 viewport at `1dppx` is not treated as an ordinary 920px shell floating unchanged in empty space. At `min-width: 3000px`, `min-height: 1600px`, and `resolution: 1dppx`:
+
+- root text is `20px`, ordinary copy uses at least `1rem` with approximately `1.45` line height, and standard headings use at least `1.25rem`;
+- the normal shell grows to `1280px`, its play column to `960px`, and the wide World shell to `1540px`; whitespace remains part of the composition rather than being filled with cards;
+- ordinary buttons expose at least a 44x44 CSS-pixel hit area; the deliberately compact four-way steppers grow from 24x24 to 32x32 each and retain their single-tab-stop keyboard model;
+- Space may grow its playfield to `900px`, while final score numerals carry a materially larger typographic scale;
+- OS-scaled, high-DPR, browser-zoomed, and sub-3000px layouts retain the regular density so the policy does not double-enlarge a viewport that is already physically scaled.
+
+This is a physical-readability policy, not a dashboard expansion. The 4K screenshot matrix remains required, with explicit assertions for root type size, shell width, action hit area, and ending hierarchy.
+
 ## Current Layout Contracts
 
 The current shell has one play column and one resources column. Room, Outside, Path, and the first World slice must keep using deliberate layout contracts instead of ad hoc fixed panels.
@@ -56,9 +68,9 @@ Path:
 
 World:
 
-- The current compact ASCII map is acceptable only as the first player-facing World slice.
-- Use an explicit wide-map mode or a dedicated World tab layout before full original World map parity is claimed.
-- Do not expand the full map inside the current event/room play column without resizing the shell contract.
+- World uses a dedicated wide shell rather than the Room/Path play column: the map is primary and the status, landmark, movement, and notification regions form an adjacent sidebar.
+- Preserve readable 15px monospace tiles with 11px line height; keep the full 61x61 map intact and allow the page to scroll at constrained zoom rather than compressing cell geometry.
+- Keep the wide composition stable at 1366/1920 and 100/125/150/200 percent zoom; use the narrow responsive stack only when viewport width genuinely requires it.
 - Keep health, food, water, and movement status adjacent to the map, not hidden in the resource column.
 - Preserve event modal focus and prevent overlap with the map and resources column.
 
@@ -203,6 +215,8 @@ Must preserve:
 
 ### Ship
 
+Phase ownership: the thin player-facing Ship upgrade UI is complete in `RA-P1-11`; Phase 8 only owns World-side discovery, while `RA-P1-13` completes player-facing lift-off and its Space handoff.
+
 Must show:
 
 - hull
@@ -212,6 +226,8 @@ Must show:
 - lift off
 
 ### Fabricator
+
+Phase ownership: player-facing Fabricator UI is Phase 11. Phase 8 may only unlock Fabricator discovery state from World safe return.
 
 Must show:
 
@@ -227,11 +243,22 @@ Must show:
 - hull remaining
 - asteroids/debris
 - altitude/title progression
+- an optional concise spatial feed with ship position, nearest-debris direction/distance, and actionable collision threat; routine polite summaries are throttled, while a newly unsafe lane emits only the immediate terse escape cue, and neither path may capture focus or block flight keys
 
 Must not:
 
 - become visually flashy
 - introduce non-original pickups, particles, or effects during parity
+- claim nonvisual flight verification until a real screen-reader operator completes the normal-clock flight-and-ending runbook in `accessibility-screen-reader-runbook.md`; use the P14V-01 console-free manual fixture only after the candidate is frozen
+
+### Ending
+
+Must preserve the original sparse monochrome identity while giving the final state enough visual and semantic authority to read as an ending:
+
+- `homefleet` and `the end.` are real headings, and focus transfers to each ending stage;
+- narrative lines remain narrow and quiet; score values, not decorative art, provide the visual climax;
+- the ending occupies the viewport intentionally at every desktop target, with a minimum 44px restart/wait hit area and enlarged score numerals at true 4K/1x;
+- fleet narrative order, wait transition, score values, and restart behavior remain unchanged.
 
 ## Accessibility Baseline
 
@@ -239,6 +266,7 @@ Must not:
 - Keyboard focus is visible.
 - Event panels trap focus.
 - World movement supports original-compatible keyboard input.
+- Space offers an opt-in throttled live spatial feed, reserves immediate alerts for newly unsafe collision lanes, and retains arrow/WASD/button control while either announcement runs.
 - Text does not overlap at target resolutions and zoom levels.
 - Accessibility labels must not reveal locked mechanics early.
 
