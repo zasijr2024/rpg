@@ -1,0 +1,127 @@
+name: Remake CI
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/remake-ci.yml"
+      - "DATA/**"
+      - "ORIGINAL/**"
+      - "REMAKE/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/remake-ci.yml"
+      - "DATA/**"
+      - "ORIGINAL/**"
+      - "REMAKE/**"
+  schedule:
+    - cron: "23 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: remake-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: REMAKE
+
+jobs:
+  verify:
+    name: Clean install and production verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out pinned source and remake
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: REMAKE/package-lock.json
+
+      - name: Clean install
+        run: npm ci
+
+      - name: Verify parity artifacts
+        run: npm run parity:check
+
+      - name: Verify type boundaries
+        run: npm run typecheck:fixtures
+
+      - name: Run unit and content contracts
+        run: npm test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build and enforce bundle budgets
+        run: npm run build
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev
+
+      - name: Install Chromium for production smoke
+        run: npx playwright install --with-deps chromium
+
+      - name: Run production Chromium smoke
+        run: npx playwright test --config playwright.production.config.ts --project production-chromium
+
+      - name: Upload failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remake-ci-evidence-${{ github.run_id }}
+          path: |
+            REMAKE/playwright-report
+            REMAKE/test-results
+          if-no-files-found: ignore
+          retention-days: 14
+
+  release-candidate:
+    name: Scheduled cross-browser Release Candidate gate
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out pinned source and remake
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: REMAKE/package-lock.json
+
+      - name: Clean install
+        run: npm ci
+
+      - name: Install all release browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run the complete clean-tree gate
+        run: npm run gate:rc
+
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remake-release-evidence-${{ github.run_id }}
+          path: |
+            REMAKE/playwright-report
+            REMAKE/test-results
+          if-no-files-found: ignore
+          retention-days: 30

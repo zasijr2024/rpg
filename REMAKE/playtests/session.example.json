@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "id": "p14v-example-session-01",
+  "participantId": "p14v-example-participant-01",
+  "cohortId": "p14v-example-cohort",
+  "recordedAt": "2026-07-12T10:00:00.000Z",
+  "revision": "0123456789abcdef0123456789abcdef01234567",
+  "ruleset": "original",
+  "experienceStatus": "first-time",
+  "operatorId": "operator-example",
+  "consentAttested": true,
+  "unassisted": true,
+  "environment": {
+    "artifactKind": "production-build",
+    "artifactId": "sha256:replace-with-built-artifact-digest",
+    "browser": "replace with browser and version",
+    "os": "replace with OS and version"
+  },
+  "sittings": [
+    { "startedAt": "2026-07-12T10:00:00.000Z", "activeMinutes": 180 },
+    { "startedAt": "2026-07-13T10:00:00.000Z", "activeMinutes": 240 }
+  ],
+  "completed": false,
+  "elapsedMinutes": 420,
+  "milestoneMinutes": {
+    "opening": 2,
+    "compass": 180,
+    "firstExpedition": 210,
+    "deepEconomy": 360,
+    "executioner": null,
+    "ship": null,
+    "space": null,
+    "completion": null
+  },
+  "deathEvents": [
+    { "activeMinute": 230, "phase": "firstExpedition", "cause": "starvation" }
+  ],
+  "abandonmentPoint": "stopped while waiting for steel",
+  "bottlenecks": [
+    {
+      "category": "steel",
+      "participantWords": "I was waiting on steel and could not see another route."
+    }
+  ],
+  "technicalExceptions": [],
+  "exclusions": []
+}

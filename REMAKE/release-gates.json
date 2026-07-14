@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "gates": [
+    {
+      "id": "parity-complete",
+      "label": "Parity Complete",
+      "description": "The pinned original gameplay and desktop UI scope is implemented or explicitly deviated/deferred, with reproducible parity artifacts and the full integration suite green.",
+      "inherits": [],
+      "requiredPackages": [
+        "RA-P0-01",
+        "RA-P0-02",
+        "RA-P0-03",
+        "RA-P0-04",
+        "RA-P0-05",
+        "RA-P0-06",
+        "RA-P0-07",
+        "RA-P0-08",
+        "RA-P1-01",
+        "RA-P1-02",
+        "RA-P1-03",
+        "RA-P1-04",
+        "RA-P1-05",
+        "RA-P1-06",
+        "RA-P1-07",
+        "RA-P1-08",
+        "RA-P1-09",
+        "RA-P1-10",
+        "RA-P1-11",
+        "RA-P1-12",
+        "RA-P1-13",
+        "RA-P1-14",
+        "RA-P1-15",
+        "RA-P1-16"
+      ],
+      "checks": ["parity-checklist"],
+      "commands": [
+        {
+          "id": "parity-artifacts",
+          "command": "npm run parity:check"
+        },
+        {
+          "id": "type-boundaries",
+          "command": "npm run typecheck:fixtures"
+        },
+        {
+          "id": "unit-and-content",
+          "command": "npm test"
+        },
+        {
+          "id": "lint",
+          "command": "npm run lint"
+        },
+        {
+          "id": "format",
+          "command": "npm run format:check"
+        },
+        {
+          "id": "production-build",
+          "command": "npm run build"
+        },
+        {
+          "id": "desktop-chromium-parity",
+          "command": "npm run test:e2e:parity"
+        }
+      ]
+    },
+    {
+      "id": "production-beta",
+      "label": "Production Beta",
+      "description": "Parity Complete plus durable save recovery, maintainable test ownership, a production-only bundle boundary, and enforced performance budgets.",
+      "inherits": ["parity-complete"],
+      "requiredPackages": [
+        "RA-P2-01",
+        "RA-P2-02",
+        "RA-P2-05",
+        "RA-P2-06",
+        "RA-P2-07"
+      ],
+      "checks": [],
+      "commands": [
+        {
+          "id": "production-performance-budgets",
+          "command": "npm run test:e2e:performance"
+        },
+        {
+          "id": "production-dependency-audit",
+          "command": "npm audit --omit=dev"
+        }
+      ]
+    },
+    {
+      "id": "release-candidate",
+      "label": "Technical Release Candidate",
+      "description": "Production Beta plus automated release browser, real-zoom, accessibility, progression-diagnostic, and clean-worktree evidence. Public product sign-off remains separate.",
+      "inherits": ["production-beta"],
+      "requiredPackages": ["RA-P2-03", "RA-P2-04", "RA-P2-08"],
+      "checks": ["clean-worktree"],
+      "commands": [
+        {
+          "id": "production-browser-smoke",
+          "command": "npm run test:e2e:production"
+        },
+        {
+          "id": "production-complete-spine",
+          "command": "npm run test:e2e:production-spine"
+        },
+        {
+          "id": "progression-policy-diagnostic",
+          "command": "npm run study:progression"
+        },
+        {
+          "id": "release-browser-real-zoom",
+          "command": "npm run test:e2e:release"
+        },
+        {
+          "id": "complete-dependency-audit",
+          "command": "npm audit"
+        }
+      ]
+    }
+  ]
+}

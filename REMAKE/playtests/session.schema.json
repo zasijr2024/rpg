@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/adr-remake/playtest-session-v2.schema.json",
+  "title": "ADR remake unassisted decision-cohort session",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "participantId",
+    "cohortId",
+    "recordedAt",
+    "revision",
+    "ruleset",
+    "experienceStatus",
+    "operatorId",
+    "consentAttested",
+    "unassisted",
+    "environment",
+    "sittings",
+    "completed",
+    "elapsedMinutes",
+    "milestoneMinutes",
+    "deathEvents",
+    "abandonmentPoint",
+    "bottlenecks",
+    "technicalExceptions",
+    "exclusions"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "id": { "type": "string", "minLength": 1 },
+    "participantId": { "type": "string", "minLength": 1 },
+    "cohortId": { "type": "string", "minLength": 1 },
+    "recordedAt": { "type": "string", "format": "date-time" },
+    "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "ruleset": { "type": "string", "minLength": 1 },
+    "experienceStatus": { "enum": ["first-time", "familiar", "experienced"] },
+    "operatorId": { "type": "string", "minLength": 1 },
+    "consentAttested": { "const": true },
+    "unassisted": { "const": true },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactKind", "artifactId", "browser", "os"],
+      "properties": {
+        "artifactKind": { "const": "production-build" },
+        "artifactId": { "type": "string", "minLength": 1 },
+        "browser": { "type": "string", "minLength": 1 },
+        "os": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sittings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["startedAt", "activeMinutes"],
+        "properties": {
+          "startedAt": { "type": "string", "format": "date-time" },
+          "activeMinutes": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    },
+    "completed": { "type": "boolean" },
+    "elapsedMinutes": { "type": "number", "minimum": 0 },
+    "milestoneMinutes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opening",
+        "compass",
+        "firstExpedition",
+        "deepEconomy",
+        "executioner",
+        "ship",
+        "space",
+        "completion"
+      ],
+      "properties": {
+        "opening": { "$ref": "#/$defs/minute" },
+        "compass": { "$ref": "#/$defs/minute" },
+        "firstExpedition": { "$ref": "#/$defs/minute" },
+        "deepEconomy": { "$ref": "#/$defs/minute" },
+        "executioner": { "$ref": "#/$defs/minute" },
+        "ship": { "$ref": "#/$defs/minute" },
+        "space": { "$ref": "#/$defs/minute" },
+        "completion": { "$ref": "#/$defs/minute" }
+      }
+    },
+    "deathEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["activeMinute", "phase", "cause"],
+        "properties": {
+          "activeMinute": { "type": "number", "minimum": 0 },
+          "phase": {
+            "enum": [
+              "opening",
+              "compass",
+              "firstExpedition",
+              "deepEconomy",
+              "executioner",
+              "ship",
+              "space",
+              "ending"
+            ]
+          },
+          "cause": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "abandonmentPoint": { "type": ["string", "null"] },
+    "bottlenecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "participantWords"],
+        "properties": {
+          "category": { "type": "string", "minLength": 1 },
+          "participantWords": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "technicalExceptions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "exclusions": {
+      "type": "array",
+      "maxItems": 0,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": { "minute": { "type": ["number", "null"], "minimum": 0 } }
+}
