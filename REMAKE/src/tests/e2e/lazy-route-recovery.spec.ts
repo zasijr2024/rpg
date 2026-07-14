@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const SAVE_KEY = "adr-remake-dev-save";
+const STORAGE_SETUP_URL = "http://127.0.0.1:41732/__playwright-storage";
 const FIXTURE_FACTORY_URL =
   "http://127.0.0.1:41733/?testHarness=1&testSeed=phase3";
 
@@ -80,11 +81,22 @@ test("browser: the split production event catalog preserves scene transitions", 
 });
 
 async function installSave(page: Page, raw: string) {
-  await page.evaluate(
-    ({ key, value }) => window.localStorage.setItem(key, value),
-    { key: SAVE_KEY, value: raw },
+  await page.route(STORAGE_SETUP_URL, (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: "<!doctype html><title>storage setup</title>",
+    }),
   );
-  await page.reload();
+  try {
+    await page.goto(STORAGE_SETUP_URL);
+    await page.evaluate(
+      ({ key, value }) => window.localStorage.setItem(key, value),
+      { key: SAVE_KEY, value: raw },
+    );
+  } finally {
+    await page.unroute(STORAGE_SETUP_URL);
+  }
+  await page.goto("/");
 }
 
 async function createLateGameSaves(page: Page) {
