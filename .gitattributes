@@ -1,1 +1,5 @@
+DATA/canonical-manifest.json text eol=lf
+DATA/parity-graph.json text eol=lf
+REMAKE/src/generated/canonical-manifest.json text eol=lf
+REMAKE/src/generated/parity-graph.json text eol=lf
 TOOLS/bin/AssetRipper/AssetRipper.GUI.Free.exe filter=lfs diff=lfs merge=lfs -text
