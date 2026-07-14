@@ -1,7 +1,4 @@
 interface:
-  display_name: "Roast"
-  short_description: "Pressure-test CH80 ideas and game features"
-  default_prompt: "Use $roast to pressure-test this CH80 idea, game design, feature, roadmap item, or prototype plan. Use subagents for non-trivial roasts when multi-agent tools are available, then return a GO / RESHAPE / KILL verdict with the cheapest validation test."
-
-policy:
-  allow_implicit_invocation: true
+  display_name: "Browsergame Roast"
+  short_description: "Pressure-test browsergame plans and builds"
+  default_prompt: "Use $roast to pressure-test this browsergame plan or implementation with evidence, independent audit lenses, and a decisive verdict."

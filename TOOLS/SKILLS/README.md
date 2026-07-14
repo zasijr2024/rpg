@@ -1,28 +1,24 @@
 # Codex Skills
 
-Dieser Ordner enthaelt lokale Skill-Definitionen fuer CH80. Kanonisch ist jeweils der Unterordner mit `SKILL.md`.
+This folder contains project-local skill definitions. The canonical skill is the subfolder containing `SKILL.md`.
 
-## Verfuegbare Skills
+## Available Skill
 
-| Skill | Pfad | Zweck | Trigger |
+| Skill | Path | Purpose | Triggers |
 | --- | --- | --- | --- |
-| `roast` | `TOOLS/SKILLS/roast/SKILL.md` | Harte Evaluation von Game-Design, Features, Scope, Roadmap und Architekturentscheidungen | `roast`, `/roast`, `pressure-test`, `stress-test`, `red-team`, `evaluate`, `validate`, `evaluieren`, `bewerten`, `entscheiden` |
+| `roast` | `TOOLS/SKILLS/roast/SKILL.md` | Evidence-driven browsergame planning and implementation audits | `roast`, `/roast`, `audit`, `pressure-test`, `evaluate`, `balance`, `progression`, `UI`, `code review` |
 
-## Roast-Subagents
+## Browsergame Audit Council
 
-Der `roast`-Skill nutzt bei nicht-trivialen Roasts Subagents, sofern Multi-Agent-Tools verfuegbar sind. Die Rollen liegen unter `TOOLS/SKILLS/roast/agents/`:
+For a non-trivial full audit, use four independent read-only lenses when subagents are authorized:
 
-- `contrarian.md`
-- `player-advocate.md`
-- `systems-designer.md`
-- `production-engineer.md`
-- `market-researcher.md`
-- `judge.md`
+- Product and Scope: `roast/agents/contrarian.md`
+- Player and UI: `roast/agents/player-advocate.md`
+- Systems and Balance: `roast/agents/systems-designer.md`
+- Code and Runtime: `roast/agents/production-engineer.md`
 
-Der Hauptagent bleibt immer Judge: Subagents liefern getrennte Perspektiven, aber der Hauptagent synthetisiert das finale `GO` / `RESHAPE` / `KILL` Urteil.
+`roast/agents/market-researcher.md` is an optional specialist when current market, platform, distribution, or IP evidence changes the decision. The main agent follows `roast/agents/judge.md` and owns the final verdict.
 
-## Hinweis zur Installation
+When the user explicitly requests GPT-5.6 SOL ULTRA, delegated auditors use model `gpt-5.6-sol` with reasoning effort `ultra`.
 
-Fuer diese Repo verdrahtet `AGENTS.md` den Skill explizit. Wenn der Skill ausserhalb dieser Repo automatisch in Codex verfuegbar sein soll, muss der Ordner `TOOLS/SKILLS/roast/` in den globalen Codex-Skill-Pfad kopiert werden.
-
-`TOOLS/SKILLS/roast.md` ist ein aelterer Skill-Entwurf und bleibt nur als Referenz erhalten. Fuer neue Arbeit gilt `TOOLS/SKILLS/roast/SKILL.md`.
+`TOOLS/SKILLS/roast.md` is a legacy reference. New work uses `TOOLS/SKILLS/roast/SKILL.md`.
