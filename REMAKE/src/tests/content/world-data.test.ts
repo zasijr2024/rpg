@@ -4,7 +4,9 @@ import {
   originalContentRegistry,
   originalWorldLandmarks,
   originalWorldCompassDirection,
+  originalWorldDrawRoad,
   originalWorldGenerateMap,
+  originalWorldMarkVisited,
   originalWorldMapSearch,
   originalWorldNewMask,
   originalWorldWeapons,
@@ -36,6 +38,15 @@ function seededRng(seed: number) {
       return state / 4294967296;
     },
   };
+}
+
+function terrainMap(fill = WORLD_TILE.FIELD) {
+  const size = WORLD_RADIUS * 2 + 1;
+  const map = Array.from({ length: size }, () =>
+    Array<string>(size).fill(fill),
+  );
+  map[WORLD_RADIUS][WORLD_RADIUS] = WORLD_TILE.VILLAGE;
+  return map;
 }
 
 describe("original world data", () => {
@@ -214,6 +225,32 @@ describe("original world data", () => {
     expect(visible).toBe(13);
 
     expect(originalWorldNewMask(true).flat().filter(Boolean)).toHaveLength(41);
+  });
+
+  it("draws original mine roads to the closest existing road anchor", () => {
+    const map = terrainMap();
+    map[35][33] = WORLD_TILE.IRON_MINE;
+
+    originalWorldDrawRoad(map, { x: 35, y: 33 });
+
+    expect(map[35][33]).toBe(WORLD_TILE.IRON_MINE);
+    expect(map[30][30]).toBe(WORLD_TILE.VILLAGE);
+    expect(map[30][31]).toBe(WORLD_TILE.ROAD);
+    expect(map[30][32]).toBe(WORLD_TILE.ROAD);
+    expect(map[30][33]).toBe(WORLD_TILE.ROAD);
+    expect(map[31][33]).toBe(WORLD_TILE.ROAD);
+    expect(map[34][33]).toBe(WORLD_TILE.ROAD);
+  });
+
+  it("marks visited world landmarks without changing the visible tile glyph", () => {
+    const map = terrainMap();
+    map[35][33] = WORLD_TILE.IRON_MINE;
+
+    originalWorldMarkVisited(map, { x: 35, y: 33 });
+    originalWorldMarkVisited(map, { x: 35, y: 33 });
+
+    expect(map[35][33]).toBe(`${WORLD_TILE.IRON_MINE}!`);
+    expect(map[35][33]?.charAt(0)).toBe(WORLD_TILE.IRON_MINE);
   });
 
   it("feeds the original content registry", () => {

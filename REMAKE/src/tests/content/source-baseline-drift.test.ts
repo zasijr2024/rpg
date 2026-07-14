@@ -11,23 +11,16 @@ function sha256(path: string): string {
 }
 
 describe("source baseline drift", () => {
-  it("detects changes in required original source files", () => {
-    const required = [
-      "ORIGINAL/script/engine.js",
-      "ORIGINAL/script/room.js",
-      "ORIGINAL/script/outside.js",
-      "ORIGINAL/script/path.js",
-      "ORIGINAL/script/world.js",
-      "ORIGINAL/script/events/setpieces.js",
-    ];
-    const manifestFiles = new Map(
-      canonicalManifest.files.map((file) => [file.path, file.sha256]),
+  it("detects changes in every canonical original source file", () => {
+    expect(canonicalManifest.files).toHaveLength(123);
+    expect(new Set(canonicalManifest.files.map((file) => file.path)).size).toBe(
+      canonicalManifest.files.length,
     );
 
-    for (const relativePath of required) {
-      const expected = manifestFiles.get(relativePath);
-      expect(expected).toBeTruthy();
-      expect(sha256(join(workspaceRoot, relativePath))).toBe(expected);
+    for (const sourceFile of canonicalManifest.files) {
+      expect(sha256(join(workspaceRoot, sourceFile.path))).toBe(
+        sourceFile.sha256,
+      );
     }
   });
 });

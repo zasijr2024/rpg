@@ -42,8 +42,6 @@ Gameplay/UI parity excludes the following deferred systems:
 - music playback
 - ambient audio playback
 - mobile/touch layout
-- durable save schema versioning
-- save migration
 - original browser save import
 - active localization
 - new content
@@ -51,11 +49,14 @@ Gameplay/UI parity excludes the following deferred systems:
 
 These exclusions are scope choices, not missing source data.
 
+Production-readiness work pulled remake-save schema versioning, atomic backup recovery, quarantine, and supported legacy-remake migrations forward before Phase 14. Only import from the original browser game's save format remains excluded here.
+
 ## Canonical Machine Manifest
 
 The canonical machine-readable manifest is:
 
 - `DATA/canonical-manifest.json`
+- `DATA/parity-graph.json`
 
 It is generated from `ORIGINAL/` by:
 
@@ -68,5 +69,5 @@ Markdown extraction files in `DATA/*.md` are human-readable references. They are
 - Treat `ORIGINAL/` as vendor/reference source.
 - Keep `ORIGINAL/` pinned as a submodule unless the repository policy is intentionally changed.
 - Do not modify `ORIGINAL/` during remake implementation.
-- If an upstream refresh is intentionally performed, record the new commit here and regenerate `DATA/canonical-manifest.json`.
+- If an upstream refresh is intentionally performed, record the new commit here and regenerate `DATA/canonical-manifest.json` plus `DATA/parity-graph.json`.
 - All source-derived remake data must trace back to this baseline.

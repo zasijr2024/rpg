@@ -10,6 +10,8 @@ export type {
 export { originalContentRegistry } from "./registry";
 export { originalPerks } from "./core/perks";
 export {
+  originalPrestigeDivisor,
+  originalReducedPrestigeStores,
   originalPrestigeStores,
   type OriginalPrestigeStoreType,
 } from "./core/prestige";
@@ -206,9 +208,11 @@ export {
   WORLD_VILLAGE_POS,
   originalWorldCompassDirection,
   originalWorldDisplayLabel,
+  originalWorldDrawRoad,
   originalWorldGenerateMap,
   originalWorldLightMap,
   originalWorldLandmarks,
+  originalWorldMarkVisited,
   originalWorldMapSearch,
   originalWorldNewMask,
   originalWorldWeapons,

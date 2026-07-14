@@ -87,39 +87,81 @@ describe("original late-game data", () => {
   });
 
   it("ports exact fabricator craftables", () => {
-    expect(originalFabricatorCraftables).toContainEqual({
-      key: "energy blade",
-      name: "energy blade",
-      type: "weapon",
-      buildMsg: "the blade hums, charged particles sparking and fizzing.",
-      cost: { "alien alloy": 1 },
-    });
-    expect(originalFabricatorCraftables).toContainEqual({
-      key: "kinetic armour",
-      name: "kinetic armour",
-      type: "upgrade",
-      maximum: 1,
-      blueprintRequired: true,
-      buildMsg: "wanderer soldiers succeed by subverting the enemy's rage.",
-      cost: { "alien alloy": 2 },
-    });
-    expect(originalFabricatorCraftables).toContainEqual({
-      key: "hypo",
-      name: "hypo",
-      type: "tool",
-      blueprintRequired: true,
-      buildMsg: "a handful of hypos. life in a vial.",
-      cost: { "alien alloy": 1 },
-      quantity: 5,
-    });
-    expect(originalFabricatorCraftables).toContainEqual({
-      key: "glowstone",
-      name: "glow stone",
-      type: "tool",
-      blueprintRequired: true,
-      buildMsg: "a smooth, perfect sphere. its light is inextinguishable.",
-      cost: { "alien alloy": 1 },
-    });
+    expect(originalFabricatorCraftables).toEqual([
+      {
+        key: "energy blade",
+        name: "energy blade",
+        type: "weapon",
+        buildMsg: "the blade hums, charged particles sparking and fizzing.",
+        cost: { "alien alloy": 1 },
+      },
+      {
+        key: "fluid recycler",
+        name: "fluid recycler",
+        type: "upgrade",
+        maximum: 1,
+        buildMsg: "water out, water in. waste not, want not.",
+        cost: { "alien alloy": 2 },
+      },
+      {
+        key: "cargo drone",
+        name: "cargo drone",
+        type: "upgrade",
+        maximum: 1,
+        buildMsg: "the workhorse of the wanderer fleet.",
+        cost: { "alien alloy": 2 },
+      },
+      {
+        key: "kinetic armour",
+        name: "kinetic armour",
+        type: "upgrade",
+        maximum: 1,
+        blueprintRequired: true,
+        buildMsg: "wanderer soldiers succeed by subverting the enemy's rage.",
+        cost: { "alien alloy": 2 },
+      },
+      {
+        key: "disruptor",
+        name: "disruptor",
+        type: "weapon",
+        blueprintRequired: true,
+        buildMsg: "somtimes it is best not to fight.",
+        cost: { "alien alloy": 1 },
+      },
+      {
+        key: "hypo",
+        name: "hypo",
+        type: "tool",
+        blueprintRequired: true,
+        buildMsg: "a handful of hypos. life in a vial.",
+        cost: { "alien alloy": 1 },
+        quantity: 5,
+      },
+      {
+        key: "stim",
+        name: "stim",
+        type: "tool",
+        blueprintRequired: true,
+        buildMsg: "sometimes it is best to fight without restraint.",
+        cost: { "alien alloy": 1 },
+      },
+      {
+        key: "plasma rifle",
+        name: "plasma rifle",
+        type: "weapon",
+        blueprintRequired: true,
+        buildMsg: "the peak of wanderer weapons technology, sleek and deadly.",
+        cost: { "alien alloy": 1 },
+      },
+      {
+        key: "glowstone",
+        name: "glow stone",
+        type: "tool",
+        blueprintRequired: true,
+        buildMsg: "a smooth, perfect sphere. its light is inextinguishable.",
+        cost: { "alien alloy": 1 },
+      },
+    ]);
   });
 
   it("ports exact space thresholds and glyph tables", () => {

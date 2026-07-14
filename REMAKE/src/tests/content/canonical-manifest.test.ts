@@ -31,6 +31,12 @@ describe("canonical manifest", () => {
     );
   });
 
+  it("tracks each canonical source file exactly once", () => {
+    const paths = canonicalManifest.files.map((file) => file.path);
+    expect(paths).toHaveLength(123);
+    expect(new Set(paths).size).toBe(paths.length);
+  });
+
   it("contains the initial core key sets needed for Phase 2", () => {
     expect(canonicalManifest.keys.perks).toEqual([
       "boxer",
@@ -74,6 +80,7 @@ describe("canonical manifest", () => {
     ]);
 
     const titles = canonicalManifest.events.titles.map((event) => event.title);
+    expect(titles).toHaveLength(48);
     expect(titles).toContain("The Nomad");
     expect(titles).toContain("A Snarling Beast");
     expect(titles).toContain("A Crashed Ship");

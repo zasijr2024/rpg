@@ -7,6 +7,10 @@ export interface OriginalPrestigeStoreDefinition {
   type: OriginalPrestigeStoreType;
 }
 
+export interface OriginalPrestigeRng {
+  next(): number;
+}
+
 export const originalPrestigeStores: OriginalPrestigeStoreDefinition[] = [
   { key: "wood", type: "g" },
   { key: "fur", type: "g" },
@@ -33,6 +37,27 @@ export const originalPrestigeStores: OriginalPrestigeStoreDefinition[] = [
   { key: "grenade", type: "a" },
   { key: "bolas", type: "a" },
 ];
+
+/** Preserves Prestige.randGen, including its unusual two-roll ammo curve. */
+export function originalPrestigeDivisor(
+  type: OriginalPrestigeStoreType,
+  rng: OriginalPrestigeRng,
+): number {
+  let amount: number;
+  if (type === "g") amount = Math.floor(rng.next() * 10);
+  else if (type === "w") amount = Math.floor(Math.floor(rng.next() * 10) / 2);
+  else amount = Math.ceil(rng.next() * 10 * Math.ceil(rng.next() * 10));
+  return amount === 0 ? 1 : amount;
+}
+
+export function originalReducedPrestigeStores(
+  stores: Readonly<Record<string, number>>,
+  rng: OriginalPrestigeRng,
+): number[] {
+  return originalPrestigeStores.map(({ key, type }) =>
+    Math.floor((stores[key] ?? 0) / originalPrestigeDivisor(type, rng)),
+  );
+}
 
 assertKeysMatchManifest();
 

@@ -40,6 +40,11 @@ export interface WorldMapSearchResult {
   y: number;
 }
 
+export interface WorldMapPosition {
+  x: number;
+  y: number;
+}
+
 export type WorldCompassDirection =
   | "north"
   | "south"
@@ -436,6 +441,52 @@ export function originalWorldMapSearch(
   return targets;
 }
 
+export function originalWorldDrawRoad(
+  map: WorldMapGrid,
+  startPos: WorldMapPosition,
+): WorldMapGrid {
+  const closestRoad = originalWorldFindClosestRoad(map, startPos);
+  const xDistance = startPos.x - closestRoad.x;
+  const yDistance = startPos.y - closestRoad.y;
+  const xDirection = sign(xDistance);
+  const yDirection = sign(yDistance);
+  const xIntersect =
+    Math.abs(xDistance) > Math.abs(yDistance)
+      ? closestRoad.x
+      : closestRoad.x + xDistance;
+  const yIntersect =
+    Math.abs(xDistance) > Math.abs(yDistance)
+      ? closestRoad.y + yDistance
+      : closestRoad.y;
+
+  for (let x = 0; x < Math.abs(xDistance); x += 1) {
+    const roadX = closestRoad.x + xDirection * x;
+    if (originalWorldIsTerrain(map[roadX]?.[yIntersect])) {
+      map[roadX][yIntersect] = WORLD_TILE.ROAD;
+    }
+  }
+
+  for (let y = 0; y < Math.abs(yDistance); y += 1) {
+    const roadY = closestRoad.y + yDirection * y;
+    if (originalWorldIsTerrain(map[xIntersect]?.[roadY])) {
+      map[xIntersect][roadY] = WORLD_TILE.ROAD;
+    }
+  }
+
+  return map;
+}
+
+export function originalWorldMarkVisited(
+  map: WorldMapGrid,
+  pos: WorldMapPosition,
+): WorldMapGrid {
+  const tile = map[pos.x]?.[pos.y];
+  if (typeof tile === "string" && !tile.endsWith("!")) {
+    map[pos.x][pos.y] = `${tile}!`;
+  }
+  return map;
+}
+
 export function originalWorldIsTerrain(tile: string | undefined): boolean {
   return (
     tile === WORLD_TILE.FOREST ||
@@ -520,6 +571,53 @@ function originalWorldPlaceLandmarkFallback(
   throw new Error(`Unable to place world landmark ${landmark}`);
 }
 
+function originalWorldFindClosestRoad(
+  map: WorldMapGrid,
+  startPos: WorldMapPosition,
+): WorldMapPosition {
+  let x = 0;
+  let y = 0;
+  let dx = 1;
+  let dy = -1;
+  const maxAttempts =
+    (manhattanDistance(startPos, { x: WORLD_RADIUS, y: WORLD_RADIUS }) + 2) **
+    2;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    const searchX = startPos.x + x;
+    const searchY = startPos.y + y;
+    if (
+      0 < searchX &&
+      searchX < WORLD_RADIUS * 2 &&
+      0 < searchY &&
+      searchY < WORLD_RADIUS * 2
+    ) {
+      const tile = map[searchX]?.[searchY];
+      if (
+        tile === WORLD_TILE.ROAD ||
+        (tile === WORLD_TILE.OUTPOST && !(x === 0 && y === 0)) ||
+        tile === WORLD_TILE.VILLAGE
+      ) {
+        return { x: searchX, y: searchY };
+      }
+    }
+
+    if (x === 0 || y === 0) {
+      const previousDx = dx;
+      dx = -dy;
+      dy = previousDx;
+    }
+    if (x === 0 && y <= 0) {
+      x += 1;
+    } else {
+      x += dx;
+      y += dy;
+    }
+  }
+
+  return { x: WORLD_RADIUS, y: WORLD_RADIUS };
+}
+
 function originalWorldChooseTile(
   x: number,
   y: number,
@@ -561,6 +659,16 @@ function originalWorldChooseTile(
   }
 
   return WORLD_TILE.BARRENS;
+}
+
+function manhattanDistance(left: WorldMapPosition, right: WorldMapPosition) {
+  return Math.abs(left.x - right.x) + Math.abs(left.y - right.y);
+}
+
+function sign(value: number): -1 | 0 | 1 {
+  if (value < 0) return -1;
+  if (value > 0) return 1;
+  return 0;
 }
 
 function clampWorldCoordinate(value: number): number {

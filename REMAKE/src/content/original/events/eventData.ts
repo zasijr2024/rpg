@@ -113,6 +113,15 @@ function worldMaxHealth(context: OriginalEventEffectContext): number {
   return 10;
 }
 
+function clearTownDungeon(context: OriginalEventEffectContext): void {
+  context.setState("game.world.townCleared", true);
+}
+
+function clearCityDungeon(context: OriginalEventEffectContext): void {
+  context.setState("game.cityCleared", true);
+  context.setState("game.world.cityCleared", true);
+}
+
 const originalEncounterDefinitions: OriginalEventDefinition[] = [
   createCombatEncounter({
     key: "encounter.snarling-beast",
@@ -1093,7 +1102,6 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         notification: "a safe place in the wilds.",
         onLoad: (context) => {
           context.setState("game.world.outpostUsed", true);
-          context.setState("game.world.waterReplenished", true);
           context.notify("water replenished");
         },
         loot: {
@@ -1178,7 +1186,7 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
     },
   },
   {
-    key: "setpiece.old-house",
+    key: "setpiece.house",
     title: "An Old House",
     pool: "setpiece",
     isAvailable: () => false,
@@ -1267,35 +1275,6 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
     },
   },
   {
-    key: "setpiece.borehole",
-    title: "A Huge Borehole",
-    pool: "setpiece",
-    isAvailable: () => false,
-    scenes: {
-      start: {
-        key: "start",
-        text: [
-          "a huge hole is cut deep into the earth, evidence of the past harvest.",
-          "they took what they came for, and left.",
-          "castoff from the mammoth drills can still be found by the edges of the precipice.",
-        ],
-        onLoad: (context) => {
-          context.setState("game.world.boreholeVisited", true);
-        },
-        loot: {
-          "alien alloy": { min: 1, max: 3, chance: 1 },
-        },
-        buttons: [
-          {
-            key: "leave",
-            text: "leave",
-            nextScene: "end",
-          },
-        ],
-      },
-    },
-  },
-  {
     key: "setpiece.battlefield",
     title: "A Forgotten Battlefield",
     pool: "setpiece",
@@ -1329,7 +1308,36 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
     },
   },
   {
-    key: "setpiece.crashed-ship",
+    key: "setpiece.borehole",
+    title: "A Huge Borehole",
+    pool: "setpiece",
+    isAvailable: () => false,
+    scenes: {
+      start: {
+        key: "start",
+        text: [
+          "a huge hole is cut deep into the earth, evidence of the past harvest.",
+          "they took what they came for, and left.",
+          "castoff from the mammoth drills can still be found by the edges of the precipice.",
+        ],
+        onLoad: (context) => {
+          context.setState("game.world.boreholeVisited", true);
+        },
+        loot: {
+          "alien alloy": { min: 1, max: 3, chance: 1 },
+        },
+        buttons: [
+          {
+            key: "leave",
+            text: "leave",
+            nextScene: "end",
+          },
+        ],
+      },
+    },
+  },
+  {
+    key: "setpiece.ship",
     title: "A Crashed Ship",
     pool: "setpiece",
     isAvailable: () => false,
@@ -1356,7 +1364,7 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
     },
   },
   {
-    key: "setpiece.destroyed-village",
+    key: "setpiece.cache",
     title: "A Destroyed Village",
     pool: "setpiece",
     isAvailable: () => false,
@@ -1411,6 +1419,1946 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
           {
             key: "leave",
             text: "leave",
+            nextScene: "end",
+          },
+        ],
+      },
+    },
+  },
+  {
+    key: "setpiece.cave",
+    title: "A Damp Cave",
+    pool: "setpiece",
+    isAvailable: () => false,
+    scenes: {
+      start: {
+        key: "start",
+        text: [
+          "the mouth of the cave is wide and dark.",
+          "can't see what's inside.",
+        ],
+        notification: "the earth here is split, as if bearing an ancient wound",
+        buttons: [
+          {
+            key: "enter",
+            text: "go inside",
+            cost: { torch: 1 },
+            nextScene: { 0.3: "a1", 0.6: "a2", 1: "a3" },
+          },
+          { key: "leave", text: "leave", nextScene: "end" },
+        ],
+      },
+      a1: {
+        key: "a1",
+        text: [],
+        notification: "a startled beast defends its home",
+        combat: originalSetpieceCombatDefinitions["cave-beast"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "b1", 1: "b2" },
+          },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      a2: {
+        key: "a2",
+        text: [
+          "the cave narrows a few feet in.",
+          "the walls are moist and moss-covered",
+        ],
+        buttons: [
+          {
+            key: "continue",
+            text: "squeeze",
+            nextScene: { 0.5: "b2", 1: "b3" },
+          },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      a3: {
+        key: "a3",
+        text: [
+          "the remains of an old camp sits just inside the cave.",
+          "bedrolls, torn and blackened, lay beneath a thin layer of dust.",
+        ],
+        loot: {
+          "cured meat": { min: 1, max: 5, chance: 1 },
+          torch: { min: 1, max: 5, chance: 0.5 },
+          leather: { min: 1, max: 5, chance: 0.3 },
+        },
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "b3", 1: "b4" },
+          },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      b1: {
+        key: "b1",
+        text: [
+          "the body of a wanderer lies in a small cavern.",
+          "rot's been to work on it, and some of the pieces are missing.",
+          "can't tell what left it here.",
+        ],
+        loot: {
+          "iron sword": { min: 1, max: 1, chance: 1 },
+          "cured meat": { min: 1, max: 5, chance: 0.8 },
+          torch: { min: 1, max: 3, chance: 0.5 },
+          medicine: { min: 1, max: 2, chance: 0.1 },
+        },
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "c1" } },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      b2: {
+        key: "b2",
+        text: [
+          "the torch sputters and dies in the damp air",
+          "the darkness is absolute",
+        ],
+        notification: "the torch goes out",
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            cost: { torch: 1 },
+            nextScene: { 1: "c1" },
+          },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      b3: {
+        key: "b3",
+        text: [],
+        notification: "a startled beast defends its home",
+        combat: originalSetpieceCombatDefinitions["cave-small-beast"],
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "c2" } },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      b4: {
+        key: "b4",
+        text: [],
+        notification: "a cave lizard attacks",
+        combat: originalSetpieceCombatDefinitions["cave-lizard"],
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "c2" } },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      c1: {
+        key: "c1",
+        text: [],
+        notification: "a large beast charges out of the dark",
+        combat: originalSetpieceCombatDefinitions["cave-large-beast"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "end1", 1: "end2" },
+          },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      c2: {
+        key: "c2",
+        text: [],
+        notification: "a giant lizard shambles forward",
+        combat: originalSetpieceCombatDefinitions["cave-giant-lizard"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.7: "end2", 1: "end3" },
+          },
+          { key: "leave", text: "leave cave", nextScene: "end" },
+        ],
+      },
+      end1: {
+        key: "end1",
+        text: ["the nest of a large animal lies at the back of the cave."],
+        onLoad: (context) => {
+          context.setState("game.world.caveDepthsCleared", true);
+        },
+        loot: {
+          meat: { min: 5, max: 10, chance: 1 },
+          fur: { min: 5, max: 10, chance: 1 },
+          scales: { min: 5, max: 10, chance: 1 },
+          teeth: { min: 5, max: 10, chance: 1 },
+          cloth: { min: 5, max: 10, chance: 0.5 },
+        },
+        buttons: [{ key: "leave", text: "leave cave", nextScene: "end" }],
+      },
+      end2: {
+        key: "end2",
+        text: ["a small supply cache is hidden at the back of the cave."],
+        onLoad: (context) => {
+          context.setState("game.world.caveDepthsCleared", true);
+        },
+        loot: {
+          cloth: { min: 5, max: 10, chance: 1 },
+          leather: { min: 5, max: 10, chance: 1 },
+          iron: { min: 5, max: 10, chance: 1 },
+          "cured meat": { min: 5, max: 10, chance: 1 },
+          steel: { min: 5, max: 10, chance: 0.5 },
+          bolas: { min: 1, max: 3, chance: 0.3 },
+          medicine: { min: 1, max: 4, chance: 0.15 },
+        },
+        buttons: [{ key: "leave", text: "leave cave", nextScene: "end" }],
+      },
+      end3: {
+        key: "end3",
+        text: [
+          "an old case is wedged behind a rock, covered in a thick layer of dust.",
+        ],
+        onLoad: (context) => {
+          context.setState("game.world.caveDepthsCleared", true);
+        },
+        loot: {
+          "steel sword": { min: 1, max: 1, chance: 1 },
+          bolas: { min: 1, max: 3, chance: 0.5 },
+          medicine: { min: 1, max: 3, chance: 0.3 },
+        },
+        buttons: [{ key: "leave", text: "leave cave", nextScene: "end" }],
+      },
+    },
+  },
+  {
+    key: "setpiece.town",
+    title: "A Deserted Town",
+    pool: "setpiece",
+    isAvailable: () => false,
+    scenes: {
+      start: {
+        key: "start",
+        text: [
+          "a small suburb lays ahead, empty houses scorched and peeling.",
+          "broken streetlights stand, rusting. light hasn't graced this place in a long time.",
+        ],
+        notification: "the town lies abandoned, its citizens long dead",
+        buttons: [
+          {
+            key: "enter",
+            text: "explore",
+            nextScene: { 0.3: "a1", 0.7: "a3", 1: "a2" },
+          },
+          { key: "leave", text: "leave", nextScene: "end" },
+        ],
+      },
+      a1: {
+        key: "a1",
+        text: [
+          "where the windows of the schoolhouse aren't shattered, they're blackened with soot.",
+          "the double doors creak endlessly in the wind.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "enter",
+            cost: { torch: 1 },
+            nextScene: { 0.5: "b1", 1: "b2" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      a2: {
+        key: "a2",
+        text: [],
+        notification: "ambushed on the street.",
+        combat: originalSetpieceCombatDefinitions["town-thug"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "b3", 1: "b4" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      a3: {
+        key: "a3",
+        text: [
+          "a squat building up ahead.",
+          "a green cross barely visible behind grimy windows.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "enter",
+            cost: { torch: 1 },
+            nextScene: { 0.5: "b5", 1: "end5" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      b1: {
+        key: "b1",
+        text: ["a small cache of supplies is tucked inside a rusting locker."],
+        loot: {
+          "cured meat": { min: 1, max: 5, chance: 1 },
+          torch: { min: 1, max: 3, chance: 0.8 },
+          bullets: { min: 1, max: 5, chance: 0.3 },
+          medicine: { min: 1, max: 3, chance: 0.05 },
+        },
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "c1", 1: "c2" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      b2: {
+        key: "b2",
+        text: [],
+        notification: "a scavenger waits just inside the door.",
+        combat: {
+          ...originalSetpieceCombatDefinitions["town-thug"],
+          enemy: "scavenger",
+          enemyName: "scavenger",
+          deathMessage: "the scavenger is dead",
+        },
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "c2", 1: "c3" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      b3: {
+        key: "b3",
+        text: [],
+        notification: "a beast stands alone in an overgrown park.",
+        combat: originalSetpieceCombatDefinitions["town-beast"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "c4", 1: "c5" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      b4: {
+        key: "b4",
+        text: [
+          "an overturned caravan is spread across the pockmarked street.",
+          "it's been picked over by scavengers, but there's still some things worth taking.",
+        ],
+        loot: {
+          "cured meat": { min: 1, max: 5, chance: 0.8 },
+          torch: { min: 1, max: 3, chance: 0.5 },
+          bullets: { min: 1, max: 5, chance: 0.3 },
+          medicine: { min: 1, max: 3, chance: 0.1 },
+        },
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "c5", 1: "c6" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      b5: {
+        key: "b5",
+        text: [],
+        notification: "a madman attacks, screeching.",
+        combat: originalSetpieceCombatDefinitions["town-madman"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.3: "end5", 1: "end6" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      c1: {
+        key: "c1",
+        text: [],
+        notification: "a thug moves out of the shadows.",
+        combat: originalSetpieceCombatDefinitions["town-thug"],
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "d1" } },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      c2: {
+        key: "c2",
+        text: [],
+        notification: "a beast charges out of a ransacked classroom.",
+        combat: originalSetpieceCombatDefinitions["town-beast"],
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "d1" } },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      c3: {
+        key: "c3",
+        text: [
+          "through the large gymnasium doors, footsteps can be heard.",
+          "the torchlight casts a flickering glow down the hallway.",
+          "the footsteps stop.",
+        ],
+        buttons: [
+          { key: "continue", text: "enter", nextScene: { 1: "d1" } },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      c4: {
+        key: "c4",
+        text: [],
+        notification:
+          "another beast, draw by the noise, leaps out of a copse of trees.",
+        combat: {
+          ...originalSetpieceCombatDefinitions["town-beast"],
+          damage: 4,
+        },
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "d2" } },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      c5: {
+        key: "c5",
+        text: [
+          "something's causing a commotion a ways down the road.",
+          "a fight, maybe.",
+        ],
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "d2" } },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      c6: {
+        key: "c6",
+        text: [
+          "a small basket of food is hidden under a park bench, with a note attached.",
+          "can't read the words.",
+        ],
+        loot: { "cured meat": { min: 1, max: 5, chance: 1 } },
+        buttons: [
+          { key: "continue", text: "continue", nextScene: { 1: "d2" } },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      d1: {
+        key: "d1",
+        text: [],
+        notification:
+          "a panicked scavenger bursts through the door, screaming.",
+        combat: originalSetpieceCombatDefinitions["town-scavenger"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "end1", 1: "end2" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      d2: {
+        key: "d2",
+        text: [],
+        notification:
+          "a man stands over a dead wanderer. notices he's not alone.",
+        combat: originalSetpieceCombatDefinitions["town-vigilante"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: { 0.5: "end3", 1: "end4" },
+          },
+          { key: "leave", text: "leave town", nextScene: "end" },
+        ],
+      },
+      end1: {
+        key: "end1",
+        text: [
+          "scavenger had a small camp in the school.",
+          "collected scraps spread across the floor like they fell from heaven.",
+        ],
+        onLoad: clearTownDungeon,
+        loot: {
+          "steel sword": { min: 1, max: 1, chance: 1 },
+          steel: { min: 5, max: 10, chance: 1 },
+          "cured meat": { min: 5, max: 10, chance: 1 },
+          bolas: { min: 1, max: 5, chance: 0.5 },
+          medicine: { min: 1, max: 2, chance: 0.3 },
+        },
+        buttons: [{ key: "leave", text: "leave town", nextScene: "end" }],
+      },
+      end2: {
+        key: "end2",
+        text: [
+          "scavenger'd been looking for supplies in here, it seems.",
+          "a shame to let what he'd found go to waste.",
+        ],
+        onLoad: clearTownDungeon,
+        loot: {
+          coal: { min: 5, max: 10, chance: 1 },
+          "cured meat": { min: 5, max: 10, chance: 1 },
+          leather: { min: 5, max: 10, chance: 1 },
+        },
+        buttons: [{ key: "leave", text: "leave town", nextScene: "end" }],
+      },
+      end3: {
+        key: "end3",
+        text: [
+          "beneath the wanderer's rags, clutched in one of its many hands, a glint of steel.",
+          "worth killing for, it seems.",
+        ],
+        onLoad: clearTownDungeon,
+        loot: {
+          rifle: { min: 1, max: 1, chance: 1 },
+          bullets: { min: 1, max: 5, chance: 1 },
+        },
+        buttons: [{ key: "leave", text: "leave town", nextScene: "end" }],
+      },
+      end4: {
+        key: "end4",
+        text: [
+          "eye for an eye seems fair.",
+          "always worked before, at least.",
+          "picking the bones finds some useful trinkets.",
+        ],
+        onLoad: clearTownDungeon,
+        loot: {
+          "cured meat": { min: 5, max: 10, chance: 1 },
+          iron: { min: 5, max: 10, chance: 1 },
+          torch: { min: 1, max: 5, chance: 1 },
+          bolas: { min: 1, max: 5, chance: 0.5 },
+          medicine: { min: 1, max: 2, chance: 0.1 },
+        },
+        buttons: [{ key: "leave", text: "leave town", nextScene: "end" }],
+      },
+      end5: {
+        key: "end5",
+        text: ["some medicine abandoned in the drawers."],
+        onLoad: clearTownDungeon,
+        loot: { medicine: { min: 2, max: 5, chance: 1 } },
+        buttons: [{ key: "leave", text: "leave town", nextScene: "end" }],
+      },
+      end6: {
+        key: "end6",
+        text: [
+          "the clinic has been ransacked.",
+          "only dust and stains remain.",
+        ],
+        onLoad: clearTownDungeon,
+        buttons: [{ key: "leave", text: "leave town", nextScene: "end" }],
+      },
+    },
+  },
+  {
+    key: "setpiece.city",
+    title: "A Ruined City",
+    pool: "setpiece",
+    isAvailable: () => false,
+    scenes: {
+      start: {
+        key: "start",
+        text: [
+          "a battered highway sign stands guard at the entrance to this once-great city.",
+          "the towers that haven't crumbled jut from the landscape like the ribcage of some ancient beast.",
+          "might be things worth having still inside.",
+        ],
+        notification: "the towers of a decaying city dominate the skyline",
+        buttons: [
+          {
+            key: "enter",
+            text: "explore",
+            nextScene: {
+              "1": "a4",
+              "0.2": "a1",
+              "0.5": "a2",
+              "0.8": "a3",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave",
+            nextScene: "end",
+          },
+        ],
+      },
+      a1: {
+        key: "a1",
+        text: [
+          "the streets are empty.",
+          "the air is filled with dust, driven relentlessly by the hard winds.",
+        ],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "b2",
+              "0.5": "b1",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      a2: {
+        key: "a2",
+        text: [
+          "orange traffic cones are set across the street, faded and cracked.",
+          "lights flash through the alleys between buildings.",
+        ],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "b4",
+              "0.5": "b3",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      a3: {
+        key: "a3",
+        text: [
+          "a large shanty town sprawls across the streets.",
+          "faces, darkened by soot and blood, stare out from crooked huts.",
+        ],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "b6",
+              "0.5": "b5",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      a4: {
+        key: "a4",
+        text: ["the shell of an abandoned hospital looms ahead."],
+        buttons: [
+          {
+            key: "enter",
+            text: "enter",
+            cost: {
+              torch: 1,
+            },
+            nextScene: {
+              "1": "b8",
+              "0.5": "b7",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b1: {
+        key: "b1",
+        text: [
+          "the old tower seems mostly intact.",
+          "the shell of a burned out car blocks the entrance.",
+          "most of the windows at ground level are busted anyway.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "enter",
+            nextScene: {
+              "1": "c2",
+              "0.5": "c1",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b2: {
+        key: "b2",
+        text: [],
+        notification:
+          "a huge lizard scrambles up out of the darkness of an old metro station.",
+        combat: originalSetpieceCombatDefinitions["city-lizard"],
+        buttons: [
+          {
+            key: "descend",
+            text: "descend",
+            nextScene: {
+              "1": "c3",
+              "0.5": "c2",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b3: {
+        key: "b3",
+        text: [],
+        notification: "the shot echoes in the empty street.",
+        combat: originalSetpieceCombatDefinitions["city-sniper"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "c5",
+              "0.5": "c4",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b4: {
+        key: "b4",
+        text: [],
+        notification:
+          "the soldier steps out from between the buildings, rifle raised.",
+        combat: originalSetpieceCombatDefinitions["city-soldier"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "c6",
+              "0.5": "c5",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b5: {
+        key: "b5",
+        text: [],
+        notification: "a frail man stands defiantly, blocking the path.",
+        combat: originalSetpieceCombatDefinitions["city-frail-man"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "c8",
+              "0.5": "c7",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b6: {
+        key: "b6",
+        text: [
+          "nothing but downcast eyes.",
+          "the people here were broken a long time ago.",
+        ],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "c9",
+              "0.5": "c8",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b7: {
+        key: "b7",
+        text: [
+          "empty corridors.",
+          "the place has been swept clean by scavengers.",
+        ],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "c11",
+              "0.3": "c12",
+              "0.7": "c10",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      b8: {
+        key: "b8",
+        text: [],
+        notification: "an old man bursts through a door, wielding a scalpel.",
+        combat: originalSetpieceCombatDefinitions["city-old-man"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end15",
+              "0.3": "c13",
+              "0.7": "c11",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c1: {
+        key: "c1",
+        text: [],
+        notification: "a thug is waiting on the other side of the wall.",
+        combat: originalSetpieceCombatDefinitions["city-thug"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "d2",
+              "0.5": "d1",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c2: {
+        key: "c2",
+        text: [],
+        notification: "a snarling beast jumps out from behind a car.",
+        combat: originalSetpieceCombatDefinitions["city-beast"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "d2",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c3: {
+        key: "c3",
+        text: [
+          "street above the subway platform is blown away.",
+          "lets some light down into the dusty haze.",
+          "a sound comes from the tunnel, just ahead.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "investigate",
+            cost: {
+              torch: 1,
+            },
+            nextScene: {
+              "1": "d3",
+              "0.5": "d2",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c4: {
+        key: "c4",
+        text: [
+          "looks like a camp of sorts up ahead.",
+          "rusted chainlink is pulled across an alleyway.",
+          "fires burn in the courtyard beyond.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "continue",
+            nextScene: {
+              "1": "d5",
+              "0.5": "d4",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c5: {
+        key: "c5",
+        text: [
+          "more voices can be heard ahead.",
+          "they must be here for a reason.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "continue",
+            nextScene: {
+              "1": "d5",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c6: {
+        key: "c6",
+        text: [
+          "the sound of gunfire carries on the wind.",
+          "the street ahead glows with firelight.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "continue",
+            nextScene: {
+              "1": "d6",
+              "0.5": "d5",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c7: {
+        key: "c7",
+        text: [
+          "more squatters are crowding around now.",
+          "someone throws a stone.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "continue",
+            nextScene: {
+              "1": "d8",
+              "0.5": "d7",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c8: {
+        key: "c8",
+        text: [
+          "an improvised shop is set up on the sidewalk.",
+          "the owner stands by, stoic.",
+        ],
+        loot: {
+          "steel sword": {
+            min: 1,
+            max: 1,
+            chance: 0.8,
+          },
+          rifle: {
+            min: 1,
+            max: 1,
+            chance: 0.5,
+          },
+          bullets: {
+            min: 1,
+            max: 8,
+            chance: 0.25,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.01,
+          },
+          medicine: {
+            min: 1,
+            max: 4,
+            chance: 0.5,
+          },
+        },
+        buttons: [
+          {
+            key: "enter",
+            text: "continue",
+            nextScene: {
+              "1": "d8",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c9: {
+        key: "c9",
+        text: [
+          "strips of meat hang drying by the side of the street.",
+          "the people back away, avoiding eye contact.",
+        ],
+        loot: {
+          "cured meat": {
+            min: 5,
+            max: 10,
+            chance: 1,
+          },
+        },
+        buttons: [
+          {
+            key: "enter",
+            text: "continue",
+            nextScene: {
+              "1": "d9",
+              "0.5": "d8",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c10: {
+        key: "c10",
+        text: [
+          "someone has locked and barricaded the door to this operating theatre.",
+        ],
+        buttons: [
+          {
+            key: "enter",
+            text: "continue",
+            nextScene: {
+              "1": "d11",
+              "0.2": "end12",
+              "0.6": "d10",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c11: {
+        key: "c11",
+        text: [],
+        notification:
+          "a tribe of elderly squatters is camped out in this ward.",
+        combat: originalSetpieceCombatDefinitions["city-squatters"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end10",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c12: {
+        key: "c12",
+        text: [],
+        notification: "a pack of lizards rounds the corner.",
+        combat: originalSetpieceCombatDefinitions["city-lizards"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end10",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      c13: {
+        key: "c13",
+        text: ["strips of meat are hung up to dry in this ward."],
+        loot: {
+          "cured meat": {
+            min: 3,
+            max: 10,
+            chance: 1,
+          },
+        },
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end11",
+              "0.5": "end10",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d1: {
+        key: "d1",
+        text: [],
+        notification: "a large bird nests at the top of the stairs.",
+        combat: originalSetpieceCombatDefinitions["city-bird"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end2",
+              "0.5": "end1",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d2: {
+        key: "d2",
+        text: [
+          "the debris is denser here.",
+          "maybe some useful stuff in the rubble.",
+        ],
+        loot: {
+          bullets: {
+            min: 1,
+            max: 5,
+            chance: 0.5,
+          },
+          steel: {
+            min: 1,
+            max: 10,
+            chance: 0.8,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.01,
+          },
+          cloth: {
+            min: 1,
+            max: 10,
+            chance: 1,
+          },
+        },
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end2",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d3: {
+        key: "d3",
+        text: [],
+        notification: "a swarm of rats rushes up the tunnel.",
+        combat: originalSetpieceCombatDefinitions["city-rats"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end3",
+              "0.5": "end2",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d4: {
+        key: "d4",
+        text: [],
+        notification: "a large man attacks, waving a bayonet.",
+        combat: originalSetpieceCombatDefinitions["city-veteran"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end5",
+              "0.5": "end4",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d5: {
+        key: "d5",
+        text: [],
+        notification: "a second soldier opens fire.",
+        combat: originalSetpieceCombatDefinitions["city-soldier"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end5",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d6: {
+        key: "d6",
+        text: [],
+        notification: "a masked soldier rounds the corner, gun drawn",
+        combat: originalSetpieceCombatDefinitions["city-commando"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end6",
+              "0.5": "end5",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d7: {
+        key: "d7",
+        text: [],
+        notification: "the crowd surges forward.",
+        combat: originalSetpieceCombatDefinitions["city-crowd-squatters"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end8",
+              "0.5": "end7",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d8: {
+        key: "d8",
+        text: [],
+        notification: "a youth lashes out with a tree branch.",
+        combat: originalSetpieceCombatDefinitions["city-youth"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end8",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d9: {
+        key: "d9",
+        text: [],
+        notification: "a squatter stands firmly in the doorway of a small hut.",
+        combat: originalSetpieceCombatDefinitions["city-squatter"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end9",
+              "0.5": "end8",
+            },
+          },
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      d10: {
+        key: "d10",
+        text: [],
+        notification: "behind the door, a deformed figure awakes and attacks.",
+        combat: originalSetpieceCombatDefinitions["city-deformed"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end14",
+            },
+          },
+        ],
+      },
+      d11: {
+        key: "d11",
+        text: [],
+        notification:
+          "as soon as the door is open a little bit, hundreds of tentacles erupt.",
+        combat: originalSetpieceCombatDefinitions["city-tentacles"],
+        buttons: [
+          {
+            key: "continue",
+            text: "continue",
+            nextScene: {
+              "1": "end13",
+            },
+          },
+        ],
+      },
+      end1: {
+        key: "end1",
+        text: [
+          "bird must have liked shiney things.",
+          "some good stuff woven into its nest.",
+        ],
+        loot: {
+          bullets: {
+            min: 5,
+            max: 10,
+            chance: 0.8,
+          },
+          bolas: {
+            min: 1,
+            max: 5,
+            chance: 0.5,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.5,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end2: {
+        key: "end2",
+        text: [
+          "not much here.",
+          "scavengers must have gotten to this place already.",
+        ],
+        loot: {
+          torch: {
+            min: 1,
+            max: 5,
+            chance: 0.8,
+          },
+          "cured meat": {
+            min: 1,
+            max: 5,
+            chance: 0.5,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end3: {
+        key: "end3",
+        text: [
+          "the tunnel opens up at another platform.",
+          "the walls are scorched from an old battle.",
+          "bodies and supplies from both sides litter the ground.",
+        ],
+        loot: {
+          rifle: {
+            min: 1,
+            max: 1,
+            chance: 0.8,
+          },
+          bullets: {
+            min: 1,
+            max: 5,
+            chance: 0.8,
+          },
+          "laser rifle": {
+            min: 1,
+            max: 1,
+            chance: 0.3,
+          },
+          "energy cell": {
+            min: 1,
+            max: 5,
+            chance: 0.3,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.3,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end4: {
+        key: "end4",
+        text: [
+          "the small military outpost is well supplied.",
+          "arms and munitions, relics from the war, are neatly arranged on the store-room floor.",
+          "just as deadly now as they were then.",
+        ],
+        loot: {
+          rifle: {
+            min: 1,
+            max: 1,
+            chance: 1,
+          },
+          bullets: {
+            min: 1,
+            max: 10,
+            chance: 1,
+          },
+          grenade: {
+            min: 1,
+            max: 5,
+            chance: 0.8,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end5: {
+        key: "end5",
+        text: [
+          "searching the bodies yields a few supplies.",
+          "more soldiers will be on their way.",
+          "time to move on.",
+        ],
+        loot: {
+          rifle: {
+            min: 1,
+            max: 1,
+            chance: 1,
+          },
+          bullets: {
+            min: 1,
+            max: 10,
+            chance: 1,
+          },
+          "cured meat": {
+            min: 1,
+            max: 5,
+            chance: 0.8,
+          },
+          medicine: {
+            min: 1,
+            max: 4,
+            chance: 0.1,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end6: {
+        key: "end6",
+        text: [
+          "the small settlement has clearly been burning a while.",
+          "the bodies of the wanderers that lived here are still visible in the flames.",
+          "still time to rescue a few supplies.",
+        ],
+        loot: {
+          "laser rifle": {
+            min: 1,
+            max: 1,
+            chance: 0.5,
+          },
+          "energy cell": {
+            min: 1,
+            max: 5,
+            chance: 0.5,
+          },
+          "cured meat": {
+            min: 1,
+            max: 10,
+            chance: 1,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end7: {
+        key: "end7",
+        text: [
+          "the remaining settlers flee from the violence, their belongings forgotten.",
+          "there's not much, but some useful things can still be found.",
+        ],
+        loot: {
+          "steel sword": {
+            min: 1,
+            max: 1,
+            chance: 0.8,
+          },
+          "energy cell": {
+            min: 1,
+            max: 5,
+            chance: 0.5,
+          },
+          "cured meat": {
+            min: 1,
+            max: 10,
+            chance: 1,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end8: {
+        key: "end8",
+        text: [
+          "the young settler was carrying a canvas sack.",
+          "it contains travelling gear, and a few trinkets.",
+          "there's nothing else here.",
+        ],
+        loot: {
+          "steel sword": {
+            min: 1,
+            max: 1,
+            chance: 0.8,
+          },
+          bolas: {
+            min: 1,
+            max: 5,
+            chance: 0.5,
+          },
+          "cured meat": {
+            min: 1,
+            max: 10,
+            chance: 1,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end9: {
+        key: "end9",
+        text: [
+          "inside the hut, a child cries.",
+          "a few belongings rest against the walls.",
+          "there's nothing else here.",
+        ],
+        loot: {
+          rifle: {
+            min: 1,
+            max: 1,
+            chance: 0.8,
+          },
+          bullets: {
+            min: 1,
+            max: 5,
+            chance: 0.8,
+          },
+          bolas: {
+            min: 1,
+            max: 5,
+            chance: 0.5,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.2,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end10: {
+        key: "end10",
+        text: [
+          "the stench of rot and death fills the operating theatres.",
+          "a few items are scattered on the ground.",
+          "there is nothing else here.",
+        ],
+        loot: {
+          "energy cell": {
+            min: 1,
+            max: 1,
+            chance: 0.3,
+          },
+          medicine: {
+            min: 1,
+            max: 5,
+            chance: 0.3,
+          },
+          teeth: {
+            min: 3,
+            max: 8,
+            chance: 1,
+          },
+          scales: {
+            min: 4,
+            max: 7,
+            chance: 0.9,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end11: {
+        key: "end11",
+        text: [
+          "a pristine medicine cabinet at the end of a hallway.",
+          "the rest of the hospital is empty.",
+        ],
+        loot: {
+          "energy cell": {
+            min: 1,
+            max: 1,
+            chance: 0.2,
+          },
+          medicine: {
+            min: 3,
+            max: 10,
+            chance: 1,
+          },
+          teeth: {
+            min: 1,
+            max: 2,
+            chance: 0.2,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end12: {
+        key: "end12",
+        text: ["someone had been stockpiling loot here."],
+        loot: {
+          "energy cell": {
+            min: 1,
+            max: 3,
+            chance: 0.2,
+          },
+          medicine: {
+            min: 3,
+            max: 10,
+            chance: 0.5,
+          },
+          bullets: {
+            min: 2,
+            max: 8,
+            chance: 1,
+          },
+          torch: {
+            min: 1,
+            max: 3,
+            chance: 0.5,
+          },
+          grenade: {
+            min: 1,
+            max: 1,
+            chance: 0.5,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 2,
+            chance: 0.8,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end13: {
+        key: "end13",
+        text: [
+          "the tentacular horror is defeated.",
+          "inside, the remains of its victims are everywhere.",
+        ],
+        loot: {
+          "steel sword": {
+            min: 1,
+            max: 3,
+            chance: 0.5,
+          },
+          rifle: {
+            min: 1,
+            max: 2,
+            chance: 0.3,
+          },
+          teeth: {
+            min: 2,
+            max: 8,
+            chance: 1,
+          },
+          cloth: {
+            min: 3,
+            max: 6,
+            chance: 0.5,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.1,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end14: {
+        key: "end14",
+        text: [
+          "the warped man lies dead.",
+          "the operating theatre has a lot of curious equipment.",
+        ],
+        loot: {
+          "energy cell": {
+            min: 2,
+            max: 5,
+            chance: 0.8,
+          },
+          medicine: {
+            min: 3,
+            max: 12,
+            chance: 1,
+          },
+          cloth: {
+            min: 1,
+            max: 3,
+            chance: 0.5,
+          },
+          steel: {
+            min: 2,
+            max: 3,
+            chance: 0.3,
+          },
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.3,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
+            nextScene: "end",
+          },
+        ],
+      },
+      end15: {
+        key: "end15",
+        text: ["the old man had a small cache of interesting items."],
+        loot: {
+          "alien alloy": {
+            min: 1,
+            max: 1,
+            chance: 0.8,
+          },
+          medicine: {
+            min: 1,
+            max: 4,
+            chance: 1,
+          },
+          "cured meat": {
+            min: 3,
+            max: 7,
+            chance: 1,
+          },
+          bolas: {
+            min: 1,
+            max: 3,
+            chance: 0.5,
+          },
+          fur: {
+            min: 1,
+            max: 5,
+            chance: 0.8,
+          },
+        },
+        onLoad: clearCityDungeon,
+        buttons: [
+          {
+            key: "leave",
+            text: "leave city",
             nextScene: "end",
           },
         ],
@@ -1495,6 +3443,9 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
           "the darkness is absolute",
         ],
         notification: "the torch goes out",
+        onLoad: (context) => {
+          context.setState("game.world.caveDepthsCleared", true);
+        },
         buttons: [
           {
             key: "leave",
@@ -1836,6 +3787,9 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
           "where the windows of the schoolhouse aren't shattered, they're blackened with soot.",
           "the double doors creak endlessly in the wind.",
         ],
+        onLoad: (context) => {
+          context.setState("game.world.townThugCleared", true);
+        },
         buttons: [
           {
             key: "leave",
@@ -2900,6 +4854,10 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
           "lets some light down into the dusty haze.",
           "a sound comes from the tunnel, just ahead.",
         ],
+        onLoad: (context) => {
+          context.setState("game.cityCleared", true);
+          context.setState("game.world.citySniperCleared", true);
+        },
         buttons: [
           {
             key: "leave",
@@ -5678,7 +7636,7 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         notification: "a military perimeter is set up around the mine.",
         buttons: [
           {
-            key: "enter",
+            key: "attack",
             text: "attack",
             nextScene: { 1: "a1" },
           },
@@ -5696,9 +7654,14 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         combat: originalSetpieceCombatDefinitions["city-soldier"],
         buttons: [
           {
-            key: "leave",
+            key: "continue",
             text: "continue",
             nextScene: { 1: "a2" },
+          },
+          {
+            key: "run",
+            text: "run",
+            nextScene: "end",
           },
         ],
       },
@@ -5709,9 +7672,14 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         combat: originalSetpieceCombatDefinitions["city-soldier"],
         buttons: [
           {
-            key: "leave",
+            key: "continue",
             text: "continue",
             nextScene: { 1: "a3" },
+          },
+          {
+            key: "run",
+            text: "run",
+            nextScene: "end",
           },
         ],
       },
@@ -5722,7 +7690,7 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         combat: originalSetpieceCombatDefinitions["sulphurmine-veteran"],
         buttons: [
           {
-            key: "leave",
+            key: "continue",
             text: "continue",
             nextScene: { 1: "cleared" },
           },
@@ -5763,7 +7731,7 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         notification: "this old mine is not abandoned",
         buttons: [
           {
-            key: "enter",
+            key: "attack",
             text: "attack",
             nextScene: { 1: "a1" },
           },
@@ -5781,9 +7749,14 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         combat: originalSetpieceCombatDefinitions["coalmine-man"],
         buttons: [
           {
-            key: "leave",
+            key: "continue",
             text: "continue",
             nextScene: { 1: "a2" },
+          },
+          {
+            key: "run",
+            text: "run",
+            nextScene: "end",
           },
         ],
       },
@@ -5794,9 +7767,14 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         combat: originalSetpieceCombatDefinitions["coalmine-man"],
         buttons: [
           {
-            key: "leave",
+            key: "continue",
             text: "continue",
             nextScene: { 1: "a3" },
+          },
+          {
+            key: "run",
+            text: "run",
+            nextScene: "end",
           },
         ],
       },
@@ -5807,7 +7785,7 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         combat: originalSetpieceCombatDefinitions["coalmine-chief"],
         buttons: [
           {
-            key: "leave",
+            key: "continue",
             text: "continue",
             nextScene: { 1: "cleared" },
           },
@@ -5850,7 +7828,8 @@ const originalSetpieceDefinitions: OriginalEventDefinition[] = [
         buttons: [
           {
             key: "enter",
-            text: "enter",
+            text: "go inside",
+            cost: { torch: 1 },
             nextScene: { 1: "enter" },
           },
           {
@@ -5976,7 +7955,7 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
         key: "maintenance-panel",
         text: [
           "a maintenance panel is embedded in the wall next to a large sealed door.",
-          "perhaps the ship's systems are still operational.",
+          "perhaps the ship’s systems are still operational.",
         ],
         buttons: [
           {
@@ -6080,6 +8059,9 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
           "then it is gone.",
           "time to get out of here.",
         ],
+        onLoad: (context) => {
+          context.setState("game.world.executionerCleared", true);
+        },
         buttons: [
           {
             key: "leave",
@@ -6221,6 +8203,9 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
           "then it is gone.",
           "time to get out of here.",
         ],
+        onLoad: (context) => {
+          context.setState("game.world.executionerCleared", true);
+        },
         buttons: [
           {
             key: "leave",
@@ -6361,6 +8346,9 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
           "then it is gone.",
           "time to get out of here.",
         ],
+        onLoad: (context) => {
+          context.setState("game.world.executionerCleared", true);
+        },
         buttons: [
           {
             key: "leave",
@@ -6533,7 +8521,7 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
         key: "maintenance-panel",
         text: [
           "a maintenance panel is embedded in the wall next to a large sealed door.",
-          "perhaps the ship's systems are still operational.",
+          "perhaps the ship’s systems are still operational.",
         ],
         buttons: [
           {
@@ -6685,7 +8673,7 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
         key: "maintenance-panel",
         text: [
           "a maintenance panel is embedded in the wall next to a large sealed door.",
-          "perhaps the ship's systems are still operational.",
+          "perhaps the ship’s systems are still operational.",
         ],
         buttons: [
           {
@@ -6845,7 +8833,7 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
         key: "maintenance-panel",
         text: [
           "a maintenance panel is embedded in the wall next to a large sealed door.",
-          "perhaps the ship's systems are still operational.",
+          "perhaps the ship’s systems are still operational.",
         ],
         buttons: [
           {
@@ -8952,7 +10940,7 @@ const originalExecutionerDefinitions: OriginalEventDefinition[] = [
         buttons: [
           {
             key: "blast",
-            text: "blast door",
+            text: "blow it down",
             cost: { grenade: 1 },
             nextScene: { 1: "armory" },
           },
