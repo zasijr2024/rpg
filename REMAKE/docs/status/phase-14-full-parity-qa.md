@@ -2,11 +2,11 @@
 
 Status: **accepted on 2026-07-11** against the pinned desktop gameplay/UI parity scope.
 
-Delivery boundary at acceptance: `Parity Complete` and `Production Beta` executable command suites passed. `Release Candidate` was not claimed at that checkpoint because static preflight correctly blocked the then-dirty worktree, and no clean closure tag was created. P14V later froze clean production candidate `d3696de` and passed the technical RC gate; public sign-off and a final tag remain separate and open.
+Delivery boundary at acceptance: `Parity Complete` and `Production Beta` executable command suites passed. `Release Candidate` was not claimed at that checkpoint because static preflight correctly blocked the then-dirty worktree, and no clean closure tag was created. P14V later froze historical revision `d3696de` and passed the technical RC gate; current remediation supersedes it as a candidate, while public sign-off and a final tag remain separate and open.
 
 Product verdict at acceptance: the separate full roast placed Release Candidate on `HOLD` at strong Alpha. Phase acceptance means the defined source parity contract is closed; it did not by itself erase persistence, bundle-headroom, CI, nonvisual-Space, or uncontrolled-pacing risks.
 
-Post-audit addendum: the implementation recommendations named in that roast were remediated later on 2026-07-11. See `phase-14-roast-remediation-2026-07-11.md` for the superseding code/test status. P14V-02, P14V-04, and P14V-05 subsequently closed clean reproduction, policy validity, and the retained corpus. Hosted CI, human, screen-reader, decision, and tag work remains ordered in `phase-14-release-readiness-plan-2026-07-12.md`.
+Post-audit addendum: the implementation recommendations named in that roast were remediated later on 2026-07-11. See `phase-14-roast-remediation-2026-07-11.md` for the superseding code/test status. P14V-02 historically closed clean reproduction on `d3696de`, while P14V-04/P14V-05 retained policy and corpus evidence on that revision. The 2026-07-30 remediation reopens P14V-02 and candidate-specific P14V-05 without rewriting those historical results. Hosted CI, replacement corpus, human, screen-reader, decision, host-smoke, and tag work is ordered in `phase-14-post-remediation-next-steps-2026-07-30.md` and contracted in `phase-14-release-readiness-plan-2026-07-12.md`.
 
 ## Acceptance Matrix
 
@@ -36,7 +36,7 @@ The automated fresh-save spine uses visible player controls. Clock and RNG are c
 - [x] Complete the sixty-second Space ascent with income suspended.
 - [x] Reach and verify run score, total score, prestige carryover, and restart surface.
 
-The pinned pacing trace ends at simulated `12:16:02`. It proves reachability and guards major pacing drift; it is not a measured human completion-time distribution.
+The pinned controlled reachability trace ends at simulated `12:16:02`. It proves one scripted route is reachable and guards deterministic drift; it is not pacing evidence or a measured human completion-time distribution.
 
 ## Automated Module Smoke Matrix
 
@@ -133,4 +133,4 @@ Run from `REMAKE/` on 2026-07-11:
 
 ## Closure Decision
 
-Phase 14 is complete for the declared desktop parity scope. The high-priority persistence warning and every other code-level roast recommendation are now implemented. P14V has since completed clean reproduction, policy validation, and the retained fixed corpus on candidate `d3696de`. Public Release Candidate sign-off still requires hosted CI, unassisted sessions, a real screen-reader Space/ending pass, an explicit balance/license/NOTICE decision, and a verified clean tag.
+Phase 14 is complete for the declared desktop parity scope. P14V retains clean reproduction, policy validation, and the fixed corpus from historical revision `d3696de`; current remediation requires a new clean candidate. Public Release Candidate sign-off still requires hosted CI, five schema-v3 unassisted sessions, a real-screen-reader Space/ending pass, exact-source/legal-owner and product decisions, and a verified clean tag.

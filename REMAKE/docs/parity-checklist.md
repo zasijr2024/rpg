@@ -307,7 +307,7 @@ These tests protect the original reveal curve.
 - [x] Behavior scenarios cover discovery, economy, events, combat, World, Setpieces, Executioner, Ship, Fabricator, Space, ending, persistence, accessibility, and guarded modal input.
 - [x] Discovery parity tests.
 - [x] Organic browser smoke from fresh room to Compass, Path, embark, World movement, and Path return without resource injection.
-- [x] A controlled-clock/RNG fresh-save playthrough reaches the score ending through visible controls and asserted pacing milestones; exhaustive source-graph parity is separately locked, while this single route is not presented as a human pacing distribution.
+- [x] A controlled-clock/RNG fresh-save playthrough reaches the score ending through visible controls and asserted reachability milestones; exhaustive source-graph parity is separately locked, while this single route is not presented as pacing evidence.
 - [x] Visual screenshots for implemented Phase 3 states/resolutions.
 - [x] Visual screenshots for implemented Phase 4 Outside worker state/resolutions.
 - [x] Visual screenshots for implemented Path/World foundation slices/resolutions.

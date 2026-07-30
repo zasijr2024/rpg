@@ -1,6 +1,6 @@
 ﻿# Git Versioning Plan
 
-Last updated: 2026-07-12
+Last updated: 2026-07-30
 
 Decision: use git immediately for the remake.
 
@@ -63,6 +63,10 @@ Avoid mixed commits that combine unrelated data changes, architecture changes, a
 
 For the current post-Phase 14 checkpoint, first review every tracked, untracked, deleted, and submodule change. Do not bulk-stage a worktree with unknown ownership. Keep source/data baseline changes, parity implementation, roast remediation, and planning/evidence changes separable where the actual diff permits it. The maintainer must authorize commit/push actions.
 
+Follow `status/phase-14-post-remediation-next-steps-2026-07-30.md`. No planning
+document authorizes staging, commits, pushes, pull requests, workflow dispatch,
+branch-protection changes, deployments, or tags.
+
 ## Tags
 
 Recommended milestone tags:
@@ -77,7 +81,8 @@ Recommended milestone tags:
 Post-Phase 14 tags:
 
 - an optional annotated implementation checkpoint may use a name such as `phase-14-implementation-checkpoint-1`, but it must state that human/public-release evidence is pending;
-- do not use `release-candidate`, `v*-rc.*`, or closure language until `P14V-08` records `GO` and `P14V-09` verifies the final candidate;
+- candidate package version `0.1.0-rc.1` is authorized for the replacement P14V-02 checkpoint; this package version does not grant public `GO` or authorize an RC tag;
+- do not use `release-candidate`, `v*-rc.*`, or closure language until `P14V-08` records `GO` and P14V-09's final candidate/tag manifest is authorized;
 - never move a published checkpoint or release tag; create a new increment after candidate-changing fixes.
 
 ## Candidate Reproduction
@@ -94,7 +99,29 @@ npm run gate:rc
 
 Record the exact SHA, clean `git status --short`, Node/npm versions, commands, and results. `P14V-03` must then prove both hosted workflow lanes on that same SHA. A candidate-changing fix creates a new SHA and repeats the clean and hosted checks.
 
+Call the product candidate `C` and its complete production-tree identity `A`.
+Human and assistive-technology evidence may later be committed in an
+evidence-only descendant `F` only if `git diff C..F` contains evidence,
+status, or session records and a clean rebuild still equals `A`. Any source,
+public asset, package/dependency, build configuration, workflow, runtime,
+balance, or artifact change creates a new candidate and repeats downstream
+evidence.
+
+The target branch must require the stable always-reporting `Remake CI required`
+context. Record the branch-protection/ruleset URL or ID and prove both an
+out-of-scope success and an in-scope candidate that cannot pass without the
+full three-engine lane.
+
 The `closure:verify-tag` parser reads the historical RA ledger plus P14R/P14V status from the tagged revision and fails closed while any owned package remains open. The executable RC gate remains technical; zero open package IDs are additionally required for Phase 14 product closure.
+
+Avoid self-referential tag evidence. P14V-09 is the pre-tag authorization
+package: its final manifest records exact `A`, approved tag name/message,
+gate/host evidence, and “revision: the commit containing this manifest, resolved
+by the annotated tag.” Once that package is `done`, create the authorized local
+annotated tag, run `closure:verify-tag -- <tag>`, publish only after `PASS`, and
+retain the resolved full SHA/tag result in append-only post-tag evidence. A
+tagged commit cannot contain the result of a future tag operation or its own
+literal full hash.
 
 ## Source Protection
 

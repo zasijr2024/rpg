@@ -10,9 +10,9 @@ The historical RA remediation program is complete: P0, P1, and all eight P2 pack
 
 ## Current Package
 
-- ID: none active in the historical RA program; `P14V-02`, `P14V-04`, and `P14V-05` are complete in the separate validation ledger, with operator-owned P14V-06/P14V-07 next
+- ID: none active in the historical RA program; P14V-02 historically completed on `d3696de` but is reopened for the post-remediation candidate, P14V-04's method and the old P14V-05 artifact remain historical diagnostics, candidate-specific P14V-05 is reopened, and operator-owned P14V-06/P14V-07 wait for P14V-03/P14V-05
 - Name: RA remediation closed; see `REMAKE/docs/planning.md` for P14V
-- State: all RA packages complete. P14V later reproduced clean technical candidate `d3696de`; no final closure tag is claimed because hosted, human, assistive-technology, decision, and tag packages remain open.
+- State: all RA packages complete. P14V historically reproduced revision `d3696de`, but current remediation supersedes it as a candidate; no final closure tag is claimed because new clean reproduction, hosted, human, assistive-technology, decision, and tag packages remain open.
 - Final Phase 14 checkpoint: 69 unit-test files / 483 tests; cumulative Beta gate passed; 381 Chromium parity executions passed with 139 expected skips; 9 served-production and 27 release-browser executions passed; dependency audits found zero vulnerabilities.
 - Closure command: P14V-01 extended `npm run closure:status` and `closure:verify-tag` to fail closed for open RA/P14R/P14V packages while keeping the executable RC gate explicitly technical.
 
@@ -91,7 +91,7 @@ The historical RA remediation program is complete: P0, P1, and all eight P2 pack
 
 - Product path: cleared storage progresses through the original Room/Outside economy, Compass, generated Iron and Coal Mines, mine-worker production, Steelworks, Water Tank/Wagon, radius-28 Executioner discovery, a player-acquired Plasma Rifle Blueprint, safe-return redemption, visible Fabricator crafting, radius-28 Crashed Ship salvage, hull reinforcement, lift-off, Space, and ending.
 - Evidence boundary: the Chromium 1366 test calls visible controls only. It uses the allowed deterministic clock and RNG controls, reads the generated map for route planning/evidence, and never calls `setState`, `triggerEvent`, `triggerEventByKey`, `triggerWorldEncounter`, or `triggerWorldSetpiece`.
-- Pacing artifact: the test asserts and attaches Builder `00:00:30`, Outside `00:00:50`, Compass `08:32:10`, first expedition `10:42:10`, Fabricator `12:15:02`, Ship `12:15:02`, and Ending `12:16:02`; methodology and original-source comparison are recorded in `docs/status/fresh-save-pacing.md`.
+- Controlled reachability artifact: the test asserts and attaches Builder `00:00:30`, Outside `00:00:50`, Compass `08:32:10`, first expedition `10:42:10`, Fabricator `12:15:02`, Ship `12:15:02`, and Ending `12:16:02`; methodology, limits, and source comparison are recorded in `docs/status/controlled-reachability-trace.md`.
 - Integration cleanup: repeated visible landmarks now receive unique React list keys, eliminating the warnings exposed by the long generated-map route without changing accessible content.
 - Final integration gate: 39 unit-test files / 429 tests passed; lint, format check, and build passed; 302 Playwright tests passed with 130 expected skips in 4.8 minutes.
 

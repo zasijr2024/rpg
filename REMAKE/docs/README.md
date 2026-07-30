@@ -6,42 +6,47 @@ Current readiness:
 
 - Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope; see `status/phase-14-full-parity-qa.md`.
 - The connected visible-control route runs from fresh Room through World, canonical Mines, Executioner Blueprint, Fabricator, Ship, Space, and score ending in Chromium, Firefox, and WebKit.
-- Parity Complete, Production Beta, and the technical Release Candidate gate pass on clean candidate `d3696de`; P14V-05's 32-seed corpus is retained, while public sign-off still requires hosted CI, human, real-screen-reader, licensing/decision, and tag packages in `P14V-2026-07-12`.
-- Fresh-run pacing evidence is reproducible but controlled; see `status/fresh-save-pacing.md` for the deterministic milestone trace, the original 0/4 and clean-candidate 4/4 policy diagnostics, and the retained 32-seed P14V corpus. None is a player completion rate.
+- Historical candidate `d3696de` passed Parity Complete, Production Beta, and the technical Release Candidate gate, and its P14V-05 32-seed corpus is retained for that revision. Current remediation requires a new clean candidate and candidate-specific corpus; public sign-off still requires hosted CI/required protection, five schema-v3 human sessions, real-screen-reader evidence, exact-source/legal-owner and product decisions, production-host smoke, and final tag authorization/verification.
+- The scripted ending is controlled reachability evidence, not pacing evidence; see `status/controlled-reachability-trace.md` for the deterministic milestone trace, the original 0/4 and historical clean-candidate 4/4 policy diagnostics, and the retained 32-seed P14V corpus. None is a player completion rate.
 - Parser-backed parity measurement now exposes 2,547 stable event/scene/button/transition/effect/reward requirements in `DATA/parity-graph.json`.
 - Executioner parity is finalized against its complete 798-requirement source graph, with organic World entry/clear consequences and exhaustive headless branch contracts.
 - Phase 14 closes the declared parity scope with 284 completed checklist items, 3 linked deviations, and no open/partial items.
-- All code-level recommendations from the latest roast are implemented; see `status/phase-14-roast-remediation-2026-07-11.md`. The candidate and corpus are frozen; final playtest and real assistive-technology evidence now wait for human operators.
+- The repository-side remediation from the 2026-07-30 evaluation is organized as an approved three-checkpoint integration; see `../../REPORTS/remake_full_evaluation_roast_and_remediation_2026-07-30.md` for verification status. Candidate `d3696de` and its corpus remain historical; a replacement clean candidate must be frozen before human or real assistive-technology collection begins.
+- P14V-02's audit classified all 122 pre-checkpoint dirty paths exactly once. The approved sequence, `0.1.0-rc.1` choice, and protected user worksheet are recorded in `status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`; separate clean reproduction is next.
 
 Recommended reading order:
 
-1. `context.md`
-2. `planning.md`
-3. `status/audit-remediation-2026-07-09.md`
-4. `source-baseline.md`
-5. `release-gates.md`
-6. `plan.md`
-7. `parity-checklist.md`
-8. `status/phase-7-path.md`
-9. `status/phase-8-world.md`
-10. `status/phase-9-setpieces.md`
-11. `status/phase-10-ship.md`
-12. `status/phase-11-fabricator.md`
-13. `status/phase-12-executioner.md`
-14. `status/phase-13-space-ending.md`
-15. `status/phase-14-full-parity-qa.md`
-16. `status/phase-14-roast-remediation-2026-07-11.md`
-17. `status/phase-14-release-readiness-plan-2026-07-12.md`
-18. `accessibility-screen-reader-runbook.md`
-19. `../playtests/README.md`
-20. `deferred.md`
-21. `tech-decisions.md`
-22. `ui-spec.md`
-23. `content-model.md`
-24. `deviations.md`
-25. `license-attribution.md`
-26. `git-versioning.md`
-27. `changelog.md`
+1. `../../AGENTS.md`
+2. `status/phase-14-post-remediation-next-steps-2026-07-30.md`
+3. `status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`
+4. `context.md`
+5. `planning.md`
+6. `../../REPORTS/remake_full_evaluation_roast_and_remediation_2026-07-30.md`
+7. `status/phase-14-release-readiness-plan-2026-07-12.md`
+8. `release-gates.md`
+9. `plan.md`
+10. `parity-checklist.md`
+11. `status/phase-14-full-parity-qa.md`
+12. `status/phase-14-roast-remediation-2026-07-11.md`
+13. `accessibility-screen-reader-runbook.md`
+14. `../playtests/README.md`
+15. `source-baseline.md`
+16. `status/audit-remediation-2026-07-09.md` (historical audit ledger)
+17. `status/phase-7-path.md`
+18. `status/phase-8-world.md`
+19. `status/phase-9-setpieces.md`
+20. `status/phase-10-ship.md`
+21. `status/phase-11-fabricator.md`
+22. `status/phase-12-executioner.md`
+23. `status/phase-13-space-ending.md`
+24. `deferred.md`
+25. `tech-decisions.md`
+26. `ui-spec.md`
+27. `content-model.md`
+28. `deviations.md`
+29. `license-attribution.md`
+30. `git-versioning.md`
+31. `changelog.md`
 
 Current implementation stance:
 

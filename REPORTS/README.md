@@ -4,10 +4,14 @@ Purpose: audits, reviews, and status reports.
 
 Current key reports:
 
+- `../AGENTS.md` - mandatory first read for repository sessions and evidence boundaries.
+- `../REMAKE/docs/status/phase-14-post-remediation-next-steps-2026-07-30.md` - active execution sequence, owners, dependencies, and stop conditions.
+- `../REMAKE/docs/status/phase-14-p14v-02-checkpoint-map-2026-07-30.md` - exact 122-path ownership audit, protected worksheet, proposed commit groups, and current maintainer gate.
+- `remake_full_evaluation_roast_and_remediation_2026-07-30.md` - current-revision full evaluation, roast, remediation plan, and verification ledger.
 - `current_prototype_full_roasting_audit_2026-07-11.md` - Phase 14 full-product roast, release verdict, remaining risks, and remediation priorities.
 - `phase14_data_parity_report_2026-07-11.md` - source/data denominator, domain coverage, deferred-data accounting, and Phase 14 parity conclusion.
 - `../REMAKE/docs/status/phase-14-roast-remediation-2026-07-11.md` - implementation ledger and verification addendum for every still-open recommendation in the latest roast.
-- `../REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md` - ordered evidence-contract, clean/CI, pacing, human, assistive-technology, licensing/decision, and tag plan.
+- `../REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md` - P14V evidence and completion contract.
 - `remediation/P14V-2026-07-12/README.md` - authoritative index for the still-pending execution artifacts; its pending entries are not evidence of completion.
 
 Remediation baseline:

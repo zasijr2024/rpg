@@ -1,6 +1,6 @@
 # A Dark Room Remake Plan
 
-Last updated: 2026-07-12
+Last updated: 2026-07-30
 
 Primary goal: recreate the latest web version of _A Dark Room_ in a modern, stable engine and tech stack while preserving the original vision intact. After the remake reaches full parity, add optimizations, improvements, new features, and expansions step by step.
 
@@ -16,7 +16,9 @@ Original source authority: `ORIGINAL/`
 
 Supporting control documents:
 
-- active audit-remediation packages: `REMAKE/docs/planning.md`
+- mandatory session contract: root `AGENTS.md`
+- active post-remediation sequence: `REMAKE/docs/status/phase-14-post-remediation-next-steps-2026-07-30.md`
+- package-state ledger: `REMAKE/docs/planning.md`
 - deferred scope: `REMAKE/docs/deferred.md`
 - parity checklist: `REMAKE/docs/parity-checklist.md`
 - technical decisions: `REMAKE/docs/tech-decisions.md`
@@ -24,9 +26,9 @@ Supporting control documents:
 - content model: `REMAKE/docs/content-model.md`
 - deviations log: `REMAKE/docs/deviations.md`
 - license and attribution: `REMAKE/docs/license-attribution.md`
-- active release-readiness validation: `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`
+- release-readiness evidence contract: `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`
 
-Current delivery status: all `RA-P0`, `RA-P1`, `RA-P2`, and code-level `P14R` audit-remediation work is complete, and Phase 14 Full Parity QA is accepted. Parity Complete and Production Beta command suites pass. Public Release Candidate sign-off is not claimed: `P14V-2026-07-12` must first repair evidence-gate/collection semantics, freeze and reproduce a clean candidate, prove hosted CI, validate the progression policy/corpus, collect real human and screen-reader evidence, resolve license/NOTICE and balance decisions, and verify the final tag. New work remains an explicit post-parity package rather than reopening a completed roadmap phase.
+Current delivery status: all `RA-P0`, `RA-P1`, `RA-P2`, and repository-side `P14R` audit-remediation implementation is complete, and Phase 14 Full Parity QA is accepted. Parity Complete and Production Beta command suites pass. Evidence-gate semantics, schema-v3 collection tooling, historical policy/corpus diagnostics, and repository-side MPL-2.0/NOTICE artifacts are implemented. The 2026-07-30 remediation remains an uncommitted integration tree, not a candidate. Public Release Candidate sign-off is not claimed: `P14V-2026-07-12` still requires a new clean reproduced candidate and candidate corpus, hosted CI and required branch protection, five qualifying human sessions, real screen-reader evidence, a durable exact-source URL and any required legal/owner review, the final product decision, production-host smoke, and final tag authorization/verification. New work remains an explicit post-parity package rather than reopening a completed roadmap phase.
 
 ## Source Baseline
 
@@ -882,24 +884,22 @@ Only after Phase 14 is accepted:
 
 Program `P14V-2026-07-12` is the immediate priority before feature expansion:
 
-- make the distinction between technical RC automation and product/public sign-off executable and Phase 14-aware;
-- strengthen the human cohort schema/gate and provide a normal-clock, console-free manual Space fixture before recruiting operators;
-- create coherent reviewed commits and reproduce the technical RC gate from a clean checkout;
-- prove both GitHub Actions lanes on the exact candidate SHA;
-- classify the brittle four-seed policy, then retain a fixed 32-seed diagnostic corpus;
-- collect at least three strict unassisted sessions, normally continuing to five and up to eight if results conflict;
-- complete a real screen-reader Space flight and ending;
-- preserve original mode while the evidence is interpreted, resolve the remake license/NOTICE, record `GO` or `HOLD`, and only then cut a P14V-aware clean tag.
+- reconcile ownership for every dirty path and, only with explicit maintainer authorization, create coherent reviewed checkpoints;
+- reproduce one exact post-remediation SHA/artifact from a separate clean checkout with the technical RC gate;
+- prove the hosted change/manual lanes and required branch-protection context on that SHA while independently retaining a new candidate-specific 32-seed corpus;
+- only after those automated results are green, collect at least five strict schema-v3 first-time unassisted sessions and a real-screen-reader Space/ending pass, in parallel;
+- preserve Classic while the evidence is interpreted, close the durable exact-source/legal/publication inputs, and record the dated product/release-owner `GO` or `HOLD`;
+- prove an artifact-identical final evidence descendant, smoke the actual production host, authorize the immutable tag manifest, then create/verify/publish the tag through the non-circular post-tag handshake.
 
-See `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`. Feature phases A-G do not outrank this release-evidence program.
+See `REMAKE/docs/status/phase-14-post-remediation-next-steps-2026-07-30.md` for the live sequence and `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md` for exit criteria. Feature phases A-G do not outrank this release-evidence program.
 
 ### Post-Parity Phase A: Save Evolution And Original Import
 
-Schema-1 checksummed saves, atomic staging/backup recovery, quarantine, supported legacy-remake migrations, semantic validation, visible persistence health, retry, and recovery export were pulled forward and are already implemented.
+Schema-1 checksummed saves under stable key `adr-remake-save`, one-time migration from legacy namespace `adr-remake-dev-save`, semantically valid backup rotation, durable raw quarantine, typed recovery outcomes, acknowledgement-gated autosave, supported legacy-remake payload migrations, visible persistence health/retry, and validated recovery export/import were pulled forward and are already implemented.
 
 - preserve and extend the implemented visible/recoverable persistence contract;
 - extend semantic/domain validation whenever new persisted state is added;
-- keep recovery export compatible with every supported schema;
+- keep recovery export and staged import compatible with every supported schema;
 - add original-browser save import if desired;
 - add tests for every new schema or migration.
 
@@ -1098,7 +1098,7 @@ See `REMAKE/docs/content-model.md`.
 ### Post-Parity Phase G: Release Hardening and Bundle Optimization
 
 - Implemented: the original event catalog is an enforced production chunk, repeated immutable strings are pooled, and Fabricator/Ship/Space retain primary and fresh-retry lazy boundaries.
-- Implemented: the initial-entry budget is tightened to 480,000 B raw / 125,000 B gzip without increasing aggregate budgets; the latest integrated build emitted 416,217 B raw / 119,037 B gzip.
+- Implemented: the initial-entry budget is tightened to 480,000 B raw / 125,000 B gzip without increasing aggregate budgets; the historical 2026-07-11 integration build emitted 416,217 B raw / 119,037 B gzip. Current measurements belong in the 2026-07-30 remediation record and must not overwrite that historical result.
 - Implemented: save-preserving lazy-route recovery and build-external complete production progression are cross-browser/production tested.
 - Remaining: prove the workflow in hosted CI on a clean candidate and keep future measured chunk changes within the executable budgets.
 
@@ -1115,7 +1115,7 @@ Phase 0 must verify:
 - remake license decision is recorded before public distribution
 - `ORIGINAL/` is treated as immutable reference source
 
-Current status: the original license is preserved, but the final remake-code license and required NOTICE/attribution artifact remain open. `P14V-08` must close them before public distribution; a technical RC result alone is insufficient.
+Current status: the original license is preserved, new remake code uses MPL-2.0, and `LICENSE`, `NOTICE.md`, production `LICENSE.txt`/`NOTICE.txt`, and the source-derived inventory are implemented. Before public distribution, `P14V-08` must still publish the exact corresponding source revision at a durable URL, verify its placement alongside the executable, complete any distribution-specific dependency/media and qualified legal review, and record accountable owner sign-off. A technical RC result alone is insufficient.
 
 See `REMAKE/docs/license-attribution.md`.
 

@@ -1,20 +1,57 @@
 # Changelog
 
-- Froze P14V-06 cohort `p14v-2026-07-14-d3696de-original-01` and the exact clean-candidate production build. Added a tested canonical directory-identity command; the pre-existing RC output and a fresh rebuild both produced `sha256:619c6a8eefc27000a99c621a3bb3e6c656034830f2531eccc7dc1da881060e1e` across 14 files / 614,649 bytes. Human evidence remains honestly open at 0/3.
-- Reconciled the REMAKE plan with Git history at clean pre-update HEAD `588443e`: no Git-recorded reset/revert/rebase/checkout was found, the P14V dependency order has no skipped package, and post-candidate changes are limited to evidence/runbook documents, the retained corpus, and release-gate assertions rather than production behavior. Corrected stale dirty-worktree, corpus-pending, and "documentation-only" wording in the active status/evidence documents.
-- Added explicit fail-closed P14V-03, P14V-08, and P14V-09 evidence records. Hosted CI is blocked because no Git remote is configured; public distribution remains `HOLD` pending hosted, human, assistive-technology, licensing, and owner evidence; no tag is created.
-- Completed P14V-05 on clean candidate `d3696de`: eight validated four-seed shards retained one schema-versioned 32-seed artifact in 40m25s. It records 12 study-policy completions, 161 legal deaths, 42,692 incidental events, 2,937 combats, 20 policy-classified stops, and zero game-defect or unclassified stops. Human cohort collection is now unblocked but remains at 0/3; the automated completion rate is not presented as a player statistic.
+## 2026-07-30
+
+### Controlled - Post-remediation release handoff
+
+- Added root `AGENTS.md` as the mandatory first read and created the dated post-remediation execution plan with owners, dependencies, exit criteria, invalidation rules, and explicit authority boundaries.
+- Completed P14V-02's read-only path audit in `docs/status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`: 122 dirty paths are accounted for as 71 product/runtime paths, 34 evidence/control paths, 16 handoff paths, and one protected user-owned worksheet. No path is duplicated or unexplained.
+- Received maintainer approval for the three dependency-ordered commits, selected `0.1.0-rc.1` as the pre-freeze package version, and limited Git authorization to the exact listed paths while excluding the protected worksheet.
+- Reconciled onboarding, context, package, evidence, report, Git, operator, owner-decision, and tag documents. Historical `d3696de` evidence remains immutable; P14V-05 is reopened for a separately named replacement-candidate corpus.
+- Hardened the human release floor so only first-time participants count and every gated run is explicitly bound to the frozen revision, canonical artifact identity, cohort, ruleset, and mode policy. A bare gate now fails closed instead of trusting self-reported cohort identity.
+- Reworked pull-request CI to always report stable branch-protection context `Remake CI required` while keeping the full three-engine verification scope-aware and fail-closed.
+- Defined candidate `C` / artifact `A` / evidence descendant `F` lineage, actual-production-host smoke, and a non-circular P14V-09 pre-tag authorization followed by tag verification/publication evidence.
+- No remote was configured, no workflow was dispatched, and no pull request, deployment, tag, human session, assistive-technology observation, public-release owner decision, or publication claim was made.
+
+### Verified - Evidence-contract hardening
+
+- Human-gate focused suite passed 8/8 with typecheck, syntax, lint, format, help, example-summary, expected missing-binding exit `2`, and expected fully bound empty-cohort 0/5 failure.
+- Hosted-control focused suite passed 4/4 with lint, formatting, and scoped diff hygiene. Hosted execution and branch protection remain pending P14V-03.
+
+### Remediated — Full evaluation and roast
+
+- Replaced silent corrupt-save reset/rollback with typed load outcomes, durable raw quarantine, acknowledgement-gated autosave, semantic-valid backup rotation, and staged checksum/migration/semantic recovery import.
+- Added atomic command rollback, structured runtime-failure recovery, finite numeric and hostile-path guards, scoped runtime state ownership, self-cancelling intervals, and bounded catch-up persistence with one debt-preserving checkpoint plus one final flush.
+- Rebuilt late-game navigation and focus behavior: World and Hyper no longer collide, cooldown controls retain focus while disabled, Hyper Escape restores its trigger, notification contrast and semantic groups are corrected, and World keeps essential controls operable through effective 200% zoom.
+- Hardened root/lazy-route recovery, split development-only CSS, preserved failed-chunk retry behavior with pre-hash cache identity, and added explicit LICENSE/NOTICE links to the player shell.
+- Upgraded human evidence to strict schema v3 with a five-session floor and separate wall/foreground/background-open/closed-page, milestone, death, and mode exposure accounting. Renamed automation to a controlled reachability trace/policy diagnostic.
+- Characterized inherited Classic balance mathematically, kept Classic unchanged, documented Executioner/Fabricator as optional prestige content, tested the no-Executioner ending, and preregistered a separately named evidence-gated Balanced Experiment A rather than silently rebalance parity mode.
+- Pinned GitHub Actions to immutable SHAs and expanded the PR/main served-production lane to Chromium, Firefox, and WebKit. Versioned the remake as `0.1.0-beta.1`, added MPL-2.0 LICENSE/NOTICE artifacts and a source-derived inventory, and retained exact-source/legal-owner approval as an external public-distribution gate.
+
+### Verified — Post-remediation integration
+
+- Passed 77 files / 550 unit, content, and tooling tests after evidence-contract hardening; negative type fixtures; lint; formatting; parity generation; and the production build/boundary/budget checks.
+- Final bundle: 436,405 B / 123,783 B gzip initial JavaScript; 601,417 B / 154,676 B gzip total JavaScript; 23,614 B / 5,367 B gzip CSS; 8 lazy entries. Artifact identity: `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`, 16 files / 646,179 bytes.
+- Passed 15/15 served-production checks across Chromium/Firefox/WebKit, 1/1 external production ending spine, 33/33 release checks, 15/15 focused accessibility checks, 1/1 production performance, and 410 desktop parity executions with 166 intentional skips.
+- The corrected four-seed policy diagnostic completed 4/4 with 11 legal deaths, 6,748 incidental events, 439 combats, and zero policy/game-defect/unclassified failures. It remains automation evidence, not a player statistic.
+- Production and complete dependency audits reported zero vulnerabilities. The schema-v3 human gate correctly remains open at 0/5.
+- Verdict remains `HOLD`: this is an uncommitted Production Beta integration, not a frozen candidate. A clean P14V-02 candidate, hosted CI/branch protection, human and real-screen-reader evidence, durable exact-source/legal-owner and product decisions, production-host smoke, and the final tag remain open.
+
+- Historically froze P14V-06 cohort `p14v-2026-07-14-d3696de-original-01` and the exact clean-candidate production build. Added a tested canonical directory-identity command; the pre-existing RC output and a fresh rebuild both produced `sha256:619c6a8eefc27000a99c621a3bb3e6c656034830f2531eccc7dc1da881060e1e` across 14 files / 614,649 bytes. Schema v3 later retired that uncollected cohort; new human evidence remains open at 0/5.
+- At clean pre-update HEAD `588443e`, reconciled the REMAKE plan with Git history: no Git-recorded reset/revert/rebase/checkout was found, the P14V dependency order had no skipped package, and post-candidate changes at that checkpoint were evidence/runbook documents, the retained corpus, and release-gate assertions rather than production behavior. The 2026-07-30 behavior/tooling remediation later superseded `d3696de` as a candidate.
+- Added explicit fail-closed P14V-03, P14V-08, and P14V-09 evidence records. At that checkpoint hosted CI had no configured remote and public distribution remained `HOLD`. Repository licensing artifacts are now implemented; exact-source/legal-owner, hosted, human, assistive-technology, owner, and tag evidence remain open.
+- Completed P14V-05 on historical clean candidate `d3696de`: eight validated four-seed shards retained one schema-versioned 32-seed artifact in 40m25s. It records 12 study-policy completions, 161 legal deaths, 42,692 incidental events, 2,937 combats, 20 policy-classified stops, and zero game-defect or unclassified stops. The automated completion rate is not a player statistic; schema v3 requires a newly frozen human cohort and remains at 0/5.
 - Completed P14V-02 and P14V-04 on frozen candidate `d3696de`: coherent local checkpoints were reproduced from a separate clean worktree with the pinned submodule, `npm ci`, all three Playwright engines, and a 23m54s technical RC pass. The gate passed 513 unit/content tests, 400 desktop parity executions, 15/15 production smoke, the complete production spine, 30/30 release-browser executions, both dependency audits, and the clean four-seed 4/4 policy diagnostic with 11 legal deaths and no failures. At that checkpoint, hosted CI, the fixed 32-seed corpus, human and real-screen-reader evidence, product/licensing decisions, and the tag remained open; the next entry records the later corpus closure.
 - Added the P14V-05 fixed-corpus runner: deterministic shards emit a versioned result contract, aggregation rejects missing/duplicate/extra/mutated seeds and unclassified outcomes, the final JSON records the exact revision/environment/command, and formal runs fail closed on a dirty worktree. A one-seed dirty-worktree smoke completed through the production-command route and was deleted after validating the writer; it is not retained as corpus evidence.
 - Continued P14V-04 by splitting Executioner into committed device, Engineering/kinetic-armour, and Martial expeditions; corrected a won-combat continuation loop; replaced full-session progression reads with transient domain snapshots; batched ordinary Path supply commands; and added opt-in live checkpoint tracing for long deterministic seeds. The latest retained focused run is still classified policy evidence, and an over-budget rerun is not claimed as an outcome.
-- Began Phase 14 release-readiness implementation with P14V-01: technical RC/product sign-off are explicitly separated; tag closure parses RA/P14R/P14V; progression is labelled diagnostic; human evidence uses a strict version-2 same-cohort validator; and a console-free normal-clock Space fixture is available for the eventual screen-reader pass.
+- Began Phase 14 release-readiness implementation with P14V-01: technical RC/product sign-off are explicitly separated; tag closure parses RA/P14R/P14V; progression is labelled diagnostic; the initial human-evidence validator was version 2 (superseded before collection by schema v3); and a console-free normal-clock Space fixture is available for the eventual screen-reader pass.
 
 ### Planned - Phase 14 Release-Readiness Validation
 
 - Added `P14V-2026-07-12`, an evidence-gated sequence from honest closure/collection tooling through clean reproduction, hosted CI, progression-policy validation, a fixed 32-seed corpus, unassisted playtests, real screen-reader Space/ending evidence, public-distribution/product decisions, and final tag verification.
-- Recorded that the current automated RC/closure tools do not yet enforce P14R/P14V operator evidence, the four-seed progression command is diagnostic despite 0/4 completion, and the version-1 human gate is not sufficient for a same-revision decision cohort.
+- Recorded that the then-current automated RC/closure tools did not yet enforce P14R/P14V operator evidence, the four-seed progression command was diagnostic despite 0/4 completion, and the version-1 human gate was not sufficient for a same-revision decision cohort.
 - Blocked final operator collection until P14V-01 strengthens the playtest schema/validator and replaces the frozen Space test harness with a normal-clock, console-free manual fixture.
-- Set the human evidence policy to three preliminary sessions, normally continuing to five unique first-time participants and up to eight only when outcomes remain materially inconsistent.
+- Initially set a three-session preliminary policy; schema v3 superseded it before collection with a five-session release-evidence floor and up to eight only when outcomes remain materially inconsistent.
 - Added a new P14V evidence index and screen-reader template without fabricating observations, and preserved the historical RA-P2-04 record through a forward link only.
 - Elevated the unresolved remake license and required NOTICE/attribution artifact into the public-distribution decision gate.
 - This documentation package made no commit, push, pull request, workflow dispatch, tag, balance change, human record, or assistive-technology claim.
@@ -239,7 +276,7 @@
 ### Closed - RA-P1-14 Fresh-save spine and pacing
 
 - Added a deterministic Chromium 1366 cleared-storage route that uses visible controls plus controlled clock/RNG to connect Room/Outside, Compass, generated Iron/Coal Mines, Steelworks and expedition upgrades, radius-28 Executioner Blueprint acquisition, safe-return redemption, Fabricator crafting, radius-28 Crashed Ship discovery, reinforcement, lift-off, Space, and ending.
-- Asserted and attached the named 1x pacing baseline from the 30-second Builder arrival through the 12:16:02 ending without calling direct state-mutation or forced-event APIs; documented the original-source comparison boundary in `docs/status/fresh-save-pacing.md`.
+- Asserted and attached the named 1x controlled reachability trace from the 30-second Builder arrival through the 12:16:02 ending without calling direct state-mutation or forced-event APIs; documented the original-source comparison boundary in `docs/status/controlled-reachability-trace.md`.
 - Made repeated entries in the compact visible-landmark list use unique React keys, removing warnings exposed by the long generated-map route without changing the accessible model.
 - Final integration gate: 429 unit tests; lint, formatting, and build; and 302 Playwright tests passed with 130 expected skips (4.8 minutes).
 
