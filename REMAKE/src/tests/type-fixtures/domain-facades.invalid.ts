@@ -1,6 +1,8 @@
 import type {
   CombatDomainFacade,
   EconomyDomainFacade,
+  RuntimeStateDomain,
+  StateStore,
   WorldDomainFacade,
 } from "../../engine";
 
@@ -35,3 +37,35 @@ combat.dispatch({
 economy.read().population = 99;
 // @ts-expect-error read model records are immutable
 combat.read().outfit.grenade = 99;
+
+declare const state: StateStore;
+const roomState = state.forRuntime("room");
+roomState.set("stores.wood", 10);
+roomState.set("game.fire.value", 2);
+// @ts-expect-error Room cannot mutate combat character state
+roomState.set("character.health", 10);
+const combatState = state.forRuntime("combat");
+combatState.set("character.health", 10);
+// @ts-expect-error Combat cannot mutate feature unlock state
+combatState.set("features.location.world", true);
+// @ts-expect-error Unknown runtimes cannot acquire state capabilities
+state.forRuntime("unowned-runtime");
+state.category("stores").set("wood", 1);
+// @ts-expect-error Version is metadata, not a mutable state category
+state.category("version");
+
+const everyRuntimeDomain: Record<RuntimeStateDomain, true> = {
+  combat: true,
+  economy: true,
+  events: true,
+  fabricator: true,
+  path: true,
+  pathOutfit: true,
+  room: true,
+  session: true,
+  ship: true,
+  space: true,
+  expedition: true,
+  world: true,
+};
+void everyRuntimeDomain;

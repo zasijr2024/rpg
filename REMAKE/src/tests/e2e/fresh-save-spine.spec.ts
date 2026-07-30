@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
 import { driveFreshSaveSpine } from "./fresh-save-spine";
 
-test("fresh-run: visible progression reaches the ending and records pacing", async ({
+test("fresh-run: controlled reachability trace reaches the ending", async ({
   page,
 }, testInfo) => {
   test.skip(

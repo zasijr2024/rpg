@@ -7,6 +7,10 @@ export {
   type GameNavigationSnapshot,
   type GamePersistenceSnapshot,
   type GamePersistenceStatus,
+  type GameRecoveryBundle,
+  type GameRecoveryImportResult,
+  type GameRuntimeFailureSnapshot,
+  type GameSessionOptions,
   type GameSessionSnapshot,
   type GameUiDiagnostics,
   type GameUiDomain,
@@ -99,12 +103,25 @@ export {
   DEV_SAVE_QUARANTINE_KEY,
   DEV_SAVE_SCHEMA_VERSION,
   DEV_SAVE_STAGING_KEY,
+  LEGACY_DEV_SAVE_BACKUP_KEY,
+  LEGACY_DEV_SAVE_KEY,
+  LEGACY_DEV_SAVE_QUARANTINE_KEY,
+  LEGACY_DEV_SAVE_STAGING_KEY,
   createDevSaveDocument,
+  decodeDevSave,
   LocalStorageDevSaveAdapter,
   MemoryDevSaveAdapter,
   type DevSaveDocument,
+  type DevSaveLoadResult,
+  type DevSaveValidator,
+  type QuarantinedDevSave,
 } from "./save/devSave";
-export { StateStore, type StateUpdate } from "./state/StateStore";
+export {
+  ScopedStateStore,
+  StateCategoryStore,
+  StateStore,
+  type StateUpdate,
+} from "./state/StateStore";
 export {
   readBoolean,
   readNumber,
@@ -116,6 +133,12 @@ export {
   ENGINE_VERSION,
   MAX_EXACT_SCORE,
   MAX_STORE,
+  RUNTIME_STATE_ROOTS,
+  type GameStatePath,
+  type GameStateRoot,
+  type MutableGameStateRoot,
+  type RuntimeStateDomain,
+  type RuntimeStateRootMap,
 } from "./state/types";
 export { isSemanticallyValidGameState } from "./save/validation";
 export {

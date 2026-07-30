@@ -7,8 +7,19 @@ export type CommandHandler<TCommand extends Command> = (
   command: TCommand,
 ) => void;
 
+export interface CommandTransaction {
+  begin(): unknown;
+  rollback(checkpoint: unknown, error: unknown): void;
+  commit?(checkpoint: unknown): void;
+}
+
 export class CommandBus<TCommand extends Command> {
   private handlers = new Map<TCommand["type"], CommandHandler<TCommand>[]>();
+  private transaction: CommandTransaction | null = null;
+
+  setTransaction(transaction: CommandTransaction | null): void {
+    this.transaction = transaction;
+  }
 
   register<TType extends TCommand["type"]>(
     type: TType,
@@ -34,8 +45,23 @@ export class CommandBus<TCommand extends Command> {
     if (!existing || existing.length === 0) {
       throw new Error(`No command handler registered for ${command.type}`);
     }
-    for (const handler of existing) {
-      handler(command);
+    const checkpoint = this.transaction?.begin();
+    try {
+      for (const handler of existing) {
+        handler(command);
+      }
+      this.transaction?.commit?.(checkpoint);
+    } catch (error) {
+      try {
+        this.transaction?.rollback(checkpoint, error);
+      } catch (rollbackError) {
+        throw new AggregateError(
+          [error, rollbackError],
+          `Command ${command.type} failed and rollback also failed`,
+          { cause: rollbackError },
+        );
+      }
+      throw error;
     }
   }
 }

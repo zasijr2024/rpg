@@ -228,7 +228,8 @@ export class EventRuntime {
       this.endEvent();
       return true;
     }
-    if (button.reward) this.engine.state.addM("stores", button.reward);
+    if (button.reward)
+      this.engine.state.forRuntime("events").addM("stores", button.reward);
     if (button.notification) this.notify(button.notification);
     button.onChoose?.(this.effectContext());
 
@@ -402,7 +403,7 @@ export class EventRuntime {
       scene.reward &&
       !this.loadedSceneRewards.has(sceneKey)
     ) {
-      this.engine.state.addM("stores", scene.reward);
+      this.engine.state.forRuntime("events").addM("stores", scene.reward);
       this.loadedSceneRewards.add(sceneKey);
     }
     if (applyEffects && scene.combat) {
@@ -504,12 +505,13 @@ export class EventRuntime {
     const mod: Record<string, number> = {};
     for (const [store, amount] of Object.entries(cost)) {
       if (store === "hp") {
-        this.engine.state.add("character.health", -amount);
+        this.engine.state.forRuntime("events").add("character.health", -amount);
         continue;
       }
       mod[store] = -amount;
     }
-    if (Object.keys(mod).length > 0) this.engine.state.addM("stores", mod);
+    if (Object.keys(mod).length > 0)
+      this.engine.state.forRuntime("events").addM("stores", mod);
   }
 
   private costQuantity(key: string): number {
@@ -557,7 +559,7 @@ export class EventRuntime {
   private restoreDelayedAction(action: PendingDelayedActionSnapshot): void {
     const timer = this.engine.clock.setTimeout(() => {
       this.pendingDelayedActions.delete(action.id);
-      this.engine.state.addM("stores", action.reward);
+      this.engine.state.forRuntime("events").addM("stores", action.reward);
       this.engine.notifications.notify(action.source, action.notification);
     }, this.remainingMs(action.dueAt));
     this.pendingDelayedActions.set(action.id, { ...action, timer });
@@ -574,7 +576,9 @@ export class EventRuntime {
     return {
       readNumber: (path: string) => this.numberAt(path),
       readRecord: (path: string) => {
-        const value = this.engine.state.get(path, true);
+        const value = this.engine.state
+          .forRuntime("events")
+          .getDynamic(path, true);
         return value && typeof value === "object"
           ? { ...(value as Record<string, number>) }
           : {};
@@ -582,11 +586,13 @@ export class EventRuntime {
       setState: (path: string, value: unknown) =>
         this.setEffectState(path, value),
       addStores: (stores: Record<string, number>) =>
-        this.engine.state.addM("stores", stores),
+        this.engine.state.forRuntime("events").addM("stores", stores),
       removeIncome: (key: string) =>
-        this.engine.state.remove(`income["${key}"]`),
+        this.engine.state.forRuntime("events").remove(`income["${key}"]`),
       addPerk: (key: string) =>
-        this.engine.state.set(`character.perks["${key}"]`, true),
+        this.engine.state
+          .forRuntime("events")
+          .set(`character.perks["${key}"]`, true),
       canApplyMap: () =>
         this.effectHandlers.canApplyMap?.() ??
         this.worldEvents?.canApplyMap() ??
@@ -616,7 +622,7 @@ export class EventRuntime {
       this.expedition.setHealth(value, value);
       return;
     }
-    this.engine.state.set(path, value);
+    this.engine.state.forRuntime("events").setDynamic(path, value);
     if (value === true) {
       this.worldEvents?.recordLandmarkResolutionForEffect(path);
     }
@@ -749,7 +755,7 @@ export class EventRuntime {
   }
 
   private addOutfit(key: string, amount: number): void {
-    this.engine.state.addM("outfit", { [key]: amount });
+    this.engine.state.forRuntime("events").addM("outfit", { [key]: amount });
   }
 
   private outfitFreeSpace(): number {
@@ -767,7 +773,7 @@ export class EventRuntime {
   }
 
   private numericRecordAt(path: string): Record<string, number> {
-    const value = this.engine.state.get(path, true);
+    const value = this.engine.state.forRuntime("events").getDynamic(path, true);
     if (!value || typeof value !== "object") return {};
     return Object.fromEntries(
       Object.entries(value as Record<string, unknown>).filter(
@@ -792,7 +798,7 @@ export class EventRuntime {
   }
 
   private numberAt(path: string): number {
-    const value = this.engine.state.get(path, true);
+    const value = this.engine.state.forRuntime("events").getDynamic(path, true);
     if (value === true) return 1;
     return typeof value === "number" ? value : 0;
   }
@@ -806,6 +812,10 @@ export class EventRuntime {
   }
 
   private randomEventsDisabled(): boolean {
-    return this.engine.state.get("config.events.randomDisabled", true) === true;
+    return (
+      this.engine.state
+        .forRuntime("events")
+        .get("config.events.randomDisabled", true) === true
+    );
   }
 }

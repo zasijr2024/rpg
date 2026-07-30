@@ -69,6 +69,7 @@ describe("StateStore", () => {
       config: {},
       wait: {},
       cooldown: {},
+      marketing: {},
     });
   });
 
@@ -93,5 +94,54 @@ describe("StateStore", () => {
     expect(
       readStringUnion(state, "game.world.returnLocation", ["room"] as const),
     ).toBeNull();
+  });
+
+  it("rejects malformed, partially parsed, and prototype-bearing paths", () => {
+    const state = new StateStore();
+    const prototype = Object.prototype as Record<string, unknown>;
+
+    for (const path of [
+      "stores.wood trailing",
+      'stores["wood"]garbage',
+      'stores["unterminated]',
+      "stores..wood",
+      "stores.__proto__.polluted",
+      'stores["constructor"]["prototype"]',
+    ]) {
+      expect(() => state.set(path, 1)).toThrow(/state path/i);
+    }
+    expect(prototype.polluted).toBeUndefined();
+  });
+
+  it("rejects non-finite values and keeps bulk mutations atomic", () => {
+    const state = new StateStore();
+    state.set("stores.wood", 4);
+
+    expect(() => state.set("game.value", Number.NaN)).toThrow(/finite/);
+    expect(() => state.set("game.nested", { value: Infinity })).toThrow(
+      /finite/,
+    );
+    expect(() => state.add("stores.wood", Number.NEGATIVE_INFINITY)).toThrow(
+      /finite/,
+    );
+    expect(() => state.setM("stores", { wood: 9, fur: Number.NaN })).toThrow(
+      /finite/,
+    );
+    expect(state.get("stores.wood")).toBe(4);
+    expect(state.get("stores.fur")).toBeUndefined();
+  });
+
+  it("memoizes runtime scopes and enforces their root capabilities", () => {
+    const state = new StateStore();
+    const room = state.forRuntime("room");
+
+    expect(state.forRuntime("room")).toBe(room);
+    room.set("stores.wood", 3);
+    expect(room.get("stores.wood")).toBe(3);
+    expect(() => room.setDynamic("character.health", 10)).toThrow(
+      /outside the room runtime capability/,
+    );
+    state.category("stores").set('["escaped\\nkey"]', 2);
+    expect(state.get('stores["escaped\\nkey"]')).toBe(2);
   });
 });

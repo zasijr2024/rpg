@@ -60,13 +60,17 @@ export class WorldDomainFacade {
   constructor(private readonly engine: Pick<GameEngine, "state">) {}
 
   read(): WorldPersistentReadModel {
-    const world = recordValue(this.engine.state.get("game.world", true));
+    const world = recordValue(
+      this.engine.state.forRuntime("world").get("game.world", true),
+    );
     const shipPosition = recordValue(world.shipPosition);
     const legacyShipPosition = recordValue(world.ship);
     const shipX = shipPosition.x ?? legacyShipPosition.x;
     const shipY = shipPosition.y ?? legacyShipPosition.y;
     return Object.freeze({
-      unlocked: this.engine.state.get("features.location.world") === true,
+      unlocked:
+        this.engine.state.forRuntime("world").get("features.location.world") ===
+        true,
       danger: world.danger === true,
       starvation: world.starvation === true,
       thirst: world.thirst === true,
@@ -76,36 +80,50 @@ export class WorldDomainFacade {
       executionerCleared: world.executioner === true,
       shipCleared: world.ship === true,
       randomEncountersDisabled:
-        this.engine.state.get("config.events.randomDisabled", true) === true ||
+        this.engine.state
+          .forRuntime("world")
+          .get("config.events.randomDisabled", true) === true ||
         world.encounters === "disabled",
       shipUnlocked:
-        this.engine.state.get("features.location.spaceShip", true) === true,
+        this.engine.state
+          .forRuntime("world")
+          .get("features.location.spaceShip", true) === true,
       fabricatorUnlocked:
-        this.engine.state.get("features.location.fabricator", true) === true,
+        this.engine.state
+          .forRuntime("world")
+          .get("features.location.fabricator", true) === true,
       map: worldMap(world.map),
       mask: worldMask(world.mask),
       shipPosition:
         typeof shipX === "number" && typeof shipY === "number"
           ? Object.freeze({ x: shipX, y: shipY })
           : null,
-      stores: numericRecord(this.engine.state.get("stores", true)),
-      previousStores: numericRecord(
-        this.engine.state.get("previous.stores", true),
+      stores: numericRecord(
+        this.engine.state.forRuntime("world").get("stores", true),
       ),
-      buildings: numericRecord(this.engine.state.get("game.buildings", true)),
-      perks: booleanRecord(this.engine.state.get("character.perks", true)),
+      previousStores: numericRecord(
+        this.engine.state.forRuntime("world").get("previous.stores", true),
+      ),
+      buildings: numericRecord(
+        this.engine.state.forRuntime("world").get("game.buildings", true),
+      ),
+      perks: booleanRecord(
+        this.engine.state.forRuntime("world").get("character.perks", true),
+      ),
       flags: booleanRecord(world),
       resolvedLandmarks: booleanRecord(world.resolvedLandmarks),
       usedOutposts: booleanRecord(world.usedOutposts),
-      starved: numberValue(this.engine.state.get("character.starved", true)),
+      starved: numberValue(
+        this.engine.state.forRuntime("world").get("character.starved", true),
+      ),
       dehydrated: numberValue(
-        this.engine.state.get("character.dehydrated", true),
+        this.engine.state.forRuntime("world").get("character.dehydrated", true),
       ),
     });
   }
 
   dispatch(command: WorldPersistentCommand): void {
-    const state = this.engine.state;
+    const state = this.engine.state.forRuntime("world");
     switch (command.type) {
       case "world.begin":
         state.set("features.location.world", true);
@@ -235,7 +253,10 @@ function coordinateKey(x: number, y: number): string {
   return `${x},${y}`;
 }
 
-function keyedPath(parent: string, key: string): string {
+function keyedPath<const TParent extends string>(
+  parent: TParent,
+  key: string,
+): `${TParent}["${string}"]` {
   if (key.includes('"')) throw new Error("State keys cannot contain quotes");
   return `${parent}["${key}"]`;
 }

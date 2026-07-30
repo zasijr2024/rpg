@@ -1,0 +1,16 @@
+A DARK ROOM REMAKE - NOTICES AND ATTRIBUTION
+
+This is an independent remake of A Dark Room. It is not an official
+doublespeak games release, and no trademark endorsement is implied.
+
+Original design and development: Michael Townsend / doublespeak games
+Original source: https://github.com/doublespeakgames/adarkroom
+Original and remake source-code license: Mozilla Public License 2.0
+Mobile development history: Amir Rajan
+
+The exact corresponding source revision and its durable public URL must be
+provided alongside any public distribution. See NOTICE.md and
+docs/source-derived-inventory.md in the source package for the detailed
+inventory and attribution.
+
+No original audio files are included in this desktop build.

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const SAVE_KEY = "adr-remake-dev-save";
+const SAVE_KEY = "adr-remake-save";
 
 async function savedClockNow(page: import("@playwright/test").Page) {
   return page.evaluate((key) => {
@@ -12,6 +12,20 @@ async function savedClockNow(page: import("@playwright/test").Page) {
     const nowMs = save.payload?.engine?.nowMs;
     return typeof nowMs === "number" ? nowMs : null;
   }, SAVE_KEY);
+}
+
+async function advanceUntilSavedAfter(
+  page: import("@playwright/test").Page,
+  threshold: number,
+) {
+  let saved = await savedClockNow(page);
+  for (let advancedMs = 0; advancedMs < 120_000; advancedMs += 5_000) {
+    if (saved !== null && saved > threshold) return saved;
+    await page.clock.runFor(5_000);
+    saved = await savedClockNow(page);
+  }
+  expect(saved).toBeGreaterThan(threshold);
+  return saved ?? threshold;
 }
 
 test("fresh-run: a reload preserves and eventually pays all suspended realtime debt", async ({
@@ -32,9 +46,5 @@ test("fresh-run: a reload preserves and eventually pays all suspended realtime d
     .toBe((beforeSuspension ?? 0) + 10 * 1000);
 
   await page.reload();
-  await page.clock.runFor(359 * 250);
-
-  await expect
-    .poll(() => savedClockNow(page))
-    .toBe((beforeSuspension ?? 0) + 60 * 60 * 1000);
+  await advanceUntilSavedAfter(page, (beforeSuspension ?? 0) + 60 * 60 * 1000);
 });

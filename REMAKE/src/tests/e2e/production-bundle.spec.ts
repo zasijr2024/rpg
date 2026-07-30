@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const SAVE_KEY = "adr-remake-dev-save";
+const SAVE_KEY = "adr-remake-save";
 const STORAGE_SETUP_URL = "http://127.0.0.1:41732/__playwright-storage";
 const FIXTURE_FACTORY_URL =
   "http://127.0.0.1:41733/?testHarness=1&testSeed=phase3";

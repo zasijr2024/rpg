@@ -37,7 +37,7 @@ export function ShipView({
           </div>
         </dl>
 
-        <div className="shipActions" aria-label="ship actions">
+        <div className="shipActions" role="group" aria-label="ship actions">
           <ShipAction
             label="reinforce hull"
             cost={snapshot.reinforceCost}

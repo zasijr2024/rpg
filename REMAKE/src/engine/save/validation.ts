@@ -74,6 +74,12 @@ export function isSemanticallyValidGameState(
   ) {
     return false;
   }
+  if (
+    value.marketing !== undefined &&
+    !(isRecord(value.marketing) && isJsonValue(value.marketing))
+  ) {
+    return false;
+  }
 
   const state = value as unknown as GameState;
   if (

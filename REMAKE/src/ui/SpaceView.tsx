@@ -118,7 +118,7 @@ export function SpaceView({
           aria-label={`visual flight display: ship and ${snapshot.asteroids.length} pieces of debris`}
         />
       </div>
-      <div className="spaceControls" aria-label="flight controls">
+      <div className="spaceControls" role="group" aria-label="flight controls">
         <button type="button" onClick={() => onMove("north")}>
           north
         </button>

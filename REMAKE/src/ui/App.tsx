@@ -26,10 +26,14 @@ import {
 } from "../testing/browserTestSeeds";
 import { EventPanel } from "./EventPanel";
 import { LazyRouteErrorBoundary } from "./LazyRouteErrorBoundary";
+import { LegalFooter } from "./LegalFooter";
 import { OutsideView } from "./OutsideView";
 import { PathView } from "./PathView";
 import { PersistenceWarning } from "./PersistenceWarning";
+import { RecoveryImport } from "./RecoveryImport";
 import { RoomView } from "./RoomView";
+import { RuntimeFailureWarning } from "./RuntimeFailureWarning";
+import { SessionErrorBoundary } from "./SessionErrorBoundary";
 import { WorldView } from "./WorldView";
 
 const FabricatorView = lazy(() =>
@@ -39,36 +43,36 @@ const FabricatorView = lazy(() =>
 );
 const FabricatorViewRetry = lazy(() => {
   // @ts-expect-error Vite uses the query to emit a fresh retry module URL.
-  const retryImport = import("./FabricatorView?route-retry") as Promise<
-    typeof import("./FabricatorView")
-  >;
-  return retryImport.then(({ FabricatorView }) => ({
-    default: FabricatorView,
-  }));
+  const retryImport = import("./FabricatorView?route-retry") as Promise<{
+    loadRouteRetry: () => Promise<typeof import("./FabricatorView")>;
+  }>;
+  return retryImport
+    .then(({ loadRouteRetry }) => loadRouteRetry())
+    .then(({ FabricatorView }) => ({ default: FabricatorView }));
 });
 const ShipView = lazy(() =>
   import("./ShipView").then(({ ShipView }) => ({ default: ShipView })),
 );
 const ShipViewRetry = lazy(() => {
   // @ts-expect-error Vite uses the query to emit a fresh retry module URL.
-  const retryImport = import("./ShipView?route-retry") as Promise<
-    typeof import("./ShipView")
-  >;
-  return retryImport.then(({ ShipView }) => ({
-    default: ShipView,
-  }));
+  const retryImport = import("./ShipView?route-retry") as Promise<{
+    loadRouteRetry: () => Promise<typeof import("./ShipView")>;
+  }>;
+  return retryImport
+    .then(({ loadRouteRetry }) => loadRouteRetry())
+    .then(({ ShipView }) => ({ default: ShipView }));
 });
 const SpaceView = lazy(() =>
   import("./SpaceView").then(({ SpaceView }) => ({ default: SpaceView })),
 );
 const SpaceViewRetry = lazy(() => {
   // @ts-expect-error Vite uses the query to emit a fresh retry module URL.
-  const retryImport = import("./SpaceView?route-retry") as Promise<
-    typeof import("./SpaceView")
-  >;
-  return retryImport.then(({ SpaceView }) => ({
-    default: SpaceView,
-  }));
+  const retryImport = import("./SpaceView?route-retry") as Promise<{
+    loadRouteRetry: () => Promise<typeof import("./SpaceView")>;
+  }>;
+  return retryImport
+    .then(({ loadRouteRetry }) => loadRouteRetry())
+    .then(({ SpaceView }) => ({ default: SpaceView }));
 });
 const SpikeLab = __ADR_DEV_SURFACES__
   ? lazy(() =>
@@ -215,88 +219,100 @@ export function App() {
   }, [session, testHarnessEnabled]);
 
   return (
-    <main
-      className={
-        activeLocation === "world"
-          ? "appShell worldShell"
-          : activeLocation === "space"
-            ? "appShell spaceShell"
-            : "appShell"
-      }
-      aria-label="A Dark Room"
-    >
-      <div
-        className="gameSurface"
-        inert={modalOpen}
-        aria-hidden={modalOpen ? true : undefined}
+    <SessionErrorBoundary session={session}>
+      <main
+        className={
+          activeLocation === "world"
+            ? "appShell worldShell"
+            : activeLocation === "space"
+              ? "appShell spaceShell"
+              : "appShell"
+        }
+        aria-label="A Dark Room"
       >
-        {manualFixture === "space-realtime" && (
-          <p className="evidenceFixtureBanner" role="status">
-            Development evidence fixture: Ship-ready state, normal real-time
-            clock, ordinary keyboard controls, and no console test API.
-          </p>
-        )}
-        <PersistenceWarning session={session} />
-        {activeLocation !== "space" && (
-          <div className="locationNavigation">
-            <LocationTabs
-              tabs={tabs}
-              activeLocation={activeLocation}
-              onSelect={selectLocation}
-            />
-            <button
-              ref={hyperButtonRef}
-              type="button"
-              className="hyperModeButton"
-              aria-pressed={navigation.hyperMode}
-              onClick={() => {
-                if (navigation.hyperMode) {
-                  session.setHyperMode(false);
-                } else {
-                  setHyperConfirmationOpen(true);
-                }
-              }}
-            >
-              {navigation.hyperMode ? "classic." : "hyper."}
-            </button>
-          </div>
-        )}
-
         <div
-          id={locationPanelId(activeLocation)}
-          role={activeLocation === "space" ? undefined : "tabpanel"}
-          aria-labelledby={
-            activeLocation === "space"
-              ? undefined
-              : locationTabId(activeLocation)
-          }
+          className="gameSurface"
+          inert={modalOpen}
+          aria-hidden={modalOpen ? true : undefined}
         >
-          <RecoverableLocationPanel
-            key={activeLocation}
-            location={activeLocation}
-            session={session}
+          {manualFixture === "space-realtime" && (
+            <p className="evidenceFixtureBanner" role="status">
+              Development evidence fixture: Ship-ready state, normal real-time
+              clock, ordinary keyboard controls, and no console test API.
+            </p>
+          )}
+          <PersistenceWarning session={session} />
+          <RuntimeFailureWarning
+            failure={navigation.runtimeFailure}
+            onDismiss={() => session.dismissRuntimeFailure()}
           />
+          {activeLocation !== "space" && (
+            <div className="locationNavigation">
+              <LocationTabs
+                tabs={tabs}
+                activeLocation={activeLocation}
+                onSelect={selectLocation}
+              />
+              <button
+                ref={hyperButtonRef}
+                type="button"
+                className="hyperModeButton"
+                aria-pressed={navigation.hyperMode}
+                onClick={() => {
+                  if (navigation.hyperMode) {
+                    session.setHyperMode(false);
+                  } else {
+                    setHyperConfirmationOpen(true);
+                  }
+                }}
+              >
+                {navigation.hyperMode ? "classic." : "hyper."}
+              </button>
+            </div>
+          )}
+
+          <div
+            id={locationPanelId(activeLocation)}
+            role={activeLocation === "space" ? undefined : "tabpanel"}
+            aria-labelledby={
+              activeLocation === "space"
+                ? undefined
+                : locationTabId(activeLocation)
+            }
+          >
+            <RecoverableLocationPanel
+              key={activeLocation}
+              location={activeLocation}
+              session={session}
+            />
+          </div>
+          {!testHarnessEnabled && (
+            <>
+              <RecoveryImport session={session} />
+              <LegalFooter />
+            </>
+          )}
         </div>
-      </div>
-      <EventOverlay event={event} session={session} />
-      <HyperConfirmation
-        open={hyperConfirmationOpen && event === null}
-        onConfirm={() => {
-          session.setHyperMode(true);
-          setHyperConfirmationOpen(false);
-          requestAnimationFrame(() => hyperButtonRef.current?.focus());
-        }}
-        onCancel={() => {
-          setHyperConfirmationOpen(false);
-          requestAnimationFrame(() => hyperButtonRef.current?.focus());
-        }}
-      />
-      {showSpikes && SpikeLab && (
-        <Suspense fallback={<p role="status">loading spike…</p>}>
-          <SpikeLab />
-        </Suspense>
-      )}
-    </main>
+        <EventOverlay event={event} session={session} />
+        <HyperConfirmation
+          open={hyperConfirmationOpen && event === null}
+          onConfirm={() => {
+            session.setHyperMode(true);
+            setHyperConfirmationOpen(false);
+            requestAnimationFrame(() => hyperButtonRef.current?.focus());
+          }}
+          onCancel={() => {
+            setHyperConfirmationOpen(false);
+            requestAnimationFrame(() => hyperButtonRef.current?.focus());
+          }}
+        />
+        {showSpikes && SpikeLab && (
+          <Suspense fallback={<p role="status">loading spike…</p>}>
+            <SpikeLab />
+          </Suspense>
+        )}
+      </main>
+    </SessionErrorBoundary>
   );
 }
 
@@ -542,7 +558,9 @@ function SpaceLocation({
   const snapshot = useSessionUiSnapshot(session, "space");
   const View = retry ? SpaceViewRetry : SpaceView;
   useLayoutEffect(() => {
-    document.querySelector<HTMLElement>('[data-focus-owner="space"]')?.focus();
+    document
+      .querySelector<HTMLElement>('[data-focus-owner="space"]')
+      ?.focus({ preventScroll: true });
   }, []);
   return (
     <View
@@ -642,6 +660,11 @@ function HyperConfirmation({
         aria-modal="true"
         aria-labelledby="hyper-confirmation-title"
         onKeyDown={(keyboardEvent) => {
+          if (keyboardEvent.key === "Escape") {
+            keyboardEvent.preventDefault();
+            onCancel();
+            return;
+          }
           if (keyboardEvent.key !== "Tab") return;
           const buttons = Array.from(
             keyboardEvent.currentTarget.querySelectorAll<HTMLButtonElement>(
@@ -700,7 +723,7 @@ function useFocusOwnership(
     if (eventClosed || crossedOwnedBoundary) {
       document
         .querySelector<HTMLElement>(`[data-focus-owner="${location}"]`)
-        ?.focus();
+        ?.focus({ preventScroll: true });
     }
 
     previous.current = { location, eventOpen: event !== null };

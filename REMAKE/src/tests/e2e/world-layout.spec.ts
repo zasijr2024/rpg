@@ -17,12 +17,15 @@ test("scenario-seeded: dedicated World layout keeps the map and controls stable 
     testInfo.project.name !== "chromium-1366" &&
       testInfo.project.name !== "chromium-1920",
   );
-  await openSeededWorld(page);
+  const baseViewport = page.viewportSize();
+  if (!baseViewport) throw new Error("viewport project required");
 
   for (const zoom of zoomLevels) {
-    await page.evaluate((value) => {
-      document.body.style.zoom = `${value}%`;
-    }, zoom);
+    await page.setViewportSize({
+      width: Math.floor((baseViewport.width * 100) / zoom),
+      height: Math.floor((baseViewport.height * 100) / zoom),
+    });
+    await openSeededWorld(page);
 
     const map = page.locator(".worldMap");
     const controls = page.getByLabel("world controls");
@@ -32,16 +35,52 @@ test("scenario-seeded: dedicated World layout keeps the map and controls stable 
 
     const layout = await page.locator(".worldPanel").evaluate((panel) => {
       const mapElement = panel.querySelector<HTMLElement>(".worldMap");
+      const mapStage = panel.querySelector<HTMLElement>(".worldMapStage");
+      const player = panel.querySelector<HTMLElement>(".worldMapPlayer");
       const sidebar = panel.querySelector<HTMLElement>(".worldSidebar");
-      if (!mapElement || !sidebar) throw new Error("World layout incomplete");
+      const status = panel.querySelector<HTMLElement>(".worldStatus");
+      const movement = panel.querySelector<HTMLElement>(".worldControls");
+      const navigation = document.querySelector<HTMLElement>(
+        ".locationNavigation",
+      );
+      if (
+        !mapElement ||
+        !mapStage ||
+        !player ||
+        !sidebar ||
+        !status ||
+        !movement ||
+        !navigation
+      )
+        throw new Error("World layout incomplete");
       const mapRect = mapElement.getBoundingClientRect();
+      const stageRect = mapStage.getBoundingClientRect();
+      const playerRect = player.getBoundingClientRect();
       const sidebarRect = sidebar.getBoundingClientRect();
+      const statusRect = status.getBoundingClientRect();
+      const movementRect = movement.getBoundingClientRect();
+      const navigationRect = navigation.getBoundingClientRect();
       return {
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+        scrollY: window.scrollY,
+        documentWidth: document.documentElement.scrollWidth,
         mapWidth: mapRect.width,
         mapHeight: mapRect.height,
         mapRight: mapRect.right,
+        stageTop: stageRect.top,
+        stageBottom: stageRect.bottom,
+        stageHeight: stageRect.height,
+        playerLeft: playerRect.left,
+        playerRight: playerRect.right,
+        playerTop: playerRect.top,
+        playerBottom: playerRect.bottom,
         sidebarLeft: sidebarRect.left,
         sidebarWidth: sidebarRect.width,
+        statusBottom: statusRect.bottom,
+        movementBottom: movementRect.bottom,
+        navigationTop: navigationRect.top,
+        navigationBottom: navigationRect.bottom,
         fontSize: getComputedStyle(mapElement).fontSize,
         lineHeight: getComputedStyle(mapElement).lineHeight,
       };
@@ -52,7 +91,24 @@ test("scenario-seeded: dedicated World layout keeps the map and controls stable 
     expect(layout.mapWidth).toBeGreaterThan(540);
     expect(layout.mapHeight).toBeGreaterThan(680);
     expect(layout.sidebarWidth).toBeGreaterThan(200);
-    expect(layout.sidebarLeft).toBeGreaterThanOrEqual(layout.mapRight);
+    expect(layout.scrollY).toBe(0);
+    expect(layout.navigationTop).toBeGreaterThanOrEqual(0);
+    expect(layout.navigationBottom).toBeLessThanOrEqual(layout.viewportHeight);
+    expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewportWidth);
+
+    if (layout.viewportWidth <= 760) {
+      expect(layout.stageHeight).toBeLessThanOrEqual(240);
+      expect(layout.stageTop).toBeGreaterThanOrEqual(layout.navigationBottom);
+      expect(layout.stageBottom).toBeLessThanOrEqual(layout.viewportHeight);
+      expect(layout.playerLeft).toBeGreaterThanOrEqual(0);
+      expect(layout.playerRight).toBeLessThanOrEqual(layout.viewportWidth);
+      expect(layout.playerTop).toBeGreaterThanOrEqual(layout.stageTop);
+      expect(layout.playerBottom).toBeLessThanOrEqual(layout.stageBottom);
+      expect(layout.statusBottom).toBeLessThanOrEqual(layout.viewportHeight);
+      expect(layout.movementBottom).toBeLessThanOrEqual(layout.viewportHeight);
+    } else {
+      expect(layout.sidebarLeft).toBeGreaterThanOrEqual(layout.mapRight);
+    }
   }
 
   await page.getByRole("button", { name: "east" }).click();

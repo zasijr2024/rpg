@@ -34,7 +34,7 @@ export function RoomView({
       tabIndex={-1}
     >
       <div className="playColumn">
-        <div className="roomStatus" aria-label="room status">
+        <div className="roomStatus" role="group" aria-label="room status">
           <div>
             <span>the fire is </span>
             <strong>{snapshot.fire}</strong>
@@ -46,33 +46,22 @@ export function RoomView({
         </div>
 
         <div className="actionRow">
-          {snapshot.activeButton === "light fire" ? (
-            <button
-              type="button"
-              className={cooldownActive ? "cooldownButton" : undefined}
-              disabled={cooldownActive}
-              style={cooldownStyle}
-              onClick={onLightFire}
-            >
-              <span>light fire</span>
-              {cooldownActive && (
-                <span className="cooldownText">{cooldownSeconds}s</span>
-              )}
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={cooldownActive ? "cooldownButton" : undefined}
-              disabled={cooldownActive}
-              style={cooldownStyle}
-              onClick={onStokeFire}
-            >
-              <span>stoke fire</span>
-              {cooldownActive && (
-                <span className="cooldownText">{cooldownSeconds}s</span>
-              )}
-            </button>
-          )}
+          <button
+            type="button"
+            className={cooldownActive ? "cooldownButton" : undefined}
+            aria-disabled={cooldownActive}
+            style={cooldownStyle}
+            onClick={() => {
+              if (cooldownActive) return;
+              if (snapshot.activeButton === "light fire") onLightFire();
+              else onStokeFire();
+            }}
+          >
+            <span>{snapshot.activeButton}</span>
+            {cooldownActive && (
+              <span className="cooldownText">{cooldownSeconds}s</span>
+            )}
+          </button>
         </div>
 
         <div className="roomActions">

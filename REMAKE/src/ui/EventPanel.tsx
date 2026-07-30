@@ -203,7 +203,7 @@ function LootText({
   );
 
   return (
-    <div className="combatLoot" aria-label="loot">
+    <div className="combatLoot" role="group" aria-label="loot">
       {lootEntries.length > 0 ? (
         lootEntries.map(([key, amount]) => {
           const takeAction = takeActions.get(key);
@@ -264,7 +264,7 @@ function CombatText({
   return (
     <>
       <p>{event.combat.status}</p>
-      <div className="combatMeters" aria-label="combat">
+      <div className="combatMeters" role="group" aria-label="combat">
         <div>
           @ {event.combat.playerHp}/{event.combat.playerMaxHp}
         </div>
@@ -273,7 +273,7 @@ function CombatText({
         </div>
       </div>
       {event.combat.phase === "won" && (
-        <div className="combatLoot" aria-label="loot">
+        <div className="combatLoot" role="group" aria-label="loot">
           {lootEntries.length > 0 ? (
             lootEntries.map(([key, amount]) => {
               const takeAction = lootTakeActions.get(key);

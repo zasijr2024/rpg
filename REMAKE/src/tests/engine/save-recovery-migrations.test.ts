@@ -9,6 +9,7 @@ import {
   DEV_SAVE_SCHEMA_VERSION,
   DEV_SAVE_STAGING_KEY,
   GameSession,
+  LEGACY_DEV_SAVE_KEY,
   LocalStorageDevSaveAdapter,
   MemoryDevSaveAdapter,
 } from "../../engine";
@@ -27,30 +28,71 @@ describe("durable save recovery and migrations", () => {
 
   it("recovers the previous committed generation after checksum corruption", () => {
     const adapter = new LocalStorageDevSaveAdapter();
-    adapter.save({ generation: 1 });
-    adapter.save({ generation: 2 });
+    adapter.save({ generation: 1 }, acceptAnySave);
+    adapter.save({ generation: 2 }, acceptAnySave);
     const corrupted = JSON.parse(
       window.localStorage.getItem(DEV_SAVE_KEY) ?? "null",
     ) as { payload: { generation: number } };
     corrupted.payload.generation = 99;
     window.localStorage.setItem(DEV_SAVE_KEY, JSON.stringify(corrupted));
 
-    expect(adapter.load()).toEqual({ generation: 1 });
+    expect(adapter.load()).toMatchObject({
+      status: "recovered",
+      data: { generation: 1 },
+      reason: "checksum-mismatch",
+    });
     expect(readPayload(DEV_SAVE_KEY)).toEqual({ generation: 1 });
     expect(window.localStorage.getItem(DEV_SAVE_BACKUP_KEY)).toBeNull();
     expect(readQuarantine()).toMatchObject({ reason: "checksum-mismatch" });
+
+    expect(new LocalStorageDevSaveAdapter().load()).toMatchObject({
+      status: "recovered",
+      data: { generation: 1 },
+      reason: "checksum-mismatch",
+    });
+    adapter.acknowledgeRecovery();
+    expect(adapter.load()).toEqual({
+      status: "loaded",
+      data: { generation: 1 },
+    });
   });
 
   it("ignores an uncommitted staging generation", () => {
     const adapter = new LocalStorageDevSaveAdapter();
-    adapter.save({ generation: "committed" });
+    adapter.save({ generation: "committed" }, acceptAnySave);
     window.localStorage.setItem(
       DEV_SAVE_STAGING_KEY,
       JSON.stringify(createDevSaveDocument({ generation: "partial" })),
     );
 
-    expect(adapter.load()).toEqual({ generation: "committed" });
+    expect(adapter.load()).toEqual({
+      status: "loaded",
+      data: { generation: "committed" },
+    });
     expect(window.localStorage.getItem(DEV_SAVE_STAGING_KEY)).toBeNull();
+  });
+
+  it("rejects invalid precommits without rotating away the last valid backup", () => {
+    const adapter = new MemoryDevSaveAdapter();
+    const validate = (data: unknown) =>
+      typeof data === "object" &&
+      data !== null &&
+      Number.isFinite((data as { generation?: unknown }).generation);
+    adapter.save({ generation: 1 }, validate);
+    adapter.save({ generation: 2 }, validate);
+    const backup = adapter.backupForTest();
+
+    expect(() => adapter.save({ generation: Number.NaN }, validate)).toThrow(
+      /semantically invalid/,
+    );
+    expect(() => adapter.save({ generation: Infinity }, validate)).toThrow(
+      /semantically invalid/,
+    );
+    expect(adapter.backupForTest()).toBe(backup);
+    expect(loadData(adapter)).toEqual({ generation: 2 });
+    expect(JSON.parse(adapter.backupForTest() ?? "null").payload).toEqual({
+      generation: 1,
+    });
   });
 
   it("rejects and quarantines a save from an incompatible schema", () => {
@@ -64,7 +106,10 @@ describe("durable save recovery and migrations", () => {
       }),
     );
 
-    expect(new LocalStorageDevSaveAdapter().load()).toBeNull();
+    expect(new LocalStorageDevSaveAdapter().load()).toMatchObject({
+      status: "quarantined",
+      reason: "incompatible-schema",
+    });
     expect(window.localStorage.getItem(DEV_SAVE_KEY)).toBeNull();
     expect(readQuarantine()).toMatchObject({ reason: "incompatible-schema" });
   });
@@ -77,7 +122,7 @@ describe("durable save recovery and migrations", () => {
     const adapter = new MemoryDevSaveAdapter();
     adapter.setRawForTest(JSON.stringify(legacy));
 
-    expect(adapter.load()).toEqual(legacy);
+    expect(adapter.load()).toEqual({ status: "migrated", data: legacy });
     expect(JSON.parse(adapter.rawForTest() ?? "null")).toMatchObject({
       kind: "adr-remake-save",
       schemaVersion: DEV_SAVE_SCHEMA_VERSION,
@@ -95,7 +140,7 @@ describe("durable save recovery and migrations", () => {
     source.setStateForTest("stores.wood", 22);
     source.saveDevState();
 
-    const invalid = adapter.load() as {
+    const invalid = loadData(adapter) as {
       engine: { cooldowns: unknown };
     };
     invalid.engine.cooldowns = [{ key: "broken", durationMs: -1 }];
@@ -114,8 +159,14 @@ describe("durable save recovery and migrations", () => {
 
   it("consumes an invalid backup instead of retrying it on every load", () => {
     const adapter = new MemoryDevSaveAdapter();
-    adapter.save({ kind: "session", version: 2, marker: "bad-backup" });
-    adapter.save({ kind: "session", version: 2, marker: "bad-primary" });
+    adapter.save(
+      { kind: "session", version: 2, marker: "bad-backup" },
+      acceptAnySave,
+    );
+    adapter.save(
+      { kind: "session", version: 2, marker: "bad-primary" },
+      acceptAnySave,
+    );
     const target = new GameSession(
       createGameEngine({ saveAdapter: adapter, rngSeed: 0x12345678 }),
     );
@@ -123,7 +174,10 @@ describe("durable save recovery and migrations", () => {
 
     expect(target.loadDevState()).toBe(false);
     expect(target.engine.state.get("stores.wood")).toBe(7);
-    expect(adapter.load()).toBeNull();
+    expect(adapter.load()).toMatchObject({
+      status: "quarantined",
+      reason: "invalid-session-backup-snapshot",
+    });
     expect(adapter.backupForTest()).toBeNull();
     expect(adapter.quarantinedForTest()?.reason).toBe(
       "invalid-session-backup-snapshot",
@@ -132,8 +186,8 @@ describe("durable save recovery and migrations", () => {
 
   it("clears the primary, staging, and backup generations together", () => {
     const adapter = new LocalStorageDevSaveAdapter();
-    adapter.save({ generation: 1 });
-    adapter.save({ generation: 2 });
+    adapter.save({ generation: 1 }, acceptAnySave);
+    adapter.save({ generation: 2 }, acceptAnySave);
     window.localStorage.setItem(DEV_SAVE_STAGING_KEY, "partial");
 
     adapter.clear();
@@ -141,6 +195,22 @@ describe("durable save recovery and migrations", () => {
     expect(window.localStorage.getItem(DEV_SAVE_KEY)).toBeNull();
     expect(window.localStorage.getItem(DEV_SAVE_STAGING_KEY)).toBeNull();
     expect(window.localStorage.getItem(DEV_SAVE_BACKUP_KEY)).toBeNull();
+  });
+
+  it("migrates the legacy dev namespace once without orphaning its save", () => {
+    window.localStorage.setItem(
+      LEGACY_DEV_SAVE_KEY,
+      JSON.stringify(createDevSaveDocument({ generation: "legacy-key" })),
+    );
+
+    const loaded = new LocalStorageDevSaveAdapter().load();
+
+    expect(loaded).toEqual({
+      status: "migrated",
+      data: { generation: "legacy-key" },
+    });
+    expect(readPayload(DEV_SAVE_KEY)).toEqual({ generation: "legacy-key" });
+    expect(window.localStorage.getItem(LEGACY_DEV_SAVE_KEY)).toBeNull();
   });
 });
 
@@ -173,4 +243,15 @@ function createMemoryStorage(): Storage {
       values.set(key, String(value));
     },
   };
+}
+
+function acceptAnySave(): boolean {
+  return true;
+}
+
+function loadData(adapter: MemoryDevSaveAdapter): unknown {
+  const loaded = adapter.load();
+  if (!("data" in loaded))
+    throw new Error(`Expected save data: ${loaded.status}`);
+  return loaded.data;
 }

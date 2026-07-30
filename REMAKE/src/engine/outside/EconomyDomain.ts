@@ -63,9 +63,15 @@ export class EconomyDomainFacade {
   constructor(private readonly engine: Pick<GameEngine, "state">) {}
 
   read(): EconomyReadModel {
-    const buildingsValue = this.engine.state.get("game.buildings");
-    const populationValue = this.engine.state.get("game.population");
-    const workersValue = this.engine.state.get("game.workers");
+    const buildingsValue = this.engine.state
+      .forRuntime("economy")
+      .get("game.buildings");
+    const populationValue = this.engine.state
+      .forRuntime("economy")
+      .get("game.population");
+    const workersValue = this.engine.state
+      .forRuntime("economy")
+      .get("game.workers");
 
     return Object.freeze({
       initialized: Object.freeze({
@@ -73,25 +79,44 @@ export class EconomyDomainFacade {
         population: populationValue !== undefined,
         workers: workersValue !== undefined,
       }),
-      unlocked: this.engine.state.get("features.location.outside") === true,
-      seenForest: this.engine.state.get("game.outside.seenForest") === true,
+      unlocked:
+        this.engine.state
+          .forRuntime("economy")
+          .get("features.location.outside") === true,
+      seenForest:
+        this.engine.state
+          .forRuntime("economy")
+          .get("game.outside.seenForest") === true,
       population: numberValue(populationValue),
       buildings: numericRecord(buildingsValue),
       workers: numericRecord(workersValue),
-      stores: numericRecord(this.engine.state.get("stores", true)),
-      income: incomeRecord(this.engine.state.get("income", true)),
-      worldUnlocked: this.engine.state.get("features.location.world") === true,
-      thieves: nullableNumber(this.engine.state.get("game.thieves")),
-      stolen: numericRecord(this.engine.state.get("game.stolen", true)),
+      stores: numericRecord(
+        this.engine.state.forRuntime("economy").get("stores", true),
+      ),
+      income: incomeRecord(
+        this.engine.state.forRuntime("economy").get("income", true),
+      ),
+      worldUnlocked:
+        this.engine.state
+          .forRuntime("economy")
+          .get("features.location.world") === true,
+      thieves: nullableNumber(
+        this.engine.state.forRuntime("economy").get("game.thieves"),
+      ),
+      stolen: numericRecord(
+        this.engine.state.forRuntime("economy").get("game.stolen", true),
+      ),
       incomeMultiplier:
-        this.engine.state.get("config.debug.incomeMultiplier", true) === 10
+        this.engine.state
+          .forRuntime("economy")
+          .get("config.debug.incomeMultiplier", true) === 10
           ? 10
           : 1,
     });
   }
 
   dispatch(command: EconomyCommand): void {
-    const state = this.engine.state;
+    const state = this.engine.state.forRuntime("economy");
     switch (command.type) {
       case "economy.initialize":
         if (state.get("game.buildings") === undefined) {
@@ -248,7 +273,10 @@ function nullableNumber(value: unknown): number | null {
   return typeof value === "number" ? value : null;
 }
 
-function keyedPath(parent: string, key: string): string {
+function keyedPath<const TParent extends string>(
+  parent: TParent,
+  key: string,
+): `${TParent}["${string}"]` {
   if (key.includes('"')) throw new Error("State keys cannot contain quotes");
   return `${parent}["${key}"]`;
 }

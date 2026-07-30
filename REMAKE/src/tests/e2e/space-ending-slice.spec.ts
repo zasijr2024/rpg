@@ -32,7 +32,7 @@ test("scenario-seeded: visible Ship controls reach the Space loop and ending", a
   await page.keyboard.up("ArrowLeft");
   await page.evaluate(() => window.__adrTest?.save());
   const keyboardShipX = await page.evaluate(() => {
-    const raw = window.localStorage.getItem("adr-remake-dev-save");
+    const raw = window.localStorage.getItem("adr-remake-save");
     if (!raw) return null;
     const save = JSON.parse(raw) as {
       payload?: { space?: { shipX?: unknown } };

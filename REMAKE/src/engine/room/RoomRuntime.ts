@@ -97,17 +97,32 @@ export class RoomRuntime {
   ) {}
 
   initialize(): void {
-    if (this.engine.state.get("features.location.room") === undefined) {
-      this.engine.state.set("features.location.room", true, true);
+    if (
+      this.engine.state.forRuntime("room").get("features.location.room") ===
+      undefined
+    ) {
+      this.engine.state
+        .forRuntime("room")
+        .set("features.location.room", true, true);
     }
-    if (this.engine.state.get("game.builder.level") === undefined) {
-      this.engine.state.set("game.builder.level", -1, true);
+    if (
+      this.engine.state.forRuntime("room").get("game.builder.level") ===
+      undefined
+    ) {
+      this.engine.state.forRuntime("room").set("game.builder.level", -1, true);
     }
-    if (this.engine.state.get("game.temperature.value") === undefined) {
-      this.engine.state.set("game.temperature", TEMP.Freezing, true);
+    if (
+      this.engine.state.forRuntime("room").get("game.temperature.value") ===
+      undefined
+    ) {
+      this.engine.state
+        .forRuntime("room")
+        .set("game.temperature", TEMP.Freezing, true);
     }
-    if (this.engine.state.get("game.fire.value") === undefined) {
-      this.engine.state.set("game.fire", FIRE.Dead, true);
+    if (
+      this.engine.state.forRuntime("room").get("game.fire.value") === undefined
+    ) {
+      this.engine.state.forRuntime("room").set("game.fire", FIRE.Dead, true);
     }
 
     if (this.initialized) return;
@@ -155,7 +170,7 @@ export class RoomRuntime {
   snapshot(): RoomStateSnapshot {
     const fireValue = this.fireValue();
     const temperatureValue = this.temperatureValue();
-    const wood = this.engine.state.get("stores.wood");
+    const wood = this.engine.state.forRuntime("room").get("stores.wood");
     const activeButton =
       fireValue === FIRE.Dead.value ? "light fire" : "stoke fire";
 
@@ -171,7 +186,9 @@ export class RoomRuntime {
       activeButton,
       activeCooldown: this.engine.cooldowns.snapshot(activeButton),
       outsideUnlocked:
-        this.engine.state.get("features.location.outside") === true,
+        this.engine.state
+          .forRuntime("room")
+          .get("features.location.outside") === true,
       stores: this.storeRows(),
       income: this.incomeRows(),
       buildOptions: this.buildOptions(),
@@ -207,15 +224,17 @@ export class RoomRuntime {
   lightFire(): boolean {
     this.initialize();
     if (this.engine.cooldowns.isActive("light fire")) return false;
-    const wood = this.engine.state.get("stores.wood");
+    const wood = this.engine.state.forRuntime("room").get("stores.wood");
     if (typeof wood === "number" && wood < ROOM_LIGHT_FIRE_WOOD_COST) {
       this.notify("not enough wood to get the fire going");
       return false;
     }
     if (typeof wood === "number") {
-      this.engine.state.set("stores.wood", wood - ROOM_LIGHT_FIRE_WOOD_COST);
+      this.engine.state
+        .forRuntime("room")
+        .set("stores.wood", wood - ROOM_LIGHT_FIRE_WOOD_COST);
     }
-    this.engine.state.set("game.fire", FIRE.Burning);
+    this.engine.state.forRuntime("room").set("game.fire", FIRE.Burning);
     this.engine.cooldowns.start("stoke fire", ROOM_STOKE_COOLDOWN * 1000);
     this.onFireChange();
     return true;
@@ -224,18 +243,22 @@ export class RoomRuntime {
   stokeFire(): boolean {
     this.initialize();
     if (this.engine.cooldowns.isActive("stoke fire")) return false;
-    const wood = this.engine.state.get("stores.wood");
+    const wood = this.engine.state.forRuntime("room").get("stores.wood");
     if (wood === 0) {
       this.notify("the wood has run out");
       return false;
     }
     if (typeof wood === "number") {
-      this.engine.state.set("stores.wood", wood - ROOM_STOKE_FIRE_WOOD_COST);
+      this.engine.state
+        .forRuntime("room")
+        .set("stores.wood", wood - ROOM_STOKE_FIRE_WOOD_COST);
     }
 
     const fireValue = this.numberAt("game.fire.value");
     if (fireValue < FIRE.Roaring.value) {
-      this.engine.state.set("game.fire", originalRoomFireStates[fireValue + 1]);
+      this.engine.state
+        .forRuntime("room")
+        .set("game.fire", originalRoomFireStates[fireValue + 1]);
     }
     this.engine.cooldowns.start("stoke fire", ROOM_STOKE_COOLDOWN * 1000);
     this.onFireChange();
@@ -279,9 +302,11 @@ export class RoomRuntime {
       storeMod[store] = have - amount;
     }
 
-    this.engine.state.setM("stores", storeMod);
+    this.engine.state.forRuntime("room").setM("stores", storeMod);
     this.notify(craftable.buildMsg);
-    this.engine.state.add(this.itemStatePath(thing, craftable), 1);
+    this.engine.state
+      .forRuntime("room")
+      .addDynamic(this.itemStatePath(thing, craftable), 1);
     return true;
   }
 
@@ -305,8 +330,8 @@ export class RoomRuntime {
       storeMod[store] = have - amount;
     }
 
-    this.engine.state.setM("stores", storeMod);
-    this.engine.state.add(`stores["${thing}"]`, 1);
+    this.engine.state.forRuntime("room").setM("stores", storeMod);
+    this.engine.state.forRuntime("room").add(`stores["${thing}"]`, 1);
     return true;
   }
 
@@ -326,10 +351,9 @@ export class RoomRuntime {
     }
 
     if (nextTemperature !== oldTemperature) {
-      this.engine.state.set(
-        "game.temperature",
-        originalRoomTemperatures[nextTemperature],
-      );
+      this.engine.state
+        .forRuntime("room")
+        .set("game.temperature", originalRoomTemperatures[nextTemperature]);
       this.notify(`the room is ${this.temperatureText(nextTemperature)}`);
     }
   }
@@ -337,7 +361,7 @@ export class RoomRuntime {
   coolFire(): void {
     this.initialize();
     const fireValue = this.numberAt("game.fire.value");
-    const wood = this.engine.state.get("stores.wood");
+    const wood = this.engine.state.forRuntime("room").get("stores.wood");
 
     if (
       fireValue <= FIRE.Flickering.value &&
@@ -346,16 +370,17 @@ export class RoomRuntime {
       wood > 0
     ) {
       this.notify("builder stokes the fire");
-      this.engine.state.set("stores.wood", wood - 1);
-      this.engine.state.set("game.fire", originalRoomFireStates[fireValue + 1]);
+      this.engine.state.forRuntime("room").set("stores.wood", wood - 1);
+      this.engine.state
+        .forRuntime("room")
+        .set("game.fire", originalRoomFireStates[fireValue + 1]);
     }
 
     const updatedFireValue = this.numberAt("game.fire.value");
     if (updatedFireValue > FIRE.Dead.value) {
-      this.engine.state.set(
-        "game.fire",
-        originalRoomFireStates[updatedFireValue - 1],
-      );
+      this.engine.state
+        .forRuntime("room")
+        .set("game.fire", originalRoomFireStates[updatedFireValue - 1]);
       this.onFireChange();
     }
   }
@@ -366,7 +391,7 @@ export class RoomRuntime {
     const temperatureValue = this.temperatureValue();
 
     if (builderLevel === 0) {
-      this.engine.state.set("game.builder.level", 1);
+      this.engine.state.forRuntime("room").set("game.builder.level", 1);
       this.notify(
         "a ragged stranger stumbles through the door and collapses in the corner",
       );
@@ -379,12 +404,12 @@ export class RoomRuntime {
         this.notify(
           "the stranger shivers, and mumbles quietly. her words are unintelligible.",
         );
-        this.engine.state.set("game.builder.level", 2);
+        this.engine.state.forRuntime("room").set("game.builder.level", 2);
       } else if (builderLevel === 2) {
         this.notify(
           "the stranger in the corner stops shivering. her breathing calms.",
         );
-        this.engine.state.set("game.builder.level", 3);
+        this.engine.state.forRuntime("room").set("game.builder.level", 3);
       }
     }
   }
@@ -392,8 +417,8 @@ export class RoomRuntime {
   onArrival(): void {
     this.initialize();
     if (this.numberAt("game.builder.level") === 3) {
-      this.engine.state.set("game.builder.level", 4);
-      this.engine.state.set("income.builder", {
+      this.engine.state.forRuntime("room").set("game.builder.level", 4);
+      this.engine.state.forRuntime("room").set("income.builder", {
         delay: ROOM_BUILDER_INCOME_DELAY,
         stores: { wood: ROOM_BUILDER_WOOD_INCOME },
       });
@@ -405,9 +430,13 @@ export class RoomRuntime {
 
   unlockForest(): void {
     this.initialize();
-    if (this.engine.state.get("features.location.outside") === true) return;
-    this.engine.state.set("stores.wood", 4);
-    this.engine.state.set("features.location.outside", true);
+    if (
+      this.engine.state.forRuntime("room").get("features.location.outside") ===
+      true
+    )
+      return;
+    this.engine.state.forRuntime("room").set("stores.wood", 4);
+    this.engine.state.forRuntime("room").set("features.location.outside", true);
     this.notify("the wind howls outside");
     this.notify("the wood is running out");
   }
@@ -420,7 +449,7 @@ export class RoomRuntime {
       fireValue > FIRE.Smoldering.value &&
       this.numberAt("game.builder.level") < 0
     ) {
-      this.engine.state.set("game.builder.level", 0);
+      this.engine.state.forRuntime("room").set("game.builder.level", 0);
       this.notify(
         "the light from the fire spills from the windows, out into the dark",
       );
@@ -465,7 +494,9 @@ export class RoomRuntime {
     if (this.isCraftVisible(craftable)) return;
     if (!this.isCraftEligible(craftable)) return;
 
-    this.engine.state.set(`game.room.buttons["${craftable.key}"]`, true);
+    this.engine.state
+      .forRuntime("room")
+      .set(`game.room.buttons["${craftable.key}"]`, true);
     if (
       this.itemCount(craftable.key, craftable) === 0 &&
       craftable.availableMsg
@@ -476,7 +507,9 @@ export class RoomRuntime {
 
   private isCraftVisible(craftable: RoomCraftableDefinition): boolean {
     if (
-      this.engine.state.get(`game.room.buttons["${craftable.key}"]`) === true
+      this.engine.state
+        .forRuntime("room")
+        .get(`game.room.buttons["${craftable.key}"]`) === true
     ) {
       return true;
     }
@@ -517,23 +550,30 @@ export class RoomRuntime {
   private unlockTradeGoodIfEligible(good: RoomTradeGoodDefinition): void {
     if (this.isTradeGoodVisible(good)) return;
     if (!this.isTradeGoodEligible(good)) return;
-    this.engine.state.set(`game.room.buttons["${good.key}"]`, true);
+    this.engine.state
+      .forRuntime("room")
+      .set(`game.room.buttons["${good.key}"]`, true);
   }
 
   private isTradeGoodVisible(good: RoomTradeGoodDefinition): boolean {
-    return this.engine.state.get(`game.room.buttons["${good.key}"]`) === true;
+    return (
+      this.engine.state
+        .forRuntime("room")
+        .get(`game.room.buttons["${good.key}"]`) === true
+    );
   }
 
   private isTradeGoodEligible(good: RoomTradeGoodDefinition): boolean {
     if (this.numberAt('game.buildings["trading post"]') <= 0) return false;
     return (
       good.key === "compass" ||
-      this.engine.state.get(`stores["${good.key}"]`) !== undefined
+      this.engine.state.forRuntime("room").get(`stores["${good.key}"]`) !==
+        undefined
     );
   }
 
   private storeRows(): RoomStoreSnapshot[] {
-    const stores = this.engine.state.get("stores");
+    const stores = this.engine.state.forRuntime("room").get("stores");
     if (stores === null || typeof stores !== "object") return [];
     return Object.entries(stores as Record<string, unknown>)
       .filter(([, value]) => typeof value === "number" && value > 0)
@@ -551,7 +591,7 @@ export class RoomRuntime {
   }
 
   private incomeRows(): RoomIncomeSnapshot[] {
-    const income = this.engine.state.get("income");
+    const income = this.engine.state.forRuntime("room").get("income");
     if (income === null || typeof income !== "object") return [];
     const rows: RoomIncomeSnapshot[] = [];
     for (const [source, value] of Object.entries(
@@ -594,7 +634,9 @@ export class RoomRuntime {
   }
 
   private buildingsSnapshot(): Record<string, number> {
-    const buildings = this.engine.state.get("game.buildings", true);
+    const buildings = this.engine.state
+      .forRuntime("room")
+      .get("game.buildings", true);
     return typeof buildings === "object" && buildings !== null
       ? (buildings as Record<string, number>)
       : {};
@@ -681,11 +723,13 @@ export class RoomRuntime {
     this.incomeTimer = this.engine.clock.setTimeout(() => {
       this.incomeTimer = null;
       if (!this.incomePaused() && this.numberAt("game.builder.level") > 3) {
-        this.engine.state.add(
-          "stores.wood",
-          ROOM_BUILDER_WOOD_INCOME * this.incomeMultiplier(),
-          true,
-        );
+        this.engine.state
+          .forRuntime("room")
+          .add(
+            "stores.wood",
+            ROOM_BUILDER_WOOD_INCOME * this.incomeMultiplier(),
+            true,
+          );
       }
       this.scheduleBuilderIncome();
     }, delayMs);
@@ -705,7 +749,9 @@ export class RoomRuntime {
   }
 
   private incomeMultiplier(): 1 | 10 {
-    return this.engine.state.get("config.debug.incomeMultiplier", true) === 10
+    return this.engine.state
+      .forRuntime("room")
+      .get("config.debug.incomeMultiplier", true) === 10
       ? 10
       : 1;
   }
@@ -720,22 +766,26 @@ export class RoomRuntime {
   }
 
   private numberAt(path: string): number {
-    const value = this.engine.state.get(path, true);
+    const value = this.engine.state.forRuntime("room").getDynamic(path, true);
     return typeof value === "number" ? value : 0;
   }
 
   private builderLevel(): number {
-    const value = this.engine.state.get("game.builder.level");
+    const value = this.engine.state
+      .forRuntime("room")
+      .get("game.builder.level");
     return typeof value === "number" ? value : -1;
   }
 
   private fireValue(): number {
-    const value = this.engine.state.get("game.fire.value");
+    const value = this.engine.state.forRuntime("room").get("game.fire.value");
     return typeof value === "number" ? value : FIRE.Dead.value;
   }
 
   private temperatureValue(): number {
-    const value = this.engine.state.get("game.temperature.value");
+    const value = this.engine.state
+      .forRuntime("room")
+      .get("game.temperature.value");
     return typeof value === "number" ? value : TEMP.Freezing.value;
   }
 

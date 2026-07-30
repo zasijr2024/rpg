@@ -73,30 +73,38 @@ export class PathRuntime {
 
   update(): void {
     if (this.unlocked()) {
-      this.engine.state.set("features.location.path", true, true);
+      this.engine.state
+        .forRuntime("path")
+        .set("features.location.path", true, true);
       this.normalizeOutfitForPath();
     }
   }
 
   onArrival(): void {
     if (!this.unlocked()) return;
-    this.engine.state.set("features.location.path", true);
+    this.engine.state.forRuntime("path").set("features.location.path", true);
     this.normalizeOutfitForPath();
-    if (!readBoolean(this.engine.state, "game.path.seen")) {
+    if (!readBoolean(this.engine.state.forRuntime("path"), "game.path.seen")) {
       this.notifyCompassDirection();
     }
   }
 
   openFromCompassPurchase(): void {
-    this.engine.state.set("features.location.path", true);
-    if (!readBoolean(this.engine.state, "game.path.seen")) {
+    this.engine.state.forRuntime("path").set("features.location.path", true);
+    if (!readBoolean(this.engine.state.forRuntime("path"), "game.path.seen")) {
       this.notifyCompassDirection();
     }
   }
 
   snapshot(): PathStateSnapshot {
-    const stores = readNumericRecord(this.engine.state, "stores");
-    const outfit = readNumericRecord(this.engine.state, "outfit");
+    const stores = readNumericRecord(
+      this.engine.state.forRuntime("path"),
+      "stores",
+    );
+    const outfit = readNumericRecord(
+      this.engine.state.forRuntime("path"),
+      "outfit",
+    );
     const capacity = originalPathCapacity(stores);
     const used = this.outfitWeight(outfit);
     const free = Math.max(0, capacity - used);
@@ -116,10 +124,16 @@ export class PathRuntime {
       perks: this.perkRows(),
       canEmbark:
         (outfit["cured meat"] ?? 0) > 0 &&
-        !readBoolean(this.engine.state, "game.world.active") &&
+        !readBoolean(
+          this.engine.state.forRuntime("path"),
+          "game.world.active",
+        ) &&
         !embarkCooldown.active,
       embarkCooldown,
-      pendingReturn: readBoolean(this.engine.state, "game.path.pendingReturn"),
+      pendingReturn: readBoolean(
+        this.engine.state.forRuntime("path"),
+        "game.path.pendingReturn",
+      ),
     };
   }
 
@@ -138,8 +152,14 @@ export class PathRuntime {
     if (!this.unlocked()) return false;
     if (!originalPathCanCarry(key)) return false;
     this.normalizeOutfitForPath();
-    const stores = readNumericRecord(this.engine.state, "stores");
-    const outfit = readNumericRecord(this.engine.state, "outfit");
+    const stores = readNumericRecord(
+      this.engine.state.forRuntime("path"),
+      "stores",
+    );
+    const outfit = readNumericRecord(
+      this.engine.state.forRuntime("path"),
+      "outfit",
+    );
     const available = Math.floor((stores[key] ?? 0) - (outfit[key] ?? 0));
     if (available <= 0) return false;
     const weight = originalPathWeightFor(key);
@@ -151,7 +171,7 @@ export class PathRuntime {
       weight <= 0 ? available : Math.floor((free + 1e-9) / weight);
     const delta = Math.min(amount, available, byWeight);
     if (delta <= 0) return false;
-    this.engine.state.add(`outfit["${key}"]`, delta);
+    this.engine.state.forRuntime("path").add(`outfit["${key}"]`, delta);
     return true;
   }
 
@@ -159,10 +179,13 @@ export class PathRuntime {
     if (!this.unlocked()) return false;
     if (!originalPathCanCarry(key)) return false;
     this.normalizeOutfitForPath();
-    const current = readNumber(this.engine.state, `outfit["${key}"]`);
+    const current = readNumber(
+      this.engine.state.forRuntime("path"),
+      `outfit["${key}"]`,
+    );
     const delta = Math.min(amount, current);
     if (delta <= 0) return false;
-    this.engine.state.add(`outfit["${key}"]`, -delta);
+    this.engine.state.forRuntime("path").add(`outfit["${key}"]`, -delta);
     return true;
   }
 
@@ -172,9 +195,11 @@ export class PathRuntime {
     if (!snapshot.canEmbark) return false;
     for (const supply of snapshot.supplies) {
       if (supply.outfit <= 0) continue;
-      this.engine.state.add(`stores["${supply.key}"]`, -supply.outfit);
+      this.engine.state
+        .forRuntime("path")
+        .add(`stores["${supply.key}"]`, -supply.outfit);
     }
-    this.engine.state.remove("game.path.pendingReturn");
+    this.engine.state.forRuntime("path").remove("game.path.pendingReturn");
     this.engine.notifications.notify(
       "path",
       "a strange world stretches before you",
@@ -184,30 +209,36 @@ export class PathRuntime {
 
   consumeWorldReturnLocation(): PathReturnDestination | null {
     const returnLocation = readStringUnion(
-      this.engine.state,
+      this.engine.state.forRuntime("path"),
       "game.world.returnLocation",
       ["room", "path"] as const,
     );
     if (!returnLocation) return null;
 
-    this.engine.state.set("game.world.lastReturnLocation", returnLocation);
-    this.engine.state.remove("game.world.returnLocation");
+    this.engine.state
+      .forRuntime("path")
+      .set("game.world.lastReturnLocation", returnLocation);
+    this.engine.state.forRuntime("path").remove("game.world.returnLocation");
 
     if (returnLocation === "room") {
-      this.engine.state.remove("game.path.pendingReturn");
+      this.engine.state.forRuntime("path").remove("game.path.pendingReturn");
       return "room";
     }
 
-    this.engine.state.set("features.location.path", true);
-    this.engine.state.set("game.path.pendingReturn", true);
+    this.engine.state.forRuntime("path").set("features.location.path", true);
+    this.engine.state.forRuntime("path").set("game.path.pendingReturn", true);
     return "path";
   }
 
   private unlocked(): boolean {
     return (
-      readBoolean(this.engine.state, "features.location.path") ||
-      readNumber(this.engine.state, 'stores["compass"]') > 0 ||
-      readNumber(this.engine.state, "stores.compass") > 0
+      readBoolean(
+        this.engine.state.forRuntime("path"),
+        "features.location.path",
+      ) ||
+      readNumber(this.engine.state.forRuntime("path"), 'stores["compass"]') >
+        0 ||
+      readNumber(this.engine.state.forRuntime("path"), "stores.compass") > 0
     );
   }
 
@@ -255,11 +286,15 @@ export class PathRuntime {
   }
 
   private hasPerk(perk: OriginalPerkDefinition): boolean {
-    return readBoolean(this.engine.state, `character.perks["${perk.key}"]`);
+    return readBoolean(
+      this.engine.state.forRuntime("path"),
+      `character.perks["${perk.key}"]`,
+    );
   }
 
   private normalizeOutfitForPath(): void {
-    if (readBoolean(this.engine.state, "game.world.active")) return;
+    if (readBoolean(this.engine.state.forRuntime("path"), "game.world.active"))
+      return;
 
     for (const carryable of originalPathCarryables) {
       const carried = this.numberOrNull(`outfit["${carryable.key}"]`);
@@ -268,21 +303,25 @@ export class PathRuntime {
       const store = this.numberOrNull(`stores["${carryable.key}"]`);
       if (store === null) {
         if (carried < 0) {
-          this.engine.state.set(`outfit["${carryable.key}"]`, 0, true);
+          this.engine.state
+            .forRuntime("path")
+            .set(`outfit["${carryable.key}"]`, 0, true);
         }
         continue;
       }
 
       const clamped = Math.max(0, Math.min(carried, store));
       if (clamped !== carried) {
-        this.engine.state.set(`outfit["${carryable.key}"]`, clamped, true);
+        this.engine.state
+          .forRuntime("path")
+          .set(`outfit["${carryable.key}"]`, clamped, true);
       }
     }
   }
 
   private compassDirection(): WorldCompassDirection {
     const storedDirection = readStringUnion(
-      this.engine.state,
+      this.engine.state.forRuntime("path"),
       "game.world.shipDirection",
       [
         "north",
@@ -311,7 +350,7 @@ export class PathRuntime {
   }
 
   private notifyCompassDirection(): void {
-    this.engine.state.set("game.path.seen", true);
+    this.engine.state.forRuntime("path").set("game.path.seen", true);
     this.engine.notifications.notify(
       "room",
       `the compass points ${this.compassDirection()}`,
@@ -319,7 +358,7 @@ export class PathRuntime {
   }
 
   private numberOrNull(path: string): number | null {
-    const value = this.engine.state.get(path);
+    const value = this.engine.state.forRuntime("path").getDynamic(path);
     return typeof value === "number" ? value : null;
   }
 

@@ -1,0 +1,82 @@
+.settingsPanel {
+  position: relative;
+  width: min(var(--location-width), 100%);
+  min-height: 700px;
+  padding: 0;
+}
+
+.settingsColumn {
+  max-width: 540px;
+  display: grid;
+  gap: 24px;
+}
+
+.settingsGroup {
+  position: relative;
+  border: 1px solid var(--rule);
+  background: #fff;
+  padding: 14px 16px 12px;
+}
+
+.settingsGroup::before {
+  content: attr(aria-label);
+  position: absolute;
+  top: -13px;
+  left: 8px;
+  background: #fff;
+  color: #555;
+  padding: 0 3px;
+  font-size: 16px;
+}
+
+.toggleRow,
+.debugRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.settingsButtons {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.settingsButtons button {
+  border: 1px solid var(--rule);
+  background: #fff;
+  color: #111;
+  min-height: 31px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.settingsButtons button:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+.toggleRow {
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 24px;
+}
+
+.toggleRow input {
+  margin: 0;
+}
+
+.debugRow {
+  color: #555;
+}
+
+.debugRow + .debugRow,
+.toggleRow + .toggleRow {
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 760px) {
+  .settingsPanel {
+    width: 100%;
+  }
+}

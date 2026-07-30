@@ -60,8 +60,9 @@ export class ShipRuntime {
       canLiftOff: unlocked && hull > 0 && !liftOffCooldown.active,
       awaitingLiftOffConfirmation:
         unlocked &&
-        this.engine.state.get("game.spaceShip.awaitingLiftOffConfirmation") ===
-          true,
+        this.engine.state
+          .forRuntime("ship")
+          .get("game.spaceShip.awaitingLiftOffConfirmation") === true,
       liftOffCooldownMs: liftOffCooldown.remainingMs,
       notifications: this.engine.notifications.list("ship"),
     };
@@ -70,16 +71,20 @@ export class ShipRuntime {
   onArrival(): void {
     if (!this.isUnlocked()) return;
     this.ensureBaseState();
-    if (this.engine.state.get("game.spaceShip.seenShip") === true) return;
+    if (
+      this.engine.state.forRuntime("ship").get("game.spaceShip.seenShip") ===
+      true
+    )
+      return;
     this.engine.notifications.notify("ship", SHIP_ARRIVAL_NOTIFICATION);
-    this.engine.state.set("game.spaceShip.seenShip", true);
+    this.engine.state.forRuntime("ship").set("game.spaceShip.seenShip", true);
   }
 
   reinforceHull(): boolean {
     if (!this.isUnlocked()) return false;
     this.ensureBaseState();
     if (!this.spendAlloy(SHIP_ALLOY_PER_HULL)) return false;
-    this.engine.state.add("game.spaceShip.hull", 1);
+    this.engine.state.forRuntime("ship").add("game.spaceShip.hull", 1);
     return true;
   }
 
@@ -87,42 +92,65 @@ export class ShipRuntime {
     if (!this.isUnlocked()) return false;
     this.ensureBaseState();
     if (!this.spendAlloy(SHIP_ALLOY_PER_THRUSTER)) return false;
-    this.engine.state.add("game.spaceShip.thrusters", 1);
+    this.engine.state.forRuntime("ship").add("game.spaceShip.thrusters", 1);
     return true;
   }
 
   requestLiftOff(): "confirm" | "ready" | false {
     if (!this.snapshot().canLiftOff) return false;
-    if (this.engine.state.get("game.spaceShip.seenWarning") === true) {
+    if (
+      this.engine.state.forRuntime("ship").get("game.spaceShip.seenWarning") ===
+      true
+    ) {
       return "ready";
     }
-    this.engine.state.set("game.spaceShip.awaitingLiftOffConfirmation", true);
+    this.engine.state
+      .forRuntime("ship")
+      .set("game.spaceShip.awaitingLiftOffConfirmation", true);
     return "confirm";
   }
 
   confirmLiftOff(): boolean {
     if (!this.snapshot().canLiftOff) return false;
     if (
-      this.engine.state.get("game.spaceShip.awaitingLiftOffConfirmation") !==
-      true
+      this.engine.state
+        .forRuntime("ship")
+        .get("game.spaceShip.awaitingLiftOffConfirmation") !== true
     ) {
       return false;
     }
-    this.engine.state.set("game.spaceShip.seenWarning", true);
-    this.engine.state.set("game.spaceShip.awaitingLiftOffConfirmation", false);
+    this.engine.state
+      .forRuntime("ship")
+      .set("game.spaceShip.seenWarning", true);
+    this.engine.state
+      .forRuntime("ship")
+      .set("game.spaceShip.awaitingLiftOffConfirmation", false);
     return true;
   }
 
   linger(): void {
-    this.engine.state.set("game.spaceShip.awaitingLiftOffConfirmation", false);
+    this.engine.state
+      .forRuntime("ship")
+      .set("game.spaceShip.awaitingLiftOffConfirmation", false);
   }
 
   private ensureBaseState(): void {
-    if (typeof this.engine.state.get("game.spaceShip.hull") !== "number") {
-      this.engine.state.set("game.spaceShip.hull", SHIP_BASE_HULL);
+    if (
+      typeof this.engine.state.forRuntime("ship").get("game.spaceShip.hull") !==
+      "number"
+    ) {
+      this.engine.state
+        .forRuntime("ship")
+        .set("game.spaceShip.hull", SHIP_BASE_HULL);
     }
-    if (typeof this.engine.state.get("game.spaceShip.thrusters") !== "number") {
-      this.engine.state.set("game.spaceShip.thrusters", SHIP_BASE_THRUSTERS);
+    if (
+      typeof this.engine.state
+        .forRuntime("ship")
+        .get("game.spaceShip.thrusters") !== "number"
+    ) {
+      this.engine.state
+        .forRuntime("ship")
+        .set("game.spaceShip.thrusters", SHIP_BASE_THRUSTERS);
     }
   }
 
@@ -132,26 +160,38 @@ export class ShipRuntime {
       this.engine.notifications.notify("ship", "not enough alien alloy");
       return false;
     }
-    this.engine.state.set('stores["alien alloy"]', available - amount);
+    this.engine.state
+      .forRuntime("ship")
+      .set('stores["alien alloy"]', available - amount);
     return true;
   }
 
   private isUnlocked(): boolean {
-    return this.engine.state.get("features.location.spaceShip") === true;
+    return (
+      this.engine.state
+        .forRuntime("ship")
+        .get("features.location.spaceShip") === true
+    );
   }
 
   private hull(): number {
-    const value = this.engine.state.get("game.spaceShip.hull");
+    const value = this.engine.state
+      .forRuntime("ship")
+      .get("game.spaceShip.hull");
     return typeof value === "number" ? value : SHIP_BASE_HULL;
   }
 
   private thrusters(): number {
-    const value = this.engine.state.get("game.spaceShip.thrusters");
+    const value = this.engine.state
+      .forRuntime("ship")
+      .get("game.spaceShip.thrusters");
     return typeof value === "number" ? value : SHIP_BASE_THRUSTERS;
   }
 
   private alienAlloy(): number {
-    const value = this.engine.state.get('stores["alien alloy"]');
+    const value = this.engine.state
+      .forRuntime("ship")
+      .get('stores["alien alloy"]');
     return typeof value === "number" ? value : 0;
   }
 }

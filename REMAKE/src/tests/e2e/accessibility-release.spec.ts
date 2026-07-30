@@ -9,6 +9,22 @@ const WCAG_TAGS = [
   "wcag22aa",
 ] as const;
 
+function isExplainedSeriousIncomplete(
+  incomplete: Awaited<ReturnType<AxeBuilder["analyze"]>>["incomplete"][number],
+) {
+  // Axe cannot calculate contrast through generated labels, gradients, and
+  // canvas-adjacent visual layers. Keep those cases in the attached artifact
+  // for human review; every other serious incomplete is a release failure.
+  return (
+    incomplete.id === "color-contrast" &&
+    incomplete.nodes.every((node) =>
+      node.failureSummary
+        ?.toLowerCase()
+        .includes("background color could not be determined"),
+    )
+  );
+}
+
 async function expectNoAccessibilityViolations(
   page: Page,
   testInfo: TestInfo,
@@ -43,6 +59,27 @@ async function expectNoAccessibilityViolations(
     contentType: "application/json",
   });
 
+  const unexplainedSeriousIncomplete = results.incomplete.filter(
+    (incomplete) =>
+      (incomplete.impact === "serious" || incomplete.impact === "critical") &&
+      !isExplainedSeriousIncomplete(incomplete),
+  );
+
+  expect(
+    unexplainedSeriousIncomplete,
+    unexplainedSeriousIncomplete
+      .map(
+        ({ id, nodes }) =>
+          `${id}: serious accessibility result was not explained\n${nodes
+            .map(
+              ({ target, failureSummary }) =>
+                `  ${target.join(" ")}: ${failureSummary ?? "no summary"}`,
+            )
+            .join("\n")}`,
+      )
+      .join("\n"),
+  ).toEqual([]);
+
   expect(
     results.violations,
     results.violations
@@ -69,6 +106,47 @@ test("fresh-run: release accessibility smoke covers the primary room and live lo
   );
 
   await expectNoAccessibilityViolations(page, testInfo, "axe-room");
+});
+
+test("scenario-seeded: notification history keeps every visible age contrast-safe", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/?testHarness=1");
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          "__adrTest" in window &&
+          Boolean((window as Window & { __adrTest?: unknown }).__adrTest),
+      ),
+    )
+    .toBe(true);
+  for (let index = 0; index < 8; index += 1) {
+    await page.getByRole("button", { name: "light fire" }).click();
+    if (index < 7) {
+      await page.evaluate(() => {
+        const harness = (
+          window as Window & {
+            __adrTest?: {
+              setState: (path: string, value: unknown) => void;
+              refresh: () => void;
+            };
+          }
+        ).__adrTest;
+        if (!harness) throw new Error("test harness unavailable");
+        harness.setState("game.fire", { value: 0, text: "dead" });
+        harness.refresh();
+      });
+    }
+  }
+  const log = page.getByRole("log", { name: "notifications" });
+  await expect(log.locator("p")).toHaveCount(8);
+
+  await expectNoAccessibilityViolations(
+    page,
+    testInfo,
+    "axe-notification-history",
+  );
 });
 
 test("scenario-seeded: release accessibility smoke covers the compact World model", async ({

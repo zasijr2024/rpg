@@ -4,6 +4,7 @@ import type {
   OutsideStateSnapshot,
   RoomStateSnapshot,
 } from "../engine";
+import "./styles/settings.css";
 
 interface SettingsViewProps {
   settings: GameDebugSettingsSnapshot;

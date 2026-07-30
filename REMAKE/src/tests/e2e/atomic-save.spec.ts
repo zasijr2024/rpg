@@ -32,7 +32,7 @@ test("browser: corrupt primary autosave recovers the previous generation", async
   await page.getByRole("button", { name: "light fire" }).click();
   await expect(page.getByRole("tab", { name: "A Firelit Room" })).toBeVisible();
   await page.evaluate(() => {
-    const key = "adr-remake-dev-save";
+    const key = "adr-remake-save";
     const raw = window.localStorage.getItem(key);
     if (!raw) throw new Error("expected autosave");
     const save = JSON.parse(raw) as {
@@ -51,9 +51,7 @@ test("browser: corrupt primary autosave recovers the previous generation", async
   await expect
     .poll(() =>
       page.evaluate(() => {
-        const raw = window.localStorage.getItem(
-          "adr-remake-dev-save:quarantine",
-        );
+        const raw = window.localStorage.getItem("adr-remake-save:quarantine");
         return raw ? (JSON.parse(raw) as { reason: string }).reason : null;
       }),
     )

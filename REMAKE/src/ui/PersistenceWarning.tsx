@@ -56,7 +56,10 @@ export function PersistenceWarning({ session }: { session: GameSession }) {
                 </button>
               )}
               {persistence.canExport && (
-                <button type="button" onClick={() => exportRecovery(session)}>
+                <button
+                  type="button"
+                  onClick={() => downloadRecoverySnapshot(session)}
+                >
                   export recovery
                 </button>
               )}
@@ -67,19 +70,30 @@ export function PersistenceWarning({ session }: { session: GameSession }) {
   );
 }
 
-function exportRecovery(session: GameSession): void {
-  const recovery = session.exportRecoverySnapshot();
-  if (recovery === null) return;
+export function downloadRecoverySnapshot(session: GameSession): boolean {
+  try {
+    const recovery = session.exportRecoverySnapshot();
+    if (recovery === null) return false;
 
-  const url = URL.createObjectURL(
-    new Blob([recovery], { type: "application/json" }),
-  );
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "a-dark-room-recovery.json";
-  link.hidden = true;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    const url = URL.createObjectURL(
+      new Blob([recovery], { type: "application/json" }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "a-dark-room-recovery.json";
+    link.hidden = true;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => {
+      try {
+        URL.revokeObjectURL(url);
+      } catch {
+        // The recovery file has already been handed to the browser.
+      }
+    }, 0);
+    return true;
+  } catch {
+    return false;
+  }
 }

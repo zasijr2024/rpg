@@ -82,12 +82,12 @@ export function originalPathMaxWater(
 
 export function originalPathReturnOutfitToStores(engine: GameEngine): void {
   for (const [key, amount] of Object.entries(
-    readNumericRecord(engine.state, "outfit"),
+    readNumericRecord(engine.state.forRuntime("pathOutfit"), "outfit"),
   )) {
     if (amount <= 0) continue;
-    engine.state.add(`stores["${key}"]`, amount);
+    engine.state.forRuntime("pathOutfit").add(`stores["${key}"]`, amount);
     if (originalPathLeaveItAtHome(key)) {
-      engine.state.set(`outfit["${key}"]`, 0);
+      engine.state.forRuntime("pathOutfit").set(`outfit["${key}"]`, 0);
     }
   }
 }

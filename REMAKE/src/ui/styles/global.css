@@ -70,6 +70,33 @@ select {
   color: #4b2905;
 }
 
+.runtimeFailureWarning {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 8px 12px;
+  width: min(var(--location-width), 100%);
+  margin: 0 0 20px;
+  padding: 10px 12px;
+  border: 1px solid #8b1e12;
+  background: #fff0ed;
+  color: #4f100a;
+}
+
+.runtimeFailureWarning p {
+  margin: 0;
+}
+
+.runtimeFailureWarning .runtimeFailureDetails {
+  grid-column: 1 / -1;
+  overflow-wrap: anywhere;
+  color: #6b1a12;
+  font-size: 14px;
+}
+
+.runtimeFailureWarning button {
+  min-height: 31px;
+}
+
 .backgroundTimeNotice {
   display: flex;
   width: min(var(--location-width), 100%);
@@ -106,7 +133,10 @@ select {
 }
 
 .locationNavigation {
-  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: start;
+  column-gap: 16px;
   width: 100%;
 }
 
@@ -117,10 +147,14 @@ select {
 .locationTabs {
   display: flex;
   gap: 0;
-  width: min(var(--location-width), 100%);
+  width: 100%;
+  min-width: 0;
   height: 40px;
   padding-bottom: 20px;
   border-bottom: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
 }
 
 .locationTabs button {
@@ -133,6 +167,7 @@ select {
   margin-left: 10px;
   cursor: pointer;
   font-size: 17px;
+  flex: 0 0 auto;
 }
 
 .locationTabs button[aria-selected="true"] {
@@ -147,10 +182,8 @@ select {
 }
 
 .hyperModeButton {
-  position: absolute;
-  z-index: 1;
-  top: -3px;
-  right: 0;
+  position: static;
+  margin-top: -3px;
   min-height: 24px;
   border: 0;
   background: transparent;
@@ -172,7 +205,7 @@ select {
   padding: 16px 20px;
 }
 
-.lazyRouteError h2 {
+.lazyRouteError :is(h1, h2) {
   margin: 0 0 8px;
   font-size: 18px;
   font-weight: 400;
@@ -196,26 +229,121 @@ select {
   cursor: pointer;
 }
 
-.lazyRouteErrorActions button:focus-visible {
+.lazyRouteErrorActions button:focus-visible,
+.locationTabs button:focus-visible,
+.actionRow button:focus-visible,
+.compactDetail:focus-visible,
+.worldPanel:focus-visible,
+.outfitControls button:focus-visible,
+.workerControls button:focus-visible,
+.buttonGrid button:focus-visible,
+.eventButtons button:focus-visible,
+.combatLootRow button:focus-visible {
   outline: 2px solid #111;
   outline-offset: 2px;
+}
+
+.sessionErrorShell {
+  padding-left: 0;
+}
+
+.sessionError .sessionErrorStatus {
+  margin: 12px 0 0;
+}
+
+.legalFooter {
+  display: flex;
+  gap: 8px;
+  width: min(var(--location-width), 100%);
+  margin-top: 40px;
+  padding: 12px 0 20px;
+  color: #555;
+  font-size: 14px;
+}
+
+.recoveryImport {
+  width: min(var(--location-width), 100%);
+  margin-top: 40px;
+  color: #555;
+  font-size: 14px;
+}
+
+.recoveryImport summary {
+  width: max-content;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.recoveryImportBody {
+  display: grid;
+  gap: 8px;
+  width: min(28rem, 100%);
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  color: #111;
+}
+
+.recoveryImportLabel {
+  display: grid;
+  gap: 6px;
+}
+
+.recoveryImport input {
+  max-width: 100%;
+}
+
+.recoveryImport p {
+  margin: 0;
+}
+
+.recoveryImportConfirmation {
+  display: grid;
+  gap: 6px;
+  border-top: 1px solid var(--rule-muted);
+  padding-top: 8px;
+}
+
+.recoveryImportConfirmation > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recoveryImportConfirmation button {
+  min-height: 31px;
+}
+
+.recoveryImport + .legalFooter {
+  margin-top: 8px;
+}
+
+.legalFooter a {
+  color: inherit;
+}
+
+.legalFooter a:focus-visible {
+  outline: 2px solid var(--rule);
+  outline-offset: 2px;
+}
+
+.worldShell .legalFooter {
+  width: 100%;
+}
+
+.worldShell .recoveryImport {
+  width: 100%;
 }
 
 .locationTabs button:hover {
   text-decoration: underline;
 }
 
-.locationTabs button:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
 .roomPanel,
 .outsidePanel,
 .pathPanel,
 .fabricatorPanel,
-.shipPanel,
-.settingsPanel {
+.shipPanel {
   position: relative;
   width: min(var(--location-width), 100%);
   min-height: 700px;
@@ -600,11 +728,6 @@ select {
   text-decoration: underline;
 }
 
-.actionRow button:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
 .storesStack,
 .storesPanel,
 .actionPanel,
@@ -897,11 +1020,6 @@ select {
   display: none;
 }
 
-.compactDetail:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
 .perksPanel {
   width: 220px;
   max-width: 100%;
@@ -912,11 +1030,6 @@ select {
   width: 100%;
   min-height: calc(100vh - 60px);
   outline: none;
-}
-
-.worldPanel:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
 }
 
 .screenReaderOnly {
@@ -1104,12 +1217,6 @@ select {
   background: #f2f2ee;
 }
 
-.outfitControls button:focus-visible,
-.workerControls button:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
 .storeRow {
   display: flex;
   justify-content: space-between;
@@ -1145,6 +1252,12 @@ select {
   overflow-wrap: anywhere;
 }
 
+.incomeStatus {
+  grid-column: 1 / -1;
+  color: #7a1e13;
+  text-align: right;
+}
+
 .notificationsPanel {
   position: absolute;
   top: 0;
@@ -1170,7 +1283,7 @@ select {
   margin: 0 0 10px;
   color: #333;
   font-size: 16px;
-  opacity: max(0.25, calc(1 - (var(--notification-age, 0) * 0.12)));
+  opacity: max(0.72, calc(1 - (var(--notification-age, 0) * 0.08)));
 }
 
 .actionPanel p {
@@ -1217,6 +1330,7 @@ select {
 }
 
 .actionRow button:disabled,
+.actionRow button[aria-disabled="true"],
 .buttonGrid button:disabled {
   color: var(--rule-muted);
   border-color: var(--rule-disabled-border);
@@ -1261,49 +1375,6 @@ select {
   white-space: normal;
 }
 
-.buttonGrid button:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
-.settingsColumn {
-  max-width: 540px;
-  display: grid;
-  gap: 24px;
-}
-
-.settingsGroup {
-  position: relative;
-  border: 1px solid var(--rule);
-  background: #fff;
-  padding: 14px 16px 12px;
-}
-
-.settingsGroup::before {
-  content: attr(aria-label);
-  position: absolute;
-  top: -13px;
-  left: 8px;
-  background: #fff;
-  color: #555;
-  padding: 0 3px;
-  font-size: 16px;
-}
-
-.toggleRow,
-.debugRow {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.settingsButtons {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.settingsButtons button,
 .eventButtons button {
   border: 1px solid var(--rule);
   background: #fff;
@@ -1311,12 +1382,6 @@ select {
   min-height: 31px;
   padding: 5px 10px;
   cursor: pointer;
-}
-
-.settingsButtons button:focus-visible,
-.eventButtons button:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
 }
 
 .eventPanel {
@@ -1396,11 +1461,6 @@ select {
   cursor: pointer;
 }
 
-.combatLootRow button:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-}
-
 .combatLootRow button:disabled {
   color: var(--rule-muted);
   border-color: var(--rule-disabled-border);
@@ -1458,25 +1518,6 @@ select {
   cursor: default;
 }
 
-.toggleRow {
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 24px;
-}
-
-.toggleRow input {
-  margin: 0;
-}
-
-.debugRow {
-  color: #555;
-}
-
-.debugRow + .debugRow,
-.toggleRow + .toggleRow {
-  margin-top: 0.2rem;
-}
-
 /*
  * Physical-density policy: a true 4K/1x desktop gets a larger reading scale,
  * wider but still deliberately sparse columns, and physically credible hit
@@ -1521,7 +1562,7 @@ select {
   }
 
   .hyperModeButton {
-    top: 0;
+    margin-top: 0;
   }
 
   .roomActions .buttonGrid {
@@ -1584,7 +1625,6 @@ select {
   .fabricatorPanel,
   .shipPanel,
   .spacePanel,
-  .settingsPanel,
   .worldShell {
     width: 100%;
   }
@@ -1665,10 +1705,16 @@ select {
 
   .worldMapStage {
     min-height: 0;
+    height: clamp(140px, 42vh, 240px);
+    max-height: 240px;
+    align-items: flex-start;
+    overscroll-behavior: contain;
   }
 
   .worldSidebar {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 1fr);
+    gap: 12px 22px;
+    padding-top: 0;
   }
 
   .worldSidebar .notificationsPanel {
@@ -1708,5 +1754,11 @@ select {
 
   .notificationsPanel::after {
     display: none;
+  }
+}
+
+@media (max-width: 499px) {
+  .worldSidebar {
+    grid-template-columns: 1fr;
   }
 }

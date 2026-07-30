@@ -69,10 +69,12 @@ export function OutsideView({
             className={
               snapshot.gatherCooldown.active ? "cooldownButton" : undefined
             }
-            disabled={snapshot.gatherCooldown.active}
+            aria-disabled={snapshot.gatherCooldown.active}
             style={cooldownStyle}
             title={`wood: +${snapshot.gatherAmount}`}
-            onClick={onGatherWood}
+            onClick={() => {
+              if (!snapshot.gatherCooldown.active) onGatherWood();
+            }}
           >
             <span>gather wood</span>
             {snapshot.gatherCooldown.active && (
@@ -85,9 +87,11 @@ export function OutsideView({
               className={
                 snapshot.trapCooldown.active ? "cooldownButton" : undefined
               }
-              disabled={snapshot.trapCooldown.active}
+              aria-disabled={snapshot.trapCooldown.active}
               style={trapCooldownStyle}
-              onClick={onCheckTraps}
+              onClick={() => {
+                if (!snapshot.trapCooldown.active) onCheckTraps();
+              }}
             >
               <span>check traps</span>
               {snapshot.trapCooldown.active && (

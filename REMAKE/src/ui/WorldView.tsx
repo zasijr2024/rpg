@@ -17,13 +17,41 @@ export function WorldView({
   onReturnHome,
 }: WorldViewProps) {
   const panelRef = useRef<HTMLElement | null>(null);
+  const mapStageRef = useRef<HTMLDivElement | null>(null);
   const swipeStart = useRef<{ x: number; y: number } | null>(null);
   const suppressNextMapClick = useRef(false);
   const conditionLabels = worldConditionLabels(snapshot);
 
   useLayoutEffect(() => {
-    panelRef.current?.focus();
+    panelRef.current?.focus({ preventScroll: true });
   }, []);
+
+  useLayoutEffect(() => {
+    const stage = mapStageRef.current;
+    if (!stage) return undefined;
+    const centerPlayer = () => {
+      const player = stage.querySelector<HTMLElement>(".worldMapPlayer");
+      if (!player) return;
+      const stageRect = stage.getBoundingClientRect();
+      const playerRect = player.getBoundingClientRect();
+      stage.scrollLeft +=
+        playerRect.left -
+        stageRect.left -
+        (stage.clientWidth - playerRect.width) / 2;
+      stage.scrollTop +=
+        playerRect.top -
+        stageRect.top -
+        (stage.clientHeight - playerRect.height) / 2;
+    };
+    centerPlayer();
+    const observer = new ResizeObserver(centerPlayer);
+    observer.observe(stage);
+    window.addEventListener("resize", centerPlayer);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", centerPlayer);
+    };
+  }, [snapshot.active, snapshot.x, snapshot.y]);
 
   if (!snapshot.active) return null;
 
@@ -37,7 +65,7 @@ export function WorldView({
       onKeyDown={(event) => handleWorldKey(event, onMove)}
     >
       <div className="worldLayout">
-        <div className="worldMapStage" aria-hidden="true">
+        <div ref={mapStageRef} className="worldMapStage" aria-hidden="true">
           <pre
             className="worldMap"
             onPointerDown={(event) => {
@@ -66,19 +94,25 @@ export function WorldView({
           >
             {snapshot.rows.map((row, rowIndex) => (
               <span key={rowIndex}>
-                {row.map((cell) =>
-                  cell.label ? (
+                {row.map((cell) => {
+                  const isPlayer =
+                    cell.x === snapshot.x && cell.y === snapshot.y;
+                  return cell.label || isPlayer ? (
                     <span
                       key={`${cell.x},${cell.y}`}
-                      className="worldMapLandmark"
-                      title={cell.label}
+                      className={
+                        isPlayer
+                          ? "worldMapLandmark worldMapPlayer"
+                          : "worldMapLandmark"
+                      }
+                      title={cell.label || undefined}
                     >
                       {cell.glyph}
                     </span>
                   ) : (
                     cell.glyph
-                  ),
-                )}
+                  );
+                })}
                 {rowIndex < snapshot.rows.length - 1 ? "\n" : ""}
               </span>
             ))}
@@ -88,7 +122,7 @@ export function WorldView({
         <WorldAccessibleModel snapshot={snapshot} />
 
         <aside className="worldSidebar" aria-label="world controls">
-          <div className="worldStatus" aria-label="world status">
+          <div className="worldStatus" role="group" aria-label="world status">
             <div>
               <span>hp</span>
               <span>
@@ -112,6 +146,7 @@ export function WorldView({
             {conditionLabels.length > 0 && (
               <div
                 className="worldConditionRow"
+                role="status"
                 aria-label="world condition"
                 aria-live="polite"
               >
@@ -130,7 +165,7 @@ export function WorldView({
             </section>
           )}
 
-          <div className="worldControls" aria-label="movement">
+          <div className="worldControls" role="group" aria-label="movement">
             <button
               type="button"
               aria-label="north"
@@ -162,7 +197,7 @@ export function WorldView({
           </div>
 
           {snapshot.canReturn && (
-            <div className="actionRow">
+            <div className="actionRow worldReturnAction">
               <button type="button" onClick={onReturnHome}>
                 return
               </button>

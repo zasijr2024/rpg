@@ -171,7 +171,7 @@ describe("semantic restored-state validation", () => {
         createGameEngine({ saveAdapter: adapter, rngSeed: 0x12345678 }),
       );
       source.saveDevState();
-      const malformed = adapter.load() as MutableSessionSave;
+      const malformed = loadData(adapter) as MutableSessionSave;
       mutate(malformed);
       adapter.setRawForTest(JSON.stringify(createDevSaveDocument(malformed)));
 
@@ -193,7 +193,7 @@ describe("semantic restored-state validation", () => {
     source.saveDevState();
     source.setStateForTest("stores.wood", 22);
     source.saveDevState();
-    const invalid = adapter.load() as MutableSessionSave;
+    const invalid = loadData(adapter) as MutableSessionSave;
     invalid.engine.state.stores.wood = -1;
     adapter.setRawForTest(JSON.stringify(createDevSaveDocument(invalid)));
 
@@ -204,10 +204,17 @@ describe("semantic restored-state validation", () => {
     expect(target.getStateForTest("stores.wood")).toBe(11);
     expect(target.snapshot().persistence).toMatchObject({
       status: "recovered",
-      reason: "backup-recovered",
+      reason: "invalid-session-snapshot",
     });
   });
 });
+
+function loadData(adapter: MemoryDevSaveAdapter): unknown {
+  const loaded = adapter.load();
+  if (!("data" in loaded))
+    throw new Error(`Expected save data: ${loaded.status}`);
+  return loaded.data;
+}
 
 describe("exact score boundary", () => {
   it("keeps the maximum supported score exact and sensitive to one unit", () => {

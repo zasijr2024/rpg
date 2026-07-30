@@ -189,7 +189,7 @@ export async function driveFreshSaveSpine(
     });
   }
 
-  await attachPacing(testInfo, clock.milestones);
+  await attachControlledReachabilityTrace(testInfo, clock.milestones);
   return { milestones: clock.milestones, landmarks };
 }
 
@@ -590,9 +590,16 @@ function findTile(map: string[][], tile: string) {
   return null;
 }
 
-async function attachPacing(testInfo: TestInfo, milestones: Milestone[]) {
-  await testInfo.attach("fresh-save-pacing.json", {
-    body: JSON.stringify({ evidence: "fresh-run", milestones }, null, 2),
+async function attachControlledReachabilityTrace(
+  testInfo: TestInfo,
+  milestones: Milestone[],
+) {
+  await testInfo.attach("controlled-reachability-trace.json", {
+    body: JSON.stringify(
+      { evidence: "controlled-reachability-trace", milestones },
+      null,
+      2,
+    ),
     contentType: "application/json",
   });
 }

@@ -132,7 +132,7 @@ function DomSpaceSpike() {
   return (
     <figure>
       <figcaption>DOM space prototype</figcaption>
-      <div className="spaceDom" aria-label="DOM space prototype">
+      <div className="spaceDom" role="group" aria-label="DOM space prototype">
         <span
           className="spaceShip"
           style={{

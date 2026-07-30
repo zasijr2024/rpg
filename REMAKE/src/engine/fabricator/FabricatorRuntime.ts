@@ -77,12 +77,20 @@ export class FabricatorRuntime {
 
   onArrival(): void {
     if (!this.isUnlocked()) return;
-    if (readBoolean(this.engine.state, "game.fabricator.seen")) return;
+    if (
+      readBoolean(
+        this.engine.state.forRuntime("fabricator"),
+        "game.fabricator.seen",
+      )
+    )
+      return;
     this.engine.notifications.notify(
       "fabricator",
       FABRICATOR_ARRIVAL_NOTIFICATION,
     );
-    this.engine.state.set("game.fabricator.seen", true);
+    this.engine.state
+      .forRuntime("fabricator")
+      .set("game.fabricator.seen", true);
   }
 
   fabricate(key: string): boolean {
@@ -113,11 +121,10 @@ export class FabricatorRuntime {
         this.storeCount(resource) - amount,
       ]),
     );
-    this.engine.state.setM("stores", remainingStores);
-    this.engine.state.add(
-      `stores["${definition.key}"]`,
-      definition.quantity ?? 1,
-    );
+    this.engine.state.forRuntime("fabricator").setM("stores", remainingStores);
+    this.engine.state
+      .forRuntime("fabricator")
+      .add(`stores["${definition.key}"]`, definition.quantity ?? 1);
     this.engine.notifications.notify("fabricator", definition.buildMsg);
     return true;
   }
@@ -162,17 +169,23 @@ export class FabricatorRuntime {
     return (
       definition.blueprintRequired !== true ||
       readBoolean(
-        this.engine.state,
+        this.engine.state.forRuntime("fabricator"),
         `character.blueprints["${definition.key}"]`,
       )
     );
   }
 
   private isUnlocked(): boolean {
-    return readBoolean(this.engine.state, "features.location.fabricator");
+    return readBoolean(
+      this.engine.state.forRuntime("fabricator"),
+      "features.location.fabricator",
+    );
   }
 
   private storeCount(key: string): number {
-    return readNumber(this.engine.state, `stores["${key}"]`);
+    return readNumber(
+      this.engine.state.forRuntime("fabricator"),
+      `stores["${key}"]`,
+    );
   }
 }

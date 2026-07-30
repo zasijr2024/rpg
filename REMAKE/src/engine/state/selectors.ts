@@ -1,26 +1,28 @@
-import type { StateStore } from "./StateStore";
+interface StateReader<TPath extends string> {
+  get(path: TPath, requestZero?: boolean): unknown;
+}
 
-export function readNumber(
-  state: StateStore,
-  path: string,
+export function readNumber<TPath extends string>(
+  state: StateReader<TPath>,
+  path: NoInfer<TPath>,
   fallback = 0,
 ): number {
   const value = state.get(path, true);
   return typeof value === "number" ? value : fallback;
 }
 
-export function readBoolean(
-  state: StateStore,
-  path: string,
+export function readBoolean<TPath extends string>(
+  state: StateReader<TPath>,
+  path: NoInfer<TPath>,
   fallback = false,
 ): boolean {
   const value = state.get(path, true);
   return typeof value === "boolean" ? value : fallback;
 }
 
-export function readNumericRecord(
-  state: StateStore,
-  path: string,
+export function readNumericRecord<TPath extends string>(
+  state: StateReader<TPath>,
+  path: NoInfer<TPath>,
 ): Record<string, number> {
   const value = state.get(path, true);
   if (!value || typeof value !== "object") return {};
@@ -31,9 +33,12 @@ export function readNumericRecord(
   );
 }
 
-export function readStringUnion<const T extends readonly string[]>(
-  state: StateStore,
-  path: string,
+export function readStringUnion<
+  TPath extends string,
+  const T extends readonly string[],
+>(
+  state: StateReader<TPath>,
+  path: NoInfer<TPath>,
   allowed: T,
 ): T[number] | null {
   const value = state.get(path, true);

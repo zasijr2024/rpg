@@ -374,30 +374,44 @@ export class SpaceRuntime {
     };
     this.score = originalCalculateScore(prestigeStores, stores, this.maxHull);
     this.totalScore = boundedExactScoreTotal(this.previousScore(), this.score);
-    this.engine.state.set("playStats.score", this.score);
-    this.engine.state.set("previous.score", this.totalScore);
+    this.engine.state.forRuntime("space").set("playStats.score", this.score);
+    this.engine.state
+      .forRuntime("space")
+      .set("previous.score", this.totalScore);
     const storeRecord = Object.fromEntries(
       originalPrestigeStores.map(({ key }) => [key, this.storeAmount(key)]),
     );
-    this.engine.state.set(
-      "previous.stores",
-      originalReducedPrestigeStores(storeRecord, this.engine.rng),
-      true,
-    );
+    this.engine.state
+      .forRuntime("space")
+      .set(
+        "previous.stores",
+        originalReducedPrestigeStores(storeRecord, this.engine.rng),
+        true,
+      );
     this.endingStage =
       this.storeAmount("fleet beacon") > 0 ? "fleet" : "scores";
   }
 
   private storeAmount(key: string): number {
-    return readNumber(this.engine.state, `stores["${key}"]`, 0);
+    return readNumber(
+      this.engine.state.forRuntime("space"),
+      `stores["${key}"]`,
+      0,
+    );
   }
 
   private previousScore(): number {
-    return readNumber(this.engine.state, "previous.score", 0);
+    return readNumber(
+      this.engine.state.forRuntime("space"),
+      "previous.score",
+      0,
+    );
   }
 
   private thrusters(): number {
-    const value = this.engine.state.get("game.spaceShip.thrusters");
+    const value = this.engine.state
+      .forRuntime("space")
+      .get("game.spaceShip.thrusters");
     return typeof value === "number" ? value : 1;
   }
 }

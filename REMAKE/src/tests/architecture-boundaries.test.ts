@@ -143,4 +143,32 @@ describe("architecture boundaries", () => {
     expect(eventRuntime).not.toContain("WORLD_SETPIECE_EVENT_KEYS");
     expect(eventRuntime).not.toContain("../../content/original/world");
   });
+
+  it("requires every persistent-state runtime to use its typed capability scope", () => {
+    const scopedRuntimeFiles = [
+      "GameSession.ts",
+      join("combat", "CombatDomain.ts"),
+      join("events", "EventRuntime.ts"),
+      join("fabricator", "FabricatorRuntime.ts"),
+      join("outside", "EconomyDomain.ts"),
+      join("path", "PathRuntime.ts"),
+      join("path", "pathOutfit.ts"),
+      join("room", "RoomRuntime.ts"),
+      join("ship", "ShipRuntime.ts"),
+      join("space", "SpaceRuntime.ts"),
+      join("world", "ExpeditionTransaction.ts"),
+      join("world", "WorldDomain.ts"),
+    ].map((file) => join(srcRoot, "engine", file));
+
+    const violations = scopedRuntimeFiles.flatMap((file) => {
+      const source = readFileSync(file, "utf8");
+      const rawAccess = /\.state\.(?:get|set|add|remove|setM|addM)\s*\(/.test(
+        source,
+      );
+      const missingScope = !source.includes(".state.forRuntime(");
+      return rawAccess || missingScope ? [relative(projectRoot, file)] : [];
+    });
+
+    expect(violations).toEqual([]);
+  });
 });

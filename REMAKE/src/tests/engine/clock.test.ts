@@ -37,6 +37,32 @@ describe("ManualClock", () => {
     expect(calls).toBe(3);
   });
 
+  it("lets an interval cancel itself without being reinserted", () => {
+    const clock = new ManualClock();
+    let calls = 0;
+    let timer = 0;
+    timer = clock.setInterval(() => {
+      calls += 1;
+      clock.clearTimer(timer);
+    }, 10);
+
+    clock.advanceBy(100);
+
+    expect(calls).toBe(1);
+    expect(clock.timerSnapshot(timer)).toBeNull();
+  });
+
+  it("rejects non-finite clock and timer inputs", () => {
+    const clock = new ManualClock();
+
+    expect(() => clock.advanceBy(Number.NaN)).toThrow(/finite/);
+    expect(() => clock.restoreNow(Infinity)).toThrow(/finite/);
+    expect(() => clock.setTimeout(() => undefined, Infinity)).toThrow(/finite/);
+    expect(() => clock.setInterval(() => undefined, Number.NaN)).toThrow(
+      /finite/,
+    );
+  });
+
   it("drives manual time by elapsed real time", () => {
     vi.useFakeTimers();
     const clock = new ManualClock();

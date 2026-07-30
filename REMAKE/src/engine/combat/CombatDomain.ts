@@ -41,18 +41,27 @@ export class CombatDomainFacade {
   constructor(private readonly engine: GameEngine) {}
 
   read(): CombatReadModel {
-    const health = this.engine.state.get("character.health");
+    const health = this.engine.state
+      .forRuntime("combat")
+      .get("character.health");
     return Object.freeze({
       health: typeof health === "number" ? health : null,
-      punches: numberValue(this.engine.state.get("character.punches", true)),
-      stores: numericRecord(this.engine.state.get("stores", true)),
-      outfit: numericRecord(this.engine.state.get("outfit", true)),
+      punches: numberValue(
+        this.engine.state.forRuntime("combat").get("character.punches", true),
+      ),
+      stores: numericRecord(
+        this.engine.state.forRuntime("combat").get("stores", true),
+      ),
+      outfit: numericRecord(
+        this.engine.state.forRuntime("combat").get("outfit", true),
+      ),
       perks: Object.freeze(
         Object.fromEntries(
           COMBAT_PERKS.map((perk) => [
             perk,
-            this.engine.state.get(keyedPath("character.perks", perk), true) ===
-              true,
+            this.engine.state
+              .forRuntime("combat")
+              .get(keyedPath("character.perks", perk), true) === true,
           ]),
         ) as Record<CombatPerk, boolean>,
       ),
@@ -62,21 +71,28 @@ export class CombatDomainFacade {
   dispatch(command: CombatCommand): void {
     switch (command.type) {
       case "combat.setHealth":
-        this.engine.state.set(
-          "character.health",
-          Math.max(0, Math.min(command.payload.maximum, command.payload.value)),
-        );
+        this.engine.state
+          .forRuntime("combat")
+          .set(
+            "character.health",
+            Math.max(
+              0,
+              Math.min(command.payload.maximum, command.payload.value),
+            ),
+          );
         return;
       case "combat.changeOutfit":
-        this.engine.state.add(
-          keyedPath("outfit", command.payload.key),
-          command.payload.amount,
-        );
+        this.engine.state
+          .forRuntime("combat")
+          .add(
+            keyedPath("outfit", command.payload.key),
+            command.payload.amount,
+          );
         return;
       case "combat.recordPunch": {
-        this.engine.state.add("character.punches", 1);
+        this.engine.state.forRuntime("combat").add("character.punches", 1);
         const punches = numberValue(
-          this.engine.state.get("character.punches", true),
+          this.engine.state.forRuntime("combat").get("character.punches", true),
         );
         const perk =
           punches === 50
@@ -87,14 +103,18 @@ export class CombatDomainFacade {
                 ? "unarmed master"
                 : null;
         if (perk)
-          this.engine.state.set(keyedPath("character.perks", perk), true);
+          this.engine.state
+            .forRuntime("combat")
+            .set(keyedPath("character.perks", perk), true);
         return;
       }
       case "combat.returnOutfit":
         originalPathReturnOutfitToStores(this.engine);
         return;
       case "combat.setVictoryReturn":
-        this.engine.state.set("game.world.returnLocation", "path");
+        this.engine.state
+          .forRuntime("combat")
+          .set("game.world.returnLocation", "path");
         return;
     }
   }
@@ -116,7 +136,10 @@ function numberValue(value: unknown): number {
   return typeof value === "number" ? value : 0;
 }
 
-function keyedPath(parent: string, key: string): string {
+function keyedPath<const TParent extends string>(
+  parent: TParent,
+  key: string,
+): `${TParent}["${string}"]` {
   if (key.includes('"')) throw new Error("State keys cannot contain quotes");
   return `${parent}["${key}"]`;
 }

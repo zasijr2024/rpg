@@ -35,8 +35,12 @@ import {
 } from "./room/RoomRuntime";
 import {
   createDevSaveDocument,
+  decodeDevSave,
   LocalStorageDevSaveAdapter,
   type DevSaveData,
+  type DevSaveDocument,
+  type DevSaveLoadResult,
+  type QuarantinedDevSave,
 } from "./save/devSave";
 import {
   isFiniteNumber,
@@ -44,6 +48,7 @@ import {
   isNullableTimestamp,
   isNumericRecord,
   isRecord,
+  isSemanticallyValidGameState,
   isStringArray,
 } from "./save/validation";
 import type { GameEngineDevSnapshot } from "./GameEngine";
@@ -99,12 +104,19 @@ export interface GamePersistenceSnapshot {
   canExport: boolean;
 }
 
+export interface GameRuntimeFailureSnapshot {
+  commandType: string;
+  message: string;
+  occurredAt: number;
+}
+
 export const BACKGROUND_TIME_POLICY_NOTIFICATION =
   "time catches up only while this tab remains open; closing the page earns nothing";
 
 export interface GameSessionSnapshot {
   location: GameLocationKey;
   persistence: GamePersistenceSnapshot;
+  runtimeFailure: GameRuntimeFailureSnapshot | null;
   room: RoomStateSnapshot;
   outside: OutsideStateSnapshot;
   path: PathStateSnapshot;
@@ -119,6 +131,7 @@ export interface GameSessionSnapshot {
 export interface GameNavigationSnapshot {
   location: GameLocationKey;
   persistence: GamePersistenceSnapshot;
+  runtimeFailure: GameRuntimeFailureSnapshot | null;
   backgroundTimePolicyNotice: string | null;
   hyperMode: boolean;
   roomTitle: RoomStateSnapshot["title"];
@@ -178,6 +191,24 @@ export interface GameSessionDevSnapshot {
   clockDriver: RealtimeClockDriverLifecycleSnapshot;
 }
 
+export interface GameSessionOptions {
+  clockDriverIntervalMs?: number;
+  clockDriverMaxCatchUpMs?: number;
+  realtimeNow?: () => number;
+  wallNow?: () => number;
+}
+
+export type GameRecoveryImportResult =
+  | { status: "imported"; persisted: boolean }
+  | { status: "rejected"; reason: string };
+
+export interface GameRecoveryBundle {
+  kind: "adr-remake-recovery";
+  version: 1;
+  current: DevSaveDocument;
+  quarantine: QuarantinedDevSave | null;
+}
+
 const AUTOSAVE_INTERVAL_MS = 10_000;
 const UI_DOMAINS: GameUiDomain[] = [
   "navigation",
@@ -204,11 +235,14 @@ export class GameSession {
   readonly ship: ShipRuntime;
   readonly space: SpaceRuntime;
   private readonly clockDriver: RealtimeClockDriver;
+  private readonly wallNow: () => number;
   private location: GameLocationKey = "room";
   private autosaveEnabled = false;
-  private lastAutosaveAt = Number.NEGATIVE_INFINITY;
+  private lastAutosaveWallAt = Number.NEGATIVE_INFINITY;
   private lastInMemorySnapshot: DevSaveData | null = null;
+  private lastQuarantine: QuarantinedDevSave | null = null;
   private backgroundTimePolicyNotice: string | null = null;
+  private runtimeFailure: GameRuntimeFailureSnapshot | null = null;
   private persistenceState: Omit<
     GamePersistenceSnapshot,
     "hasInMemorySnapshot" | "canRetry" | "canExport"
@@ -233,6 +267,7 @@ export class GameSession {
           ? undefined
           : new LocalStorageDevSaveAdapter(),
     }),
+    options: GameSessionOptions = {},
   ) {
     this.engine = engine;
     if (engine.hasDevSaveAdapter()) this.persistenceState.status = "healthy";
@@ -256,18 +291,42 @@ export class GameSession {
       this.expedition,
     );
     this.clockDriver = new RealtimeClockDriver(engine.clock, {
-      intervalMs: 250,
+      intervalMs: options.clockDriverIntervalMs ?? 250,
+      maxCatchUpMs: options.clockDriverMaxCatchUpMs,
+      now: options.realtimeNow,
       timeScale: () => this.simulationSpeedMultiplier(),
     });
+    this.wallNow = options.wallNow ?? monotonicNow;
     this.registerGameplayCommands();
     this.room.initialize();
     this.update();
+    this.engine.commands.setTransaction({
+      begin: () => {
+        try {
+          return this.createDevSnapshot();
+        } catch {
+          // Test-only injected RNGs are intentionally not serializable. Their
+          // command execution remains available, but cannot provide a full
+          // deterministic rollback checkpoint.
+          return null;
+        }
+      },
+      rollback: (checkpoint) => {
+        if (checkpoint === null) return;
+        if (!isGameSessionDevSnapshot(checkpoint)) {
+          throw new Error("Invalid command rollback checkpoint");
+        }
+        this.applySessionSnapshot(checkpoint);
+        this.publishUiChanges();
+      },
+    });
   }
 
   snapshot(): GameSessionSnapshot {
     return {
       location: this.location,
       persistence: this.persistenceSnapshot(),
+      runtimeFailure: this.runtimeFailure,
       room: this.room.snapshot(),
       outside: this.outside.snapshot(),
       path: this.path.snapshot(),
@@ -325,6 +384,8 @@ export class GameSession {
         onUpdate();
       },
       () => this.update(false),
+      () => this.persistAutosave(true),
+      () => this.persistAutosave(true),
     );
   }
 
@@ -340,7 +401,9 @@ export class GameSession {
     }
     this.room.refreshAvailability();
     this.outside.update();
-    if (this.engine.state.get("stores.compass", true) !== 0) {
+    if (
+      this.engine.state.forRuntime("session").get("stores.compass", true) !== 0
+    ) {
       this.world.ensureMap();
     }
     this.path.update();
@@ -418,31 +481,27 @@ export class GameSession {
   }
 
   setDebugSpeedX10(enabled: boolean): void {
-    this.engine.state.set(
-      "config.debug.speedMultiplier",
-      enabled ? 10 : 1,
-      true,
-    );
+    this.engine.state
+      .forRuntime("session")
+      .set("config.debug.speedMultiplier", enabled ? 10 : 1, true);
     this.update();
   }
 
   setDebugIncomeX10(enabled: boolean): void {
-    this.engine.state.set(
-      "config.debug.incomeMultiplier",
-      enabled ? 10 : 1,
-      true,
-    );
+    this.engine.state
+      .forRuntime("session")
+      .set("config.debug.incomeMultiplier", enabled ? 10 : 1, true);
     this.update();
   }
 
   setHyperMode(enabled: boolean): void {
     if (this.events.active()) return;
-    this.engine.state.set("config.hyperMode", enabled);
+    this.engine.state.forRuntime("session").set("config.hyperMode", enabled);
     this.update();
     this.persistAutosave(true);
   }
 
-  saveDevState(): boolean {
+  saveDevState(acknowledgeRecovery = false): boolean {
     let snapshot: GameSessionDevSnapshot;
     try {
       snapshot = this.createDevSnapshot();
@@ -450,24 +509,63 @@ export class GameSession {
       this.markPersistenceUnavailable("write", error);
       return false;
     }
-    return this.saveSnapshot(snapshot);
+    return this.saveSnapshot(snapshot, acknowledgeRecovery);
   }
 
   retryPersistence(): boolean {
     if (!this.engine.hasDevSaveAdapter()) return false;
     if (this.lastInMemorySnapshot !== null) {
-      return this.saveSnapshot(this.lastInMemorySnapshot);
+      return this.saveSnapshot(this.lastInMemorySnapshot, true);
     }
-    return this.saveDevState();
+    return this.saveDevState(true);
   }
 
   exportRecoverySnapshot(): string | null {
     if (this.lastInMemorySnapshot === null) return null;
-    return JSON.stringify(
-      createDevSaveDocument(this.lastInMemorySnapshot),
-      null,
-      2,
-    );
+    const bundle: GameRecoveryBundle = {
+      kind: "adr-remake-recovery",
+      version: 1,
+      current: createDevSaveDocument(this.lastInMemorySnapshot),
+      quarantine: this.lastQuarantine ? { ...this.lastQuarantine } : null,
+    };
+    return JSON.stringify(bundle, null, 2);
+  }
+
+  importRecoverySnapshot(raw: string): GameRecoveryImportResult {
+    const decoded = decodeRecoveryInput(raw);
+    if (!decoded.ok) return { status: "rejected", reason: decoded.reason };
+    if (!isPersistableSessionSnapshot(decoded.data)) {
+      return { status: "rejected", reason: "invalid-snapshot" };
+    }
+
+    let previous: GameSessionDevSnapshot;
+    try {
+      previous = this.createDevSnapshot();
+    } catch {
+      return { status: "rejected", reason: "snapshot-unavailable" };
+    }
+
+    if (!this.restoreDevSnapshot(decoded.data)) {
+      return { status: "rejected", reason: "restore-failed" };
+    }
+    try {
+      this.notifyBackgroundTimePolicyOnFirstResume();
+      this.update();
+      this.captureInMemorySnapshot();
+    } catch {
+      this.applySessionSnapshot(previous);
+      this.publishUiChanges();
+      return { status: "rejected", reason: "restore-failed" };
+    }
+
+    const persisted =
+      this.engine.hasDevSaveAdapter() && this.lastInMemorySnapshot !== null
+        ? this.saveSnapshot(this.lastInMemorySnapshot, true)
+        : false;
+    if (decoded.quarantine !== undefined) {
+      this.lastQuarantine = decoded.quarantine;
+    }
+    return { status: "imported", persisted };
   }
 
   dismissBackgroundTimePolicyNotice(): void {
@@ -476,8 +574,14 @@ export class GameSession {
     this.publishUiChanges();
   }
 
+  dismissRuntimeFailure(): void {
+    if (this.runtimeFailure === null) return;
+    this.runtimeFailure = null;
+    this.publishUiChanges();
+  }
+
   loadDevState(): boolean {
-    let loaded: DevSaveData | null;
+    let loaded: DevSaveLoadResult;
     try {
       loaded = this.engine.loadDevSnapshot();
     } catch (error) {
@@ -485,14 +589,25 @@ export class GameSession {
       this.markPersistenceUnavailable("read", error);
       return false;
     }
-    if (!loaded) {
+    if (loaded.status === "empty") {
       this.markPersistenceHealthy();
       return false;
     }
-    const restored = this.restoreDevSnapshot(loaded);
-    let recoveredFromBackup = false;
+    if (loaded.status === "quarantined") {
+      this.lastQuarantine = loaded.quarantine ?? null;
+      this.captureInMemorySnapshot();
+      this.markPersistenceRecovered(
+        "Saved data was invalid and no valid previous generation was available. A fresh run is active; retry saving or export a recovery file before closing.",
+        loaded.reason,
+      );
+      return false;
+    }
+    const restored = this.restoreDevSnapshot(loaded.data);
+    this.lastQuarantine =
+      loaded.status === "recovered" ? (loaded.quarantine ?? null) : null;
+    let recoveryReason = loaded.status === "recovered" ? loaded.reason : null;
     if (!restored) {
-      let recovered: DevSaveData | null;
+      let recovered: DevSaveLoadResult;
       try {
         recovered = this.engine.recoverDevSnapshot("invalid-session-snapshot");
       } catch (error) {
@@ -500,8 +615,12 @@ export class GameSession {
         this.markPersistenceUnavailable("read", error);
         return false;
       }
-      if (!recovered || !this.restoreDevSnapshot(recovered)) {
-        if (recovered) {
+      if (!("data" in recovered) || !this.restoreDevSnapshot(recovered.data)) {
+        this.lastQuarantine =
+          "quarantine" in recovered
+            ? (recovered.quarantine ?? this.lastQuarantine)
+            : this.lastQuarantine;
+        if ("data" in recovered) {
           try {
             this.engine.quarantineDevState("invalid-session-backup-snapshot");
           } catch {
@@ -515,15 +634,22 @@ export class GameSession {
         );
         return false;
       }
-      recoveredFromBackup = true;
+      recoveryReason =
+        recovered.status === "recovered"
+          ? recovered.reason
+          : "invalid-session-snapshot";
+      this.lastQuarantine =
+        recovered.status === "recovered"
+          ? (recovered.quarantine ?? this.lastQuarantine)
+          : this.lastQuarantine;
     }
     this.notifyBackgroundTimePolicyOnFirstResume();
     this.update();
     this.captureInMemorySnapshot();
-    if (recoveredFromBackup) {
+    if (recoveryReason !== null) {
       this.markPersistenceRecovered(
         "The latest save was invalid. The previous saved generation was recovered.",
-        "backup-recovered",
+        recoveryReason,
       );
     } else {
       this.markPersistenceHealthy();
@@ -535,6 +661,7 @@ export class GameSession {
     try {
       this.engine.clearDevState();
       this.lastInMemorySnapshot = null;
+      this.lastQuarantine = null;
       this.markPersistenceHealthy();
       return true;
     } catch (error) {
@@ -550,8 +677,12 @@ export class GameSession {
       return false;
     }
     const previous = {
-      score: this.engine.state.get("previous.score", true),
-      stores: this.engine.state.get("previous.stores", true),
+      score: this.engine.state
+        .forRuntime("session")
+        .get("previous.score", true),
+      stores: this.engine.state
+        .forRuntime("session")
+        .get("previous.stores", true),
     };
     const state = createInitialState();
     state.previous = structuredClone(previous);
@@ -698,12 +829,12 @@ export class GameSession {
   }
 
   setStateForTest(path: string, value: unknown): void {
-    this.engine.state.set(path, value);
+    this.engine.state.setForDevelopment(path, value);
     this.update();
   }
 
   getStateForTest(path: string): unknown {
-    return this.engine.state.get(path);
+    return this.engine.state.getForDevelopment(path);
   }
 
   setRngSequenceForTest(values: number[]): void {
@@ -730,9 +861,19 @@ export class GameSession {
     ) {
       return;
     }
-    this.engine.commands.dispatch(command);
-    this.update();
-    this.persistAutosave(true);
+    try {
+      this.engine.commands.dispatch(command);
+      this.update();
+      this.persistAutosave(true);
+    } catch (error) {
+      this.runtimeFailure = {
+        commandType: command.type,
+        message: runtimeFailureMessage(error),
+        occurredAt: this.engine.clock.now(),
+      };
+      this.persistAutosave(true);
+      this.publishUiChanges();
+    }
   }
 
   private registerGameplayCommands(): void {
@@ -881,6 +1022,7 @@ export class GameSession {
         return {
           location: this.location,
           persistence: this.persistenceSnapshot(),
+          runtimeFailure: this.runtimeFailure,
           backgroundTimePolicyNotice: this.backgroundTimePolicyNotice,
           hyperMode: this.hyperMode(),
           roomTitle: this.room.navigationTitle(),
@@ -977,19 +1119,35 @@ export class GameSession {
 
   private persistAutosave(force: boolean): void {
     if (!this.autosaveEnabled || !this.engine.hasDevSaveAdapter()) return;
-    const now = this.engine.clock.now();
-    if (!force && now - this.lastAutosaveAt < AUTOSAVE_INTERVAL_MS) return;
+    if (this.persistenceState.status === "recovered") return;
+    if (!force && this.clockDriver.catchingUp()) return;
+    const now = this.wallNow();
+    if (!Number.isFinite(now)) return;
+    if (
+      !force &&
+      now - this.lastAutosaveWallAt >= 0 &&
+      now - this.lastAutosaveWallAt < AUTOSAVE_INTERVAL_MS
+    ) {
+      return;
+    }
     this.saveDevState();
     // Failed writes are retried on the normal autosave cadence instead of on
     // every 250 ms realtime tick. Player commands still force an immediate try.
-    this.lastAutosaveAt = now;
+    this.lastAutosaveWallAt = now;
   }
 
-  private saveSnapshot(snapshot: DevSaveData): boolean {
+  private saveSnapshot(
+    snapshot: DevSaveData,
+    acknowledgeRecovery = false,
+  ): boolean {
     this.lastInMemorySnapshot = snapshot;
     try {
-      this.engine.saveDevSnapshot(snapshot);
-      this.markPersistenceHealthy();
+      this.engine.saveDevSnapshot(snapshot, isPersistableSessionSnapshot);
+      if (acknowledgeRecovery) this.engine.acknowledgeDevRecovery();
+      if (acknowledgeRecovery || this.persistenceState.status !== "recovered") {
+        this.markPersistenceHealthy();
+      }
+      if (acknowledgeRecovery) this.lastQuarantine = null;
       return true;
     } catch (error) {
       this.markPersistenceUnavailable("write", error);
@@ -1066,10 +1224,16 @@ export class GameSession {
   }
 
   private notifyBackgroundTimePolicyOnFirstResume(): void {
-    if (this.engine.state.get("config.backgroundTimePolicyNotified") === true) {
+    if (
+      this.engine.state
+        .forRuntime("session")
+        .get("config.backgroundTimePolicyNotified") === true
+    ) {
       return;
     }
-    this.engine.state.set("config.backgroundTimePolicyNotified", true, true);
+    this.engine.state
+      .forRuntime("session")
+      .set("config.backgroundTimePolicyNotified", true, true);
     this.backgroundTimePolicyNotice = BACKGROUND_TIME_POLICY_NOTIFICATION;
     this.engine.notifications.notify(
       "room",
@@ -1090,13 +1254,17 @@ export class GameSession {
   }
 
   private debugSpeedMultiplier(): 1 | 10 {
-    return this.engine.state.get("config.debug.speedMultiplier", true) === 10
+    return this.engine.state
+      .forRuntime("session")
+      .get("config.debug.speedMultiplier", true) === 10
       ? 10
       : 1;
   }
 
   private hyperMode(): boolean {
-    return this.engine.state.get("config.hyperMode") === true;
+    return (
+      this.engine.state.forRuntime("session").get("config.hyperMode") === true
+    );
   }
 
   private simulationSpeedMultiplier(): 1 | 2 | 10 | 20 {
@@ -1106,7 +1274,9 @@ export class GameSession {
   }
 
   private debugIncomeMultiplier(): 1 | 10 {
-    return this.engine.state.get("config.debug.incomeMultiplier", true) === 10
+    return this.engine.state
+      .forRuntime("session")
+      .get("config.debug.incomeMultiplier", true) === 10
       ? 10
       : 1;
   }
@@ -1154,6 +1324,66 @@ function isGameSessionDevSnapshot(
   return isSessionDomainInvariantValid(
     data as unknown as GameSessionDevSnapshot,
   );
+}
+
+function isPersistableSessionSnapshot(data: DevSaveData): boolean {
+  return (
+    isGameSessionDevSnapshot(data) ||
+    isEngineDevSnapshot(data) ||
+    isSemanticallyValidGameState(data)
+  );
+}
+
+function decodeRecoveryInput(
+  raw: string,
+):
+  | { ok: true; data: DevSaveData; quarantine?: QuarantinedDevSave | null }
+  | { ok: false; reason: string } {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    return { ok: false, reason: "invalid-json" };
+  }
+
+  if (isRecord(parsed) && parsed.kind === "adr-remake-recovery") {
+    if (
+      parsed.version !== 1 ||
+      !isRecord(parsed.current) ||
+      !(
+        parsed.quarantine === null ||
+        (isRecord(parsed.quarantine) &&
+          typeof parsed.quarantine.reason === "string" &&
+          typeof parsed.quarantine.raw === "string")
+      )
+    ) {
+      return { ok: false, reason: "invalid-recovery-bundle" };
+    }
+    const decoded = decodeDevSave(JSON.stringify(parsed.current));
+    const quarantine =
+      parsed.quarantine === null
+        ? null
+        : {
+            reason: parsed.quarantine.reason as string,
+            raw: parsed.quarantine.raw as string,
+          };
+    return decoded.ok
+      ? {
+          ok: true,
+          data: decoded.data,
+          quarantine,
+        }
+      : decoded;
+  }
+
+  return decodeDevSave(raw);
+}
+
+function monotonicNow(): number {
+  return typeof performance !== "undefined" &&
+    typeof performance.now === "function"
+    ? performance.now()
+    : Date.now();
 }
 
 function isRealtimeClockDriverLifecycleSnapshot(
@@ -1473,6 +1703,13 @@ function persistenceFailureReason(
     return "quota-exceeded";
   }
   return `${operation}-failed`;
+}
+
+function runtimeFailureMessage(error: unknown): string {
+  if (error instanceof Error && error.message.trim().length > 0) {
+    return error.message.slice(0, 240);
+  }
+  return "The action could not be completed; its state changes were rolled back.";
 }
 
 function emptyUiCounter(): Record<GameUiDomain, number> {

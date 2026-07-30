@@ -1,6 +1,6 @@
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 
-const SAVE_KEY = "adr-remake-dev-save";
+const SAVE_KEY = "adr-remake-save";
 const PHYSICAL_DESKTOP_VIEWPORT = { width: 1366, height: 768 };
 const realZoomLevels = [100, 125, 150, 200] as const;
 
@@ -30,6 +30,31 @@ async function savedClockNow(page: Page) {
   }, SAVE_KEY);
 }
 
+async function advanceUntilSavedAfter(
+  page: Page,
+  threshold: number,
+  options: { maxAdvanceMs: number; stepMs: number },
+) {
+  let saved = await savedClockNow(page);
+  if (saved !== null && saved > threshold) return saved;
+  for (
+    let advancedMs = 0;
+    advancedMs < options.maxAdvanceMs;
+    advancedMs += options.stepMs
+  ) {
+    await page.clock.runFor(
+      Math.min(options.stepMs, options.maxAdvanceMs - advancedMs),
+    );
+    saved = await savedClockNow(page);
+    if (saved !== null && saved > threshold) return saved;
+  }
+  expect(
+    saved,
+    `saved clock did not advance beyond ${threshold} after ${options.maxAdvanceMs}ms of controlled foreground time`,
+  ).toBeGreaterThan(threshold);
+  return saved ?? threshold;
+}
+
 test("fresh-run: save and suspended background time survive a browser reload", async ({
   page,
 }, testInfo) => {
@@ -43,19 +68,23 @@ test("fresh-run: save and suspended background time survive a browser reload", a
   const beforeSuspension = await savedClockNow(page);
   expect(beforeSuspension).not.toBeNull();
 
-  await page.clock.fastForward(60 * 60 * 1000);
-  await expect
-    .poll(() => savedClockNow(page))
-    .toBeGreaterThan((beforeSuspension ?? 0) + 0);
-  const afterSuspension = await savedClockNow(page);
+  const suspensionMs = 60 * 60 * 1000;
+  await page.clock.fastForward(suspensionMs);
+  const durableCheckpoint = await savedClockNow(page);
+  expect(durableCheckpoint).toBeGreaterThan(beforeSuspension ?? 0);
+  expect(durableCheckpoint).toBeLessThan(
+    (beforeSuspension ?? 0) + suspensionMs,
+  );
 
+  // Reload while debt remains: the checkpoint must carry that serialized
+  // remainder, while later middle batches stay coalesced until the final save.
   await page.reload();
   const afterReload = await savedClockNow(page);
-  expect(afterReload).toBeGreaterThanOrEqual(afterSuspension ?? 0);
-  await page.clock.runFor(2_000);
-  await expect
-    .poll(() => savedClockNow(page))
-    .toBeGreaterThan(afterReload ?? 0);
+  expect(afterReload).toBeGreaterThanOrEqual(durableCheckpoint ?? 0);
+  await advanceUntilSavedAfter(page, (beforeSuspension ?? 0) + suspensionMs, {
+    maxAdvanceMs: 120_000,
+    stepMs: 5_000,
+  });
   await attachViewport(page, testInfo, "save-background-full-viewport.png");
 });
 

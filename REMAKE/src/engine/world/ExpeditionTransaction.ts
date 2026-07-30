@@ -47,8 +47,10 @@ export class ExpeditionTransaction {
       throw new Error("Cannot begin an expedition while one is active");
     }
 
-    this.engine.state.set(DRAFT_PATH, this.worldState(), true);
-    this.engine.state.set("game.world.active", true);
+    this.engine.state
+      .forRuntime("expedition")
+      .set(DRAFT_PATH, this.worldState(), true);
+    this.engine.state.forRuntime("expedition").set("game.world.active", true);
     this.setPosition(state.position);
     this.setHealth(state.health, state.health);
     this.setWater(state.water, state.water);
@@ -74,71 +76,92 @@ export class ExpeditionTransaction {
   }
 
   active(): boolean {
-    return readBoolean(this.engine.state, "game.world.active");
+    return readBoolean(
+      this.engine.state.forRuntime("expedition"),
+      "game.world.active",
+    );
   }
 
   position(fallback: ExpeditionPosition = { x: 0, y: 0 }): ExpeditionPosition {
     return {
-      x: readNumber(this.engine.state, "game.world.x", fallback.x),
-      y: readNumber(this.engine.state, "game.world.y", fallback.y),
+      x: readNumber(
+        this.engine.state.forRuntime("expedition"),
+        "game.world.x",
+        fallback.x,
+      ),
+      y: readNumber(
+        this.engine.state.forRuntime("expedition"),
+        "game.world.y",
+        fallback.y,
+      ),
     };
   }
 
   setPosition(position: ExpeditionPosition): void {
-    this.engine.state.set("game.world.x", position.x);
-    this.engine.state.set("game.world.y", position.y);
+    this.engine.state.forRuntime("expedition").set("game.world.x", position.x);
+    this.engine.state.forRuntime("expedition").set("game.world.y", position.y);
   }
 
   health(fallback = 0): number {
-    return readNumber(this.engine.state, "game.world.health", fallback);
+    return readNumber(
+      this.engine.state.forRuntime("expedition"),
+      "game.world.health",
+      fallback,
+    );
   }
 
   setHealth(value: number, maximum: number): void {
-    this.engine.state.set(
-      "game.world.health",
-      Math.max(0, Math.min(maximum, value)),
-    );
+    this.engine.state
+      .forRuntime("expedition")
+      .set("game.world.health", Math.max(0, Math.min(maximum, value)));
   }
 
   addHealth(amount: number): void {
-    this.engine.state.set(
-      "game.world.health",
-      Math.max(0, this.health() + amount),
-    );
+    this.engine.state
+      .forRuntime("expedition")
+      .set("game.world.health", Math.max(0, this.health() + amount));
   }
 
   water(fallback = 0): number {
-    return readNumber(this.engine.state, "game.world.water", fallback);
+    return readNumber(
+      this.engine.state.forRuntime("expedition"),
+      "game.world.water",
+      fallback,
+    );
   }
 
   setWater(value: number, maximum: number): void {
-    this.engine.state.set(
-      "game.world.water",
-      Math.max(0, Math.min(maximum, value)),
-    );
+    this.engine.state
+      .forRuntime("expedition")
+      .set("game.world.water", Math.max(0, Math.min(maximum, value)));
   }
 
   addWater(amount: number): void {
-    this.engine.state.set(
-      "game.world.water",
-      Math.max(0, this.water() + amount),
-    );
+    this.engine.state
+      .forRuntime("expedition")
+      .set("game.world.water", Math.max(0, this.water() + amount));
   }
 
   inventory(): Record<string, number> {
-    return readNumericRecord(this.engine.state, "outfit");
+    return readNumericRecord(
+      this.engine.state.forRuntime("expedition"),
+      "outfit",
+    );
   }
 
   inventoryQuantity(key: string): number {
-    return readNumber(this.engine.state, `outfit["${key}"]`);
+    return readNumber(
+      this.engine.state.forRuntime("expedition"),
+      `outfit["${key}"]`,
+    );
   }
 
   addInventory(key: string, amount: number): void {
-    this.engine.state.add(`outfit["${key}"]`, amount);
+    this.engine.state.forRuntime("expedition").add(`outfit["${key}"]`, amount);
   }
 
   clearInventory(): void {
-    this.engine.state.remove("outfit");
+    this.engine.state.forRuntime("expedition").remove("outfit");
   }
 
   returnInventoryToStores(): void {
@@ -149,49 +172,69 @@ export class ExpeditionTransaction {
     let redeemed = false;
     for (const [blueprint, item] of EXPEDITION_BLUEPRINT_REDEMPTIONS) {
       if (this.inventoryQuantity(blueprint) <= 0) continue;
-      this.engine.state.set(`character.blueprints["${item}"]`, true);
-      this.engine.state.remove(`outfit["${blueprint}"]`);
+      this.engine.state
+        .forRuntime("expedition")
+        .set(`character.blueprints["${item}"]`, true);
+      this.engine.state
+        .forRuntime("expedition")
+        .remove(`outfit["${blueprint}"]`);
       redeemed = true;
     }
     return redeemed;
   }
 
   cadence(kind: ExpeditionCadence): number {
-    return readNumber(this.engine.state, this.cadencePath(kind));
+    return readNumber(
+      this.engine.state.forRuntime("expedition"),
+      this.cadencePath(kind),
+    );
   }
 
   setCadence(kind: ExpeditionCadence, value: number): void {
-    this.engine.state.set(this.cadencePath(kind), Math.max(0, value));
+    this.engine.state
+      .forRuntime("expedition")
+      .set(this.cadencePath(kind), Math.max(0, value));
   }
 
   commit(): boolean {
     if (!this.active()) return false;
-    this.engine.state.remove("game.expedition", true);
-    this.engine.state.set("game.world.active", false);
+    this.engine.state.forRuntime("expedition").remove("game.expedition", true);
+    this.engine.state.forRuntime("expedition").set("game.world.active", false);
     return true;
   }
 
   rollback(): boolean {
-    const baseline = this.engine.state.get(DRAFT_PATH);
+    const baseline = this.engine.state.forRuntime("expedition").get(DRAFT_PATH);
     if (!isRecord(baseline)) return false;
 
-    this.engine.state.set(WORLD_PATH, structuredClone(baseline), true);
-    this.engine.state.remove("game.expedition", true);
-    this.engine.state.set("game.world.active", false);
+    this.engine.state
+      .forRuntime("expedition")
+      .set(WORLD_PATH, structuredClone(baseline), true);
+    this.engine.state.forRuntime("expedition").remove("game.expedition", true);
+    this.engine.state.forRuntime("expedition").set("game.world.active", false);
     return true;
   }
 
   abortOnDeath(): boolean {
-    if (readBoolean(this.engine.state, "game.world.dead")) return false;
+    if (
+      readBoolean(this.engine.state.forRuntime("expedition"), "game.world.dead")
+    )
+      return false;
 
     if (!this.rollback()) {
-      this.engine.state.remove("game.expedition", true);
-      this.engine.state.set("game.world.active", false);
+      this.engine.state
+        .forRuntime("expedition")
+        .remove("game.expedition", true);
+      this.engine.state
+        .forRuntime("expedition")
+        .set("game.world.active", false);
     }
     this.clearInventory();
-    this.engine.state.set("character.dead", true);
-    this.engine.state.set("game.world.dead", true);
-    this.engine.state.set("game.world.returnLocation", "room");
+    this.engine.state.forRuntime("expedition").set("character.dead", true);
+    this.engine.state.forRuntime("expedition").set("game.world.dead", true);
+    this.engine.state
+      .forRuntime("expedition")
+      .set("game.world.returnLocation", "room");
     this.engine.cooldowns.start(
       EXPEDITION_EMBARK_COOLDOWN_KEY,
       WORLD_DEATH_COOLDOWN * 1000,
@@ -200,15 +243,17 @@ export class ExpeditionTransaction {
   }
 
   private hasDraft(): boolean {
-    return isRecord(this.engine.state.get(DRAFT_PATH));
+    return isRecord(this.engine.state.forRuntime("expedition").get(DRAFT_PATH));
   }
 
   private worldState(): Record<string, unknown> {
-    const state = this.engine.state.get(WORLD_PATH);
+    const state = this.engine.state.forRuntime("expedition").get(WORLD_PATH);
     return isRecord(state) ? structuredClone(state) : {};
   }
 
-  private cadencePath(kind: ExpeditionCadence): string {
+  private cadencePath(
+    kind: ExpeditionCadence,
+  ): `game.world.${ExpeditionCadence}Move` {
     return `game.world.${kind}Move`;
   }
 }

@@ -1,6 +1,9 @@
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  define: {
+    __ADR_DEV_SURFACES__: JSON.stringify(true),
+  },
   test: {
     include: ["src/tests/engine/progression-distribution.test.ts"],
     environment: "node",

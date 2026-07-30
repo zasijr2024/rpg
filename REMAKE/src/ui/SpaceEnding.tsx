@@ -67,7 +67,7 @@ export function SpaceEnding({
         </p>
         <h1>the end.</h1>
       </header>
-      <div className="endingScores" aria-label="final scores">
+      <div className="endingScores" role="group" aria-label="final scores">
         <p>
           <span>score for this game: </span>
           <strong>{snapshot.score}</strong>

@@ -18,7 +18,12 @@ import {
   type Rng,
   type RngLifecycleSnapshot,
 } from "./rng";
-import type { DevSaveAdapter, DevSaveData } from "./save/devSave";
+import type {
+  DevSaveAdapter,
+  DevSaveData,
+  DevSaveLoadResult,
+  DevSaveValidator,
+} from "./save/devSave";
 import {
   isNonNegativeNumber,
   isRecord,
@@ -165,14 +170,17 @@ export class GameEngine {
     return false;
   }
 
-  saveDevSnapshot(data: DevSaveData): void {
+  saveDevSnapshot(
+    data: DevSaveData,
+    validate: DevSaveValidator = isPersistableEngineSnapshot,
+  ): void {
     if (!this.saveAdapter) {
       throw new Error("No dev save adapter configured");
     }
-    this.saveAdapter.save(data);
+    this.saveAdapter.save(data, validate);
   }
 
-  loadDevSnapshot(): DevSaveData | null {
+  loadDevSnapshot(): DevSaveLoadResult {
     if (!this.saveAdapter) {
       throw new Error("No dev save adapter configured");
     }
@@ -185,19 +193,30 @@ export class GameEngine {
 
   loadDevState(): boolean {
     const loaded = this.loadDevSnapshot();
-    if (!loaded) return false;
-    if (this.restoreDevSnapshot(loaded)) return true;
+    if (!("data" in loaded)) return false;
+    if (this.restoreDevSnapshot(loaded.data)) return true;
     const recovered = this.recoverDevSnapshot("invalid-engine-snapshot");
-    if (recovered && this.restoreDevSnapshot(recovered)) return true;
-    if (recovered) this.quarantineDevState("invalid-engine-backup-snapshot");
+    if ("data" in recovered && this.restoreDevSnapshot(recovered.data)) {
+      return true;
+    }
+    if ("data" in recovered) {
+      this.quarantineDevState("invalid-engine-backup-snapshot");
+    }
     return false;
   }
 
-  recoverDevSnapshot(reason: string): DevSaveData | null {
+  recoverDevSnapshot(reason: string): DevSaveLoadResult {
     if (!this.saveAdapter) {
       throw new Error("No dev save adapter configured");
     }
     return this.saveAdapter.recover(reason);
+  }
+
+  acknowledgeDevRecovery(): void {
+    if (!this.saveAdapter) {
+      throw new Error("No dev save adapter configured");
+    }
+    this.saveAdapter.acknowledgeRecovery();
   }
 
   clearDevState(): void {
@@ -266,6 +285,10 @@ export function isEngineDevSnapshot(
 
 function isLegacyGameState(data: DevSaveData): data is GameState {
   return isSemanticallyValidGameState(data);
+}
+
+function isPersistableEngineSnapshot(data: DevSaveData): boolean {
+  return isEngineDevSnapshot(data) || isLegacyGameState(data);
 }
 
 function isCooldownEntries(
