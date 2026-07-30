@@ -1,6 +1,6 @@
 ﻿# Deferred Scope Contract
 
-Last updated: 2026-07-12
+Last updated: 2026-07-30
 
 This file locks what is intentionally not part of the first remake target.
 
@@ -43,10 +43,15 @@ Allowed during parity:
 
 ### Saves
 
-Completed by the production-readiness override (`RA-P2-02`):
+Completed by the production-readiness override (`RA-P2-02`) and hardened by
+the 2026-07-30 remediation:
 
-- checksummed storage schema version 1 under `adr-remake-dev-save`
-- one-generation committed backup, quarantine, and deterministic recovery
+- checksummed storage schema version 1 under stable key `adr-remake-save`, with
+  one-time namespace migration from legacy `adr-remake-dev-save`
+- backup rotation only from a semantically valid committed primary, raw
+  quarantine with typed recovery outcomes, and acknowledgement-gated autosave
+- staged, explicit-confirmation recovery export/import through checksum,
+  migration, and semantic validation
 - explicit migration from unversioned session-v2, engine-v2, and legacy remake state snapshots
 
 Still deferred:
@@ -98,7 +103,7 @@ Post-parity balance evidence does not silently lift this deferral for original m
 
 ## Release Gate
 
-The executable and cumulative `Parity Complete`, `Production Beta`, and technical `Release Candidate` definitions live in `REMAKE/docs/release-gates.md` and `REMAKE/release-gates.json`. Public sign-off additionally follows `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`, including human/assistive-technology evidence and the open license/NOTICE requirement.
+The executable and cumulative `Parity Complete`, `Production Beta`, and technical `Release Candidate` definitions live in `REMAKE/docs/release-gates.md` and `REMAKE/release-gates.json`. Public sign-off additionally follows `REMAKE/docs/status/phase-14-release-readiness-plan-2026-07-12.md`. LICENSE, NOTICE, and the source-derived inventory now ship with the remake; exact upstream-source availability, qualified legal review, human/assistive-technology evidence, and owner approval remain external sign-off requirements.
 
 No deferred system may enter the active target until:
 

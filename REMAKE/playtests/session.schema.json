@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/adr-remake/playtest-session-v2.schema.json",
+  "$id": "https://example.invalid/adr-remake/playtest-session-v3.schema.json",
   "title": "ADR remake unassisted decision-cohort session",
   "type": "object",
   "additionalProperties": false,
@@ -12,15 +12,23 @@
     "recordedAt",
     "revision",
     "ruleset",
+    "modePolicy",
+    "modeTimeline",
     "experienceStatus",
     "operatorId",
     "consentAttested",
     "unassisted",
     "environment",
+    "wallStartedAt",
+    "wallEndedAt",
     "sittings",
+    "closedPageGaps",
+    "foregroundActiveMinutes",
+    "backgroundOpenMinutes",
+    "closedPageMinutes",
+    "wallElapsedMinutes",
     "completed",
-    "elapsedMinutes",
-    "milestoneMinutes",
+    "milestones",
     "deathEvents",
     "abandonmentPoint",
     "bottlenecks",
@@ -28,14 +36,32 @@
     "exclusions"
   ],
   "properties": {
-    "schemaVersion": { "const": 2 },
+    "schemaVersion": { "const": 3 },
     "id": { "type": "string", "minLength": 1 },
     "participantId": { "type": "string", "minLength": 1 },
     "cohortId": { "type": "string", "minLength": 1 },
     "recordedAt": { "type": "string", "format": "date-time" },
     "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
     "ruleset": { "type": "string", "minLength": 1 },
-    "experienceStatus": { "enum": ["first-time", "familiar", "experienced"] },
+    "modePolicy": {
+      "enum": ["classic-locked", "hyper-locked", "timeline-recorded"]
+    },
+    "modeTimeline": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["at", "mode"],
+        "properties": {
+          "at": { "type": "string", "format": "date-time" },
+          "mode": { "enum": ["classic", "hyper"] }
+        }
+      }
+    },
+    "experienceStatus": {
+      "enum": ["first-time", "familiar", "experienced"]
+    },
     "operatorId": { "type": "string", "minLength": 1 },
     "consentAttested": { "const": true },
     "unassisted": { "const": true },
@@ -45,27 +71,54 @@
       "required": ["artifactKind", "artifactId", "browser", "os"],
       "properties": {
         "artifactKind": { "const": "production-build" },
-        "artifactId": { "type": "string", "minLength": 1 },
+        "artifactId": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
         "browser": { "type": "string", "minLength": 1 },
         "os": { "type": "string", "minLength": 1 }
       }
     },
+    "wallStartedAt": { "type": "string", "format": "date-time" },
+    "wallEndedAt": { "type": "string", "format": "date-time" },
     "sittings": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["startedAt", "activeMinutes"],
+        "required": [
+          "startedAt",
+          "endedAt",
+          "foregroundActiveMinutes",
+          "backgroundOpenMinutes"
+        ],
         "properties": {
           "startedAt": { "type": "string", "format": "date-time" },
-          "activeMinutes": { "type": "number", "exclusiveMinimum": 0 }
+          "endedAt": { "type": "string", "format": "date-time" },
+          "foregroundActiveMinutes": { "type": "number", "minimum": 0 },
+          "backgroundOpenMinutes": { "type": "number", "minimum": 0 }
         }
       }
     },
+    "closedPageGaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["startedAt", "endedAt"],
+        "properties": {
+          "startedAt": { "type": "string", "format": "date-time" },
+          "endedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "foregroundActiveMinutes": { "type": "number", "exclusiveMinimum": 0 },
+    "backgroundOpenMinutes": { "type": "number", "minimum": 0 },
+    "closedPageMinutes": { "type": "number", "minimum": 0 },
+    "wallElapsedMinutes": { "type": "number", "exclusiveMinimum": 0 },
     "completed": { "type": "boolean" },
-    "elapsedMinutes": { "type": "number", "minimum": 0 },
-    "milestoneMinutes": {
+    "milestones": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -79,14 +132,14 @@
         "completion"
       ],
       "properties": {
-        "opening": { "$ref": "#/$defs/minute" },
-        "compass": { "$ref": "#/$defs/minute" },
-        "firstExpedition": { "$ref": "#/$defs/minute" },
-        "deepEconomy": { "$ref": "#/$defs/minute" },
-        "executioner": { "$ref": "#/$defs/minute" },
-        "ship": { "$ref": "#/$defs/minute" },
-        "space": { "$ref": "#/$defs/minute" },
-        "completion": { "$ref": "#/$defs/minute" }
+        "opening": { "$ref": "#/$defs/milestone" },
+        "compass": { "$ref": "#/$defs/milestone" },
+        "firstExpedition": { "$ref": "#/$defs/milestone" },
+        "deepEconomy": { "$ref": "#/$defs/milestone" },
+        "executioner": { "$ref": "#/$defs/milestone" },
+        "ship": { "$ref": "#/$defs/milestone" },
+        "space": { "$ref": "#/$defs/milestone" },
+        "completion": { "$ref": "#/$defs/milestone" }
       }
     },
     "deathEvents": {
@@ -94,9 +147,17 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["activeMinute", "phase", "cause"],
+        "required": [
+          "occurredAt",
+          "foregroundActiveMinute",
+          "wallMinute",
+          "phase",
+          "cause"
+        ],
         "properties": {
-          "activeMinute": { "type": "number", "minimum": 0 },
+          "occurredAt": { "type": "string", "format": "date-time" },
+          "foregroundActiveMinute": { "type": "number", "minimum": 0 },
+          "wallMinute": { "type": "number", "minimum": 0 },
           "phase": {
             "enum": [
               "opening",
@@ -136,5 +197,21 @@
       "items": { "type": "string", "minLength": 1 }
     }
   },
-  "$defs": { "minute": { "type": ["number", "null"], "minimum": 0 } }
+  "$defs": {
+    "milestone": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reachedAt", "foregroundActiveMinute", "wallMinute"],
+          "properties": {
+            "reachedAt": { "type": "string", "format": "date-time" },
+            "foregroundActiveMinute": { "type": "number", "minimum": 0 },
+            "wallMinute": { "type": "number", "minimum": 0 }
+          }
+        }
+      ]
+    }
+  }
 }

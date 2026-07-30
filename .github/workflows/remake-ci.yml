@@ -2,15 +2,11 @@ name: Remake CI
 
 on:
   pull_request:
-    paths:
-      - ".github/workflows/remake-ci.yml"
-      - "DATA/**"
-      - "ORIGINAL/**"
-      - "REMAKE/**"
   push:
     branches: [main]
     paths:
       - ".github/workflows/remake-ci.yml"
+      - ".gitmodules"
       - "DATA/**"
       - "ORIGINAL/**"
       - "REMAKE/**"
@@ -30,18 +26,58 @@ defaults:
     working-directory: REMAKE
 
 jobs:
+  scope:
+    name: Classify remake changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      remake: ${{ steps.scope.outputs.remake }}
+    steps:
+      - name: Check out pull-request history
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Classify changed paths
+        id: scope
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" != "pull_request" ]]; then
+            echo "remake=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git cat-file -e "${BASE_SHA}^{commit}"
+          git cat-file -e "${HEAD_SHA}^{commit}"
+          if git diff --name-only --diff-filter=ACDMRTUXB "$BASE_SHA" "$HEAD_SHA" |
+            grep -Eq '^(\.github/workflows/remake-ci\.yml$|\.gitmodules$|DATA/|ORIGINAL/|REMAKE/)'
+          then
+            echo "remake=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "remake=false" >> "$GITHUB_OUTPUT"
+          fi
+
   verify:
     name: Clean install and production verification
+    needs: scope
+    if: needs.scope.outputs.remake == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Check out pinned source and remake
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           submodules: recursive
 
       - name: Use Node.js 24
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
           cache: npm
@@ -71,15 +107,15 @@ jobs:
       - name: Audit production dependencies
         run: npm audit --omit=dev
 
-      - name: Install Chromium for production smoke
-        run: npx playwright install --with-deps chromium
+      - name: Install release browsers for bounded production smoke
+        run: npx playwright install --with-deps chromium firefox webkit
 
-      - name: Run production Chromium smoke
-        run: npx playwright test --config playwright.production.config.ts --project production-chromium
+      - name: Run bounded production smoke in Chromium, Firefox, and WebKit
+        run: npm run test:e2e:production
 
       - name: Upload failure evidence
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: remake-ci-evidence-${{ github.run_id }}
           path: |
@@ -88,6 +124,47 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+  required:
+    name: Remake CI required
+    needs: [scope, verify]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Report the required pull-request result
+        shell: bash
+        env:
+          REMAKE_CHANGED: ${{ needs.scope.outputs.remake }}
+          SCOPE_RESULT: ${{ needs.scope.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+        run: |
+          set -euo pipefail
+          if [[ "$SCOPE_RESULT" != "success" ]]; then
+            echo "::error::Remake path classification did not succeed."
+            exit 1
+          fi
+
+          case "$REMAKE_CHANGED" in
+            true)
+              if [[ "$VERIFY_RESULT" != "success" ]]; then
+                echo "::error::In-scope remake changes did not pass the full verification lane."
+                exit 1
+              fi
+              echo "In-scope remake changes passed the full verification lane."
+              ;;
+            false)
+              if [[ "$VERIFY_RESULT" != "skipped" ]]; then
+                echo "::error::Out-of-scope changes produced an unexpected verification result."
+                exit 1
+              fi
+              echo "No remake-owned paths changed; the expensive verification lane was intentionally skipped."
+              ;;
+            *)
+              echo "::error::Remake path classification produced no recognized result."
+              exit 1
+              ;;
+          esac
+
   release-candidate:
     name: Scheduled cross-browser Release Candidate gate
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
@@ -95,12 +172,12 @@ jobs:
     timeout-minutes: 120
     steps:
       - name: Check out pinned source and remake
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           submodules: recursive
 
       - name: Use Node.js 24
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
           cache: npm
@@ -117,7 +194,7 @@ jobs:
 
       - name: Upload release evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: remake-release-evidence-${{ github.run_id }}
           path: |

@@ -1,7 +1,7 @@
 # P14V-05 Fixed Progression Corpus
 
 Date completed: 2026-07-14
-Status: **DONE - retained 32-seed artifact validated on the frozen clean candidate**
+Historical status: **DONE - retained 32-seed artifact validated on historical clean candidate `d3696de`**
 
 This is deterministic study-policy evidence. Its completion rate is not a player completion rate, and its incomplete runs are not automatically game defects. P14V-06 owns human pacing evidence; P14V-08 owns the product decision.
 
@@ -26,17 +26,17 @@ This is deterministic study-policy evidence. Its completion rate is not a player
 
 ## Aggregate Result
 
-| Measure | Result |
-| --- | ---: |
-| Seeds | 32 |
-| Study-policy completions | 12 |
-| Diagnostic completion rate | 0.375 |
-| Legal deaths | 161 |
-| Incidental events | 42,692 |
-| Combats | 2,937 |
-| Policy-classified incomplete runs | 20 |
-| Game-defect-classified runs | 0 |
-| Unclassified runs | 0 |
+| Measure                           | Result |
+| --------------------------------- | -----: |
+| Seeds                             |     32 |
+| Study-policy completions          |     12 |
+| Diagnostic completion rate        |  0.375 |
+| Legal deaths                      |    161 |
+| Incidental events                 | 42,692 |
+| Combats                           |  2,937 |
+| Policy-classified incomplete runs |     20 |
+| Game-defect-classified runs       |      0 |
+| Unclassified runs                 |      0 |
 
 For the 12 completed runs, simulated completion time ranged from `335918000` to `759881000` ms, with median `391759000` and p90 `514696000`. All completed runs reached Executioner, Ship, Space, and the score ending.
 
@@ -51,6 +51,6 @@ The most frequent retained policy bottlenecks were Battlefield exhaustion after 
 
 The corpus validates that the runner covers the exact fixed seed range and that every incomplete outcome is retained and classified. It found **zero verified game-origin hard locks, soft locks, corrupt transitions, or unclassified stops**. It also demonstrates that the deterministic study policy is not universally completing: 20/32 seeds stop at explicit legal-attempt or policy ceilings. Those stops limit what automation can say about pacing and must not be re-labelled as player failures or balance defects.
 
-P14V-05 is complete under its stated exit criterion: one reproducible retained artifact exists and no verified game-origin hard/soft lock remains unresolved. Public sign-off remains `HOLD`. P14V-06 may now collect the strict same-revision human cohort on candidate `d3696de`; P14V-08 must interpret the human evidence independently of this bot completion rate.
+P14V-05 is complete for its historical artifact under the stated exit criterion: one reproducible retained artifact exists and no verified game-origin hard/soft lock remained unresolved in that corpus. Public sign-off remains `HOLD`. The current package is reopened for a separately named replacement-candidate JSON/interpretation pair; do not overwrite this historical artifact. P14V-06 waits for replacement P14V-02, hosted P14V-03, and candidate-specific P14V-05 before freezing its schema-v3 cohort. P14V-08 must interpret future human evidence independently of either bot completion rate.
 
 The earlier one-seed dirty-worktree smoke remains tooling-only and is not included in this corpus.

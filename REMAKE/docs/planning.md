@@ -1,10 +1,10 @@
 # Audit Remediation Planning
 
-Last updated: 2026-07-14
+Last updated: 2026-07-30
 
-Authorities: `REPORTS/remake_full_browsergame_roasting_audit_2026-07-09_21-11-34.md`, `REPORTS/current_prototype_full_roasting_audit_2026-07-11.md`, and `docs/status/phase-14-release-readiness-plan-2026-07-12.md`
+Authorities: root `AGENTS.md`, `docs/status/phase-14-post-remediation-next-steps-2026-07-30.md`, `docs/status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`, `REPORTS/remake_full_evaluation_roast_and_remediation_2026-07-30.md`, `REPORTS/remake_full_browsergame_roasting_audit_2026-07-09_21-11-34.md`, `REPORTS/current_prototype_full_roasting_audit_2026-07-11.md`, and `docs/status/phase-14-release-readiness-plan-2026-07-12.md`
 
-This file is the operational implementation and release-validation ledger for the current audit remediation. `REMAKE/docs/plan.md` remains the long-term remake plan. Every implementation task must belong to exactly one package below; do not mix opportunistic fixes into an active package.
+This file is the package-state ledger for audit remediation and release validation. The dated post-remediation next-steps document owns the active execution sequence, and `REMAKE/docs/plan.md` remains the long-term remake plan. Every implementation task must belong to exactly one package below; do not mix opportunistic fixes into an active package.
 
 ## Package Contract
 
@@ -26,19 +26,21 @@ Evidence labels: `fresh-run`, `scenario-seeded`, `headless`, `browser`, `visual`
 - Readiness: Production Beta implementation with Release Candidate evidence in progress
 - Historical implementation program: `RA-2026-07-09`, complete
 - Active validation program: `P14V-2026-07-12`
-- Active package: none; `P14V-02`, `P14V-04`, and `P14V-05` are complete on candidate `d3696de`; P14V-06 and P14V-07 await human operators, while P14V-03 awaits hosted repository access
+- Active package: `P14V-02` is reopened for post-remediation clean reproduction; P14V-04's method is complete and will reconfirm inside `gate:rc`, P14V-05 is reopened for a separately named candidate corpus, P14V-03 awaits hosted repository access, and operator packages wait for both automated lanes
+- P14V-02 Phase 0: complete; all 122 pre-checkpoint dirty paths were accounted for as 71 product, 34 evidence/control, 16 handoff, and 1 protected user path. The maintainer approved the exact groups, selected `0.1.0-rc.1`, and authorized staging/committing only the three listed groups. Clean Node 24 reproduction is next.
 - Core-loop gate: P0/P1/P2, P14R implementation, and roadmap Phases 9-14 complete for the declared parity scope
-- Remaining work: hosted CI, at least 3 unassisted sessions with 5 normally targeted and up to 8 if results conflict, real screen-reader Space/ending, license/NOTICE and product decision, and final clean tag
-- Current unknowns must not be collapsed into automation: the clean-candidate 4/4 policy result is not a player statistic, and axe is not a real screen-reader flight
+- Remaining work: a new clean candidate, hosted CI and required branch protection, a candidate-specific 32-seed corpus, at least 5 schema-v3 unassisted sessions from one post-remediation cohort (up to 8 if results conflict), real screen-reader Space/ending, a durable exact-source URL and any required legal/owner review, the final product decision, production-host smoke, and final tag authorization/verification
+- Current unknowns must not be collapsed into automation: historical candidate `d3696de`'s 4/4 policy result is not a player statistic, and axe is not a real screen-reader flight
 - Report archive: current through the `P14V-2026-07-12` evidence index
-- Planning baseline: synchronized 2026-07-14
+- Planning baseline: synchronized 2026-07-30
+- Active sequence: `docs/status/phase-14-post-remediation-next-steps-2026-07-30.md`; exact checkpoint map: `docs/status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`; this ledger does not authorize staging, commits, remote actions, workflow dispatch, deployment, or tags
 
 ### Repository reconciliation - 2026-07-14
 
-- Pre-update audit point: branch `remake/parity` was clean at `588443e` (`docs: record remaining P14V blockers`). The three commits after frozen production candidate `d3696de` record clean-candidate closure, retain the corpus, and record remaining blockers.
-- Candidate boundary: `git diff d3696de..588443e` contains evidence/runbook documents, the retained corpus JSON, and release-gate assertion updates; it contains no production engine, UI, package, gate configuration, script, or workflow change. Therefore `d3696de` remains the tested production-behavior candidate even though later evidence commits exist.
+- Historical audit point: branch `remake/parity` was clean at `588443e` after candidate `d3696de`; those commits retain the old closure/corpus evidence. Current remediation requires a new candidate rather than relabelling that checkpoint.
+- Historical candidate boundary: `git diff d3696de..588443e` contained evidence/runbook documents and retained corpus data only, so `d3696de` was the tested behavior candidate at that checkpoint. The current remediation includes behavior/tooling changes and therefore requires a new P14V-02 candidate.
 - History continuity: the reflog from `d3696de` through `588443e` contains commits only. No reset, rebase, checkout, revert, or other Git-recorded reversal appears. Git cannot prove that an unstaged editor buffer or never-staged file was not discarded, so the defensible claim is "no reversal evidenced," not "reversal impossible."
-- Sequence check: P14V-01, P14V-02, P14V-04, and P14V-05 closed in dependency order. P14V-03 was not skipped; it is blocked because no remote is configured. P14V-06 and P14V-07 are ready for their independent human operators. P14V-08 and P14V-09 correctly remain gated by those prerequisites.
+- Sequence check: P14V-01, P14V-02, P14V-04, and P14V-05 historically closed in dependency order. Current remediation reopens P14V-02 and candidate-specific P14V-05 evidence; P14V-03 remains blocked because no remote is configured, and P14V-06/P14V-07 wait for the replacement candidate, hosted controls, replacement corpus, and operators. P14V-08 and P14V-09 remain gated by those prerequisites.
 - Repetition check: P14V-02 required several clean-candidate retries after line-ending, Playwright isolation, baseline, autosave-race, and target-size defects were found. Those retries followed the package failure rule and produced new commits before the final uninterrupted gate; no already-accepted package was reopened or silently redone.
 
 ## Control Package
@@ -99,7 +101,7 @@ P1-13 browser evidence:
 P1-14 browser evidence:
 
 - `fresh-run`: a Chromium 1366 run starts from cleared storage and uses only visible actions, controlled clock advancement, and controlled RNG to reach Builder, Outside, Compass, generated Iron/Coal Mines, Steelworks, Water Tank/Wagon, the radius-28 Executioner, player-acquired Blueprint redemption, Fabricator crafting, the radius-28 Crashed Ship, lift-off, Space, and the ending.
-- The contract calls neither `setState` nor any forced-event API. It asserts and attaches the named pacing series: Builder `00:00:30`, Outside `00:00:50`, Compass `08:32:10`, first expedition `10:42:10`, Fabricator `12:15:02`, Ship `12:15:02`, Ending `12:16:02`.
+- The contract calls neither `setState` nor any forced-event API. It asserts and attaches the named controlled reachability series: Builder `00:00:30`, Outside `00:00:50`, Compass `08:32:10`, first expedition `10:42:10`, Fabricator `12:15:02`, Ship `12:15:02`, Ending `12:16:02`. These are deterministic simulated-clock checkpoints, not player pacing evidence.
 - Full integration gate: 429 unit tests, lint, formatting, and build passed; 302 Playwright tests passed with 130 expected skips in 4.8 minutes.
 
 P1-15 tooling evidence:
@@ -127,7 +129,7 @@ P1-16 type-boundary evidence:
 | RA-P2-05 | Test ownership split                      | M-08       | P0-08, P1-14        | Monoliths are split by domain contracts and every E2E declares its evidence label                                | done   |
 | RA-P2-06 | Production bundle boundary                | M-06       | P1-14               | Test harness and spikes are compile-time excluded; late game is intentionally lazy-loaded                        | done   |
 | RA-P2-07 | Performance budgets                       | H-02, M-06 | P1-05, P2-06        | Bundle, startup, long-task and long-idle budgets fail CI on regression                                           | done   |
-| RA-P2-08 | Reproducible phase closure                | H-08, M-10 | P1-15, P2-01..P2-07 | One command prints revision, open IDs and gate results; clean closure tag has zero phase-owned open IDs          | done    |
+| RA-P2-08 | Reproducible phase closure                | H-08, M-10 | P1-15, P2-01..P2-07 | One command prints revision, open IDs and gate results; clean closure tag has zero phase-owned open IDs          | done   |
 
 P2-06 production-bundle evidence:
 
@@ -147,14 +149,15 @@ P2-01 tooling evidence:
 
 - `release-gates.json` and the validated runner define cumulative Parity Complete, Production Beta, and Release Candidate package/check/command ownership without promoting the fresh-run smoke into a release claim.
 - Parity owns the pinned four-project Chromium suite through `test:e2e:parity`; Release Candidate separately owns `test:e2e:release`, which `RA-P2-03` will expand to the cross-browser/real-zoom matrix.
-- Phase 14 static CLI evidence reports 284 complete and 3 linked-deviation checklist items with zero open/partial entries. Candidate `d3696de` passes Parity Complete, Production Beta, and the technical Release Candidate gate from a separate clean checkout; public sign-off remains blocked by the open P14V evidence packages.
+- Phase 14 static CLI evidence reports 284 complete and 3 linked-deviation checklist items with zero open/partial entries. Historical candidate `d3696de` passed all three technical gates from a clean checkout; current remediation reopens P14V-02, and public sign-off remains blocked by the open P14V evidence packages.
 
 P2-02 durable-save evidence:
 
-- `adr-remake-dev-save` now stores a checksummed schema-1 envelope, keeps one last committed backup generation, never promotes staging data, and clears primary/staging/backup together on reset.
-- Load deterministically quarantines invalid JSON, checksum corruption, malformed documents, and incompatible schemas. Format failures recover automatically; session/engine validation failures quarantine before attempting the backup, without mutating live state.
+- Stable key `adr-remake-save` stores the checksummed schema-1 envelope; legacy namespace `adr-remake-dev-save` migrates once without orphaning a supported generation. Staging is never promoted, and reset clears the current and legacy primary/staging/backup/quarantine keys.
+- Save validates the incoming payload before staging and rotates backup only from a semantically valid committed primary. Load returns typed empty/loaded/migrated/recovered/quarantined outcomes, persists raw quarantine evidence across reload, and suspends autosave until the player acknowledges recovery.
+- Recovery export/import is staged behind explicit confirmation and must pass document, checksum, migration, and semantic validation before replacing live state.
 - Existing unversioned remake session-v2, engine-v2, and legacy state snapshots are supported migration inputs and are rewritten into the versioned envelope after a successful format decode. Unknown and future schemas are not guessed.
-- Focused evidence covers corrupt primary recovery, stale/partial staging, interrupted primary writes, incompatible schemas, all supported legacy families, semantic backup recovery, reset, exact RNG/lifecycle continuation, and a real Chromium reload through a corrupted primary.
+- Focused evidence covers corrupt primary recovery with and without backup, stale/partial staging, interrupted primary writes, incompatible schemas, all supported legacy families, semantic backup recovery, raw quarantine persistence and acknowledgement, recovery import, reset, exact RNG/lifecycle continuation, and a real Chromium reload through a corrupted primary.
 - Full integration gate: 43 unit-test files / 455 tests, parity artifacts, negative type fixtures, lint, formatting, and build passed; 306 Playwright tests passed with 130 expected skips in 5.4 minutes.
 - Final integration gate: 42 unit-test files / 446 tests, parity artifacts, negative type fixtures, lint, formatting, and build passed; 302 Playwright tests passed with 130 expected skips in 5.0 minutes.
 
@@ -190,41 +193,45 @@ P2-05 test ownership evidence:
 
 Authority: `REPORTS/current_prototype_full_roasting_audit_2026-07-11.md`. These packages are post-parity remediation and do not rewrite the historical `RA-2026-07-09` closure ledger.
 
-| ID      | Package                  | Exit criterion                                                                                                   | Status                                                                                |
-| ------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| P14R-01 | Persistence trust        | Health snapshot, durable warning, memory fallback, retry/export, blocked read/write/private-mode/reload evidence | done                                                                                  |
-| P14R-02 | Bundle headroom          | Initial entry below 480 kB without raising aggregate budgets; catalog boundary enforced                          | done                                                                                  |
-| P14R-03 | Semantic saves           | Domain/cross-field validation plus generated malformed-state and backup recovery tests                           | done                                                                                  |
-| P14R-04 | Repository CI            | Clean-install change lane plus scheduled/manual full Release Candidate gate                                      | done                                                                                  |
-| P14R-05 | Lazy recovery            | Save-preserving Fabricator/Ship/Space error boundary and cross-browser aborted-chunk retry                       | done                                                                                  |
-| P14R-06 | Nonvisual Space          | Optional spatial feed, hazard alerts, automated accessibility and an honest real-AT runbook                      | implementation done; candidate operator pass pending P14V-07                           |
-| P14R-07 | Large desktop and ending | Physical-density policy, stronger ending hierarchy, regenerated/inspected 4K matrix                              | done                                                                                  |
-| P14R-08 | Background economics     | Retain bounded open-tab debt, disclose closed-page no-progress rule on first resume                              | done                                                                                  |
-| P14R-09 | Pacing distribution      | Scheduled multi-seed real-command study plus schema and summarizer for unassisted sessions                       | implementation and policy/corpus evidence done; human cohort pending P14V-06            |
-| P14R-10 | Exact scoring            | Realistic semantic cap and saturating safe-integer cumulative score                                              | done                                                                                  |
-| P14R-11 | Production completion    | External complete-spine fixture restores the full ending in the shipped bundle                                   | done                                                                                  |
-| P14R-12 | Source-authentic balance | Explicit original-mode preservation decision; future rebalance isolated behind a named ruleset                   | done                                                                                  |
+| ID      | Package                  | Exit criterion                                                                                                   | Status                                                                       |
+| ------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| P14R-01 | Persistence trust        | Health snapshot, durable warning, memory fallback, retry/export, blocked read/write/private-mode/reload evidence | done                                                                         |
+| P14R-02 | Bundle headroom          | Initial entry below 480 kB without raising aggregate budgets; catalog boundary enforced                          | done                                                                         |
+| P14R-03 | Semantic saves           | Domain/cross-field validation plus generated malformed-state and backup recovery tests                           | done                                                                         |
+| P14R-04 | Repository CI            | Clean-install change lane plus scheduled/manual full Release Candidate gate                                      | done                                                                         |
+| P14R-05 | Lazy recovery            | Save-preserving Fabricator/Ship/Space error boundary and cross-browser aborted-chunk retry                       | done                                                                         |
+| P14R-06 | Nonvisual Space          | Optional spatial feed, hazard alerts, automated accessibility and an honest real-AT runbook                      | implementation done; candidate operator pass pending P14V-07                 |
+| P14R-07 | Large desktop and ending | Physical-density policy, stronger ending hierarchy, regenerated/inspected 4K matrix                              | done                                                                         |
+| P14R-08 | Background economics     | Retain bounded open-tab debt, disclose closed-page no-progress rule on first resume                              | done                                                                         |
+| P14R-09 | Pacing distribution      | Scheduled multi-seed real-command study plus schema and summarizer for unassisted sessions                       | implementation and policy/corpus evidence done; human cohort pending P14V-06 |
+| P14R-10 | Exact scoring            | Realistic semantic cap and saturating safe-integer cumulative score                                              | done                                                                         |
+| P14R-11 | Production completion    | External complete-spine fixture restores the full ending in the shipped bundle                                   | done                                                                         |
+| P14R-12 | Source-authentic balance | Explicit original-mode preservation decision; future rebalance isolated behind a named ruleset                   | done                                                                         |
 
 Evidence and remaining operator work are recorded in `docs/status/phase-14-roast-remediation-2026-07-11.md`.
 
 ## Phase 14 Release-Readiness Validation Packages
 
-Authority: `docs/status/phase-14-release-readiness-plan-2026-07-12.md`. These packages validate a stable candidate; they do not reopen the completed parity or implementation packages. The executable `Release Candidate` gate is necessary but does not substitute for P14V human or product evidence.
+Evidence authority: `docs/status/phase-14-release-readiness-plan-2026-07-12.md`. Active sequence: `docs/status/phase-14-post-remediation-next-steps-2026-07-30.md`. These packages validate a stable candidate; they do not reopen the completed parity or implementation packages. The executable `Release Candidate` gate is necessary but does not substitute for P14V human or product evidence.
 
-| ID      | Package                                            | Depends on                         | Exit criterion                                                                                                                                                                     | Status  |
-| ------- | -------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| P14V-00 | Plan and document synchronization                  | none                               | Ledgers, status, runbooks, indexes, and evidence locations agree without claiming missing evidence                                                                                 | done    |
-| P14V-01 | Honest evidence gates and collection tooling       | P14V-00                            | Closure understands P14R/P14V or separates technical/product sign-off; diagnostic naming is honest; cohort records fail closed; a normal-clock nonvisual Space fixture is runnable | done    |
-| P14V-02 | Scope-safe checkpoint and clean reproduction       | P14V-01                            | Reviewed coherent commits; clean separate checkout initializes submodules, installs with `npm ci`, and passes the technical RC gate                                                | done - `d3696de` |
-| P14V-03 | Hosted CI validation                               | P14V-02                            | Change-lane and manual full technical-RC workflows pass on the same SHA with retained run IDs/URLs                                                                                 | blocked - no configured remote |
-| P14V-04 | Progression-policy validity                        | P14V-02                            | Current four failures classified; legal death/resource recovery represented; policy and game failures separated                                                                    | done - clean candidate 4/4 |
-| P14V-05 | Fixed 32-seed progression corpus                   | P14V-04                            | Reproducible aggregate report exists and no verified game-origin hard/soft lock remains unresolved                                                                                 | done - retained 32-seed artifact |
-| P14V-06 | Unassisted production playtests                    | P14V-05                            | At least 3 valid unique, same-revision records pass the strengthened gate; normally continue to 5 and up to 8 if outcomes conflict                                                 | cohort/artifact frozen; 0/3 sessions |
-| P14V-07 | Real screen-reader Space and ending                | P14V-02                            | Candidate-revision runbook passes on the normal clock, including a complete nonvisual flight and ending, with no pending observations                                              | ready for operator |
-| P14V-08 | Release, balance, and public-distribution decision | P14V-03, P14V-05, P14V-06, P14V-07 | Dated `GO`/`HOLD` classifies evidence, resolves license/NOTICE, and preserves original mode unless a separate ruleset is explicitly scoped                                         | HOLD - prerequisites pending |
-| P14V-09 | Final clean gate and tag                           | P14V-08                            | Final SHA passes local/hosted technical RC gates and P14V-aware tag verification; every document points to the same evidence                                                       | waiting for P14V-08 |
+| ID      | Package                                            | Depends on                         | Exit criterion                                                                                                                                                                            | Status                                        |
+| ------- | -------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| P14V-00 | Plan and document synchronization                  | none                               | Ledgers, status, runbooks, indexes, and evidence locations agree without claiming missing evidence                                                                                        | done                                          |
+| P14V-01 | Honest evidence gates and collection tooling       | P14V-00                            | Closure understands P14R/P14V or separates technical/product sign-off; diagnostic naming is honest; cohort records fail closed; a normal-clock nonvisual Space fixture is runnable        | done                                          |
+| P14V-02 | Scope-safe checkpoint and clean reproduction       | P14V-01                            | Reviewed coherent commits; clean separate checkout initializes submodules, installs with `npm ci`, and passes the technical RC gate                                                       | superseded; new reproduction required         |
+| P14V-03 | Hosted CI validation                               | P14V-02                            | Change-lane and manual full technical-RC workflows pass on the same SHA with retained run IDs/URLs; the always-reporting required check is enforced by the target branch rule             | blocked - no new candidate/configured remote  |
+| P14V-04 | Progression-policy validity                        | P14V-02                            | Current four failures classified; legal death/resource recovery represented; policy and game failures separated                                                                           | done - method current; candidate reruns in RC |
+| P14V-05 | Fixed 32-seed progression corpus                   | P14V-02, P14V-04                   | A new candidate-specific reproducible aggregate exists and no verified game-origin hard/soft lock remains unresolved; the `d3696de` artifact remains immutable history                    | reopened - replacement corpus required        |
+| P14V-06 | Unassisted production playtests                    | P14V-03, P14V-05                   | At least 5 valid unique schema-v3 records share one post-remediation revision, artifact, ruleset, mode policy, and first-time status; continue up to 8 if preregistered outcomes conflict | new cohort/artifact not frozen; 0/5 sessions  |
+| P14V-07 | Real screen-reader Space and ending                | P14V-03, P14V-05                   | Candidate-revision runbook passes on the normal clock, including a complete nonvisual flight and ending, with no pending observations                                                     | waiting for automated gates/operator          |
+| P14V-08 | Release, balance, and public-distribution decision | P14V-03, P14V-05, P14V-06, P14V-07 | Dated `GO`/`HOLD` classifies evidence, verifies license/NOTICE, closes exact-source/legal-owner requirements, and preserves Classic unless an experiment is explicitly scoped             | HOLD - prerequisites pending                  |
+| P14V-09 | Final candidate and tag authorization              | P14V-08                            | Final clean evidence-only descendant is proven artifact-identical to the candidate; local/hosted gates and production-host smoke pass; immutable tag manifest/name are authorized         | waiting for P14V-08                           |
 
-Evidence belongs under `REPORTS/remediation/P14V-2026-07-12/`. Any candidate-changing fix returns the program to P14V-02 (or P14V-01 if evidence semantics change) and invalidates later evidence for the replaced revision.
+Evidence belongs under `REPORTS/remediation/P14V-2026-07-12/`. Any candidate-changing fix returns the program to P14V-02 (or P14V-01 if evidence semantics change) and invalidates later evidence for the replaced revision. P14R-09 closes only with P14V-06; P14R-06 closes only with P14V-07.
+
+Candidate lineage uses product candidate `C` and artifact identity `A`. A final evidence-only descendant `F` may retain candidate evidence only when `git diff C..F` is limited to evidence/status/session records and a clean rebuild remains exactly `A`. Any source, public asset, build configuration, dependency, workflow, runtime, balance, or artifact change creates a new candidate and resets downstream evidence.
+
+P14V-09 is a pre-tag authorization package so tag verification is not circular. Its final pre-tag commit may identify itself symbolically as "the commit containing this manifest, resolved by the annotated tag," plus exact `A` and the approved tag name. After P14V-09 is `done`, create the authorized local annotated tag, run `closure:verify-tag`, publish only after `PASS`, and append the resolved tag/SHA result as post-tag evidence. A tagged commit cannot honestly contain the result of a future tag operation or its own full hash.
 
 ## Documentation Package
 

@@ -6,7 +6,7 @@ Candidate revision: `d3696de28218bb6c7645302398e1a4b5fe7cba18`
 Environment: Windows, Node `25.4.0`, npm `11.7.0`, Vitest `4.1.10`
 Final clean aggregate command: `npm run study:progression`, invoked by `npm run gate:rc` from `F:\ADR20-P14V-02\REMAKE`
 
-Status: **DONE - policy-valid result reproduced on the exact clean P14V-02 candidate**. This is diagnostic policy evidence, not player completion evidence and not P14V-05's retained 32-seed corpus.
+Historical status: **DONE for `d3696de` - policy-valid result reproduced on that exact clean P14V-02 candidate**. This is retained diagnostic policy evidence, not current candidate evidence, player completion evidence, or P14V-05's retained 32-seed corpus.
 
 ## Before
 
@@ -158,7 +158,7 @@ The exact P14V-02 candidate reproduced the same result from the separate clean c
 - milestones: every seed reached `executioner`, `ship`, `space`, and `complete`;
 - enclosing technical RC gate: exit `0`, `Technical Release Candidate: PASS`.
 
-This clean reproduction closes P14V-04. It does not establish a player completion rate or product pacing decision. Those claims remain owned by P14V-06 and P14V-08.
+This clean reproduction closed P14V-04 for historical candidate `d3696de`. It does not establish current candidate behavior, a player completion rate, or a product pacing decision. Those claims remain owned by P14V-06 and P14V-08.
 
 ## Next Work
 

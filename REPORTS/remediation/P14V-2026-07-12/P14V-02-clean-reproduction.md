@@ -4,9 +4,9 @@ Date opened: 2026-07-14
 Date completed: 2026-07-14
 Program: `P14V-2026-07-12`
 Candidate revision: `d3696de28218bb6c7645302398e1a4b5fe7cba18`
-Status: **DONE - the reviewed candidate passes the technical RC gate from a separate clean checkout**
+Historical status: **DONE for `d3696de` only - the reviewed revision passed the technical RC gate from a separate clean checkout; 2026-07-30 remediation superseded it as a candidate and reopened P14V-02**
 
-P14V-02 freezes the production-behavior candidate above. Later evidence work updates documents and release-gate assertions, retains the corpus and production-artifact records, and adds collection tooling; it does not change production engine/UI behavior or replace the tested revision. No push, hosted workflow, tag, public sign-off, human-playtest claim, or screen-reader claim is part of this package.
+At this 2026-07-14 checkpoint, P14V-02 froze the production-behavior candidate above. Evidence work through the historical checkpoint updated documents and release-gate assertions, retained the corpus and production-artifact records, and added collection tooling without replacing the tested behavior revision. The later 2026-07-30 remediation does change production engine/UI/tooling behavior, so it invalidates `d3696de` as the current candidate without rewriting this historical gate result. No push, hosted workflow, tag, public sign-off, human-playtest claim, or screen-reader claim is part of this package.
 
 ## Scope Review And Checkpoints
 
@@ -29,18 +29,18 @@ Clean-candidate iterations exposed and corrected real reproduction defects befor
 
 ## Clean-Reproduction Record
 
-| Field | Recorded value |
-| --- | --- |
-| Candidate revision | `d3696de28218bb6c7645302398e1a4b5fe7cba18` |
-| Source checkout status | branch checkout clean at the candidate revision |
-| Separate clean checkout path | `F:\ADR20-P14V-02` (detached worktree) |
-| Clean checkout `git status --short` | empty before and after the gate |
-| Recursive submodule initialization | `ORIGINAL` initialized at `1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7` |
-| Node/npm/OS | Node `v25.4.0`; npm `11.7.0`; Windows NT `10.0.19045.0` |
-| `npm ci` | passed; 180 packages installed; audit reported 0 vulnerabilities |
-| Chromium/Firefox/WebKit installation | passed with `npx playwright install chromium firefox webkit` |
-| `npm run gate:rc` | exit `0`; 1,434.4 seconds wall time |
-| Technical RC result | **PASS** |
+| Field                                | Recorded value                                                       |
+| ------------------------------------ | -------------------------------------------------------------------- |
+| Candidate revision                   | `d3696de28218bb6c7645302398e1a4b5fe7cba18`                           |
+| Source checkout status               | branch checkout clean at the candidate revision                      |
+| Separate clean checkout path         | `F:\ADR20-P14V-02` (detached worktree)                               |
+| Clean checkout `git status --short`  | empty before and after the gate                                      |
+| Recursive submodule initialization   | `ORIGINAL` initialized at `1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7` |
+| Node/npm/OS                          | Node `v25.4.0`; npm `11.7.0`; Windows NT `10.0.19045.0`              |
+| `npm ci`                             | passed; 180 packages installed; audit reported 0 vulnerabilities     |
+| Chromium/Firefox/WebKit installation | passed with `npx playwright install chromium firefox webkit`         |
+| `npm run gate:rc`                    | exit `0`; 1,434.4 seconds wall time                                  |
+| Technical RC result                  | **PASS**                                                             |
 
 ## Final Gate Evidence
 
@@ -60,4 +60,4 @@ Final executable verdict: `Technical Release Candidate: PASS`.
 
 ## Exit
 
-P14V-02 is complete for candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`. P14V-03 hosted CI and P14V-07 real assistive-technology evidence may run against this revision. The clean four-seed result satisfied P14V-04's reproduction prerequisite, and P14V-05 subsequently retained the 32-seed corpus. Any behavior-changing candidate fix invalidates this record and returns the program to P14V-02.
+P14V-02 completed historically for revision `d3696de28218bb6c7645302398e1a4b5fe7cba18`. Its clean four-seed result satisfied P14V-04's historical reproduction prerequisite, and P14V-05 retained the 32-seed corpus on that revision. Do not run current P14V-03, replacement P14V-05, P14V-06, or P14V-07 evidence against `d3696de`; freeze and reproduce a replacement post-remediation SHA/artifact first. The behavior-changing remediation returns the program to P14V-02. Write a new date/SHA-qualified clean-reproduction record rather than overwriting this one.

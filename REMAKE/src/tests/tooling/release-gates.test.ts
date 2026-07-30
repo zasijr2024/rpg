@@ -206,9 +206,10 @@ describe("release gate separation", () => {
 
   it("reports the revision, phase-owned open IDs, and every gate's static result", () => {
     const pendingPlanning = planning.replace(
-      "| RA-P2-08 | Reproducible phase closure                | H-08, M-10 | P1-15, P2-01..P2-07 | One command prints revision, open IDs and gate results; clean closure tag has zero phase-owned open IDs          | done    |",
-      "| RA-P2-08 | Reproducible phase closure                | H-08, M-10 | P1-15, P2-01..P2-07 | One command prints revision, open IDs and gate results; clean closure tag has zero phase-owned open IDs          | pending |",
+      /^(\|\s*RA-P2-08\s*\|.*\|)\s*done\s*\|\s*$/m,
+      "$1 pending |",
     );
+    expect(pendingPlanning).not.toBe(planning);
     const report = inspectPhaseClosure({
       phaseId: "RA-2026-07-09",
       revision: "abc123",
@@ -267,7 +268,9 @@ describe("release gate separation", () => {
     expect(phaseOwnedOpenIds(phase14Planning, "P14V-2026-07-12")).toEqual([
       "P14R-06",
       "P14R-09",
+      "P14V-02",
       "P14V-03",
+      "P14V-05",
       "P14V-06",
       "P14V-07",
       "P14V-08",

@@ -1,39 +1,84 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "p14v-example-session-01",
   "participantId": "p14v-example-participant-01",
-  "cohortId": "p14v-2026-07-14-d3696de-original-01",
-  "recordedAt": "2026-07-12T10:00:00.000Z",
-  "revision": "d3696de28218bb6c7645302398e1a4b5fe7cba18",
+  "cohortId": "p14v-v3-example-original-classic-01",
+  "recordedAt": "2026-07-13T14:15:00.000Z",
+  "revision": "0123456789abcdef0123456789abcdef01234567",
   "ruleset": "original",
+  "modePolicy": "classic-locked",
+  "modeTimeline": [{ "at": "2026-07-12T10:00:00.000Z", "mode": "classic" }],
   "experienceStatus": "first-time",
   "operatorId": "operator-example",
   "consentAttested": true,
   "unassisted": true,
   "environment": {
     "artifactKind": "production-build",
-    "artifactId": "sha256:619c6a8eefc27000a99c621a3bb3e6c656034830f2531eccc7dc1da881060e1e",
+    "artifactId": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
     "browser": "replace with browser and version",
     "os": "replace with OS and version"
   },
+  "wallStartedAt": "2026-07-12T10:00:00.000Z",
+  "wallEndedAt": "2026-07-13T14:00:00.000Z",
   "sittings": [
-    { "startedAt": "2026-07-12T10:00:00.000Z", "activeMinutes": 180 },
-    { "startedAt": "2026-07-13T10:00:00.000Z", "activeMinutes": 240 }
+    {
+      "startedAt": "2026-07-12T10:00:00.000Z",
+      "endedAt": "2026-07-12T14:00:00.000Z",
+      "foregroundActiveMinutes": 180,
+      "backgroundOpenMinutes": 60
+    },
+    {
+      "startedAt": "2026-07-13T10:00:00.000Z",
+      "endedAt": "2026-07-13T14:00:00.000Z",
+      "foregroundActiveMinutes": 240,
+      "backgroundOpenMinutes": 0
+    }
   ],
+  "closedPageGaps": [
+    {
+      "startedAt": "2026-07-12T14:00:00.000Z",
+      "endedAt": "2026-07-13T10:00:00.000Z"
+    }
+  ],
+  "foregroundActiveMinutes": 420,
+  "backgroundOpenMinutes": 60,
+  "closedPageMinutes": 1200,
+  "wallElapsedMinutes": 1680,
   "completed": false,
-  "elapsedMinutes": 420,
-  "milestoneMinutes": {
-    "opening": 2,
-    "compass": 180,
-    "firstExpedition": 210,
-    "deepEconomy": 360,
+  "milestones": {
+    "opening": {
+      "reachedAt": "2026-07-12T10:02:00.000Z",
+      "foregroundActiveMinute": 2,
+      "wallMinute": 2
+    },
+    "compass": {
+      "reachedAt": "2026-07-12T14:00:00.000Z",
+      "foregroundActiveMinute": 180,
+      "wallMinute": 240
+    },
+    "firstExpedition": {
+      "reachedAt": "2026-07-13T10:30:00.000Z",
+      "foregroundActiveMinute": 210,
+      "wallMinute": 1470
+    },
+    "deepEconomy": {
+      "reachedAt": "2026-07-13T13:00:00.000Z",
+      "foregroundActiveMinute": 360,
+      "wallMinute": 1620
+    },
     "executioner": null,
     "ship": null,
     "space": null,
     "completion": null
   },
   "deathEvents": [
-    { "activeMinute": 230, "phase": "firstExpedition", "cause": "starvation" }
+    {
+      "occurredAt": "2026-07-13T10:50:00.000Z",
+      "foregroundActiveMinute": 230,
+      "wallMinute": 1490,
+      "phase": "firstExpedition",
+      "cause": "starvation"
+    }
   ],
   "abandonmentPoint": "stopped while waiting for steel",
   "bottlenecks": [

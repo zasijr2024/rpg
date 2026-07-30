@@ -288,9 +288,10 @@ Decision: production autosaves use a checksummed, versioned storage envelope aro
 
 Boundary:
 
-- `adr-remake-dev-save` remains the primary key for compatibility. `:staging` is never loadable, `:backup` retains one previous committed generation, and `:quarantine` retains the rejected primary plus its deterministic reason.
-- Commits write staging, preserve the previous decodable primary as backup, replace primary, then remove staging. Recovery may promote only a decoded backup, never staging.
-- Invalid JSON, checksum mismatch, malformed documents, incompatible schema versions, and invalid runtime payloads are rejected before live state mutation. Runtime validation failure triggers one backup attempt; a consumed bad backup cannot loop across startups.
+- `adr-remake-save` is the stable primary key. The older `adr-remake-dev-save` namespace is a supported one-time migration source; `:staging` is never loadable, `:backup` retains one semantically valid committed generation, and `:quarantine` retains the rejected raw primary plus its deterministic reason.
+- Commits semantically validate the incoming payload before staging, preserve the previous primary as backup only after decoding and semantic validation, replace primary, then remove staging. Recovery may promote only a validated backup, never staging.
+- Invalid JSON, checksum mismatch, malformed documents, incompatible schema versions, and invalid runtime payloads are rejected before live state mutation. Load exposes typed empty/loaded/migrated/recovered/quarantined outcomes; quarantine evidence survives reload, and autosave remains suspended until the player acknowledges recovery.
+- Recovery export/import is staged behind explicit confirmation and must pass document, checksum, migration, and semantic validation before it can replace live state.
 - Unversioned session-v2, engine-v2, and legacy remake state snapshots are supported migration sources. Unknown/future schemas and original-game save imports are not inferred.
 
 Reason:
@@ -301,8 +302,8 @@ Reason:
 
 Enforcement:
 
-- Storage/session tests cover corruption, partial/stale writes, incompatible schemas, every supported migration source, semantic validation failure, backup consumption, reset, and exact lifecycle/RNG restoration.
-- Chromium reload evidence corrupts the primary document and observes the prior committed visible generation without direct state injection into the live session.
+- Storage/session tests cover corruption with and without backup, partial/stale writes, incompatible schemas, every supported migration source, semantic validation failure, durable quarantine/acknowledgement, recovery import, backup consumption, reset, and exact lifecycle/RNG restoration.
+- Chromium reload evidence covers truthful recovered/unrecoverable warnings, guarded autosave, and restoration of the prior semantically valid visible generation without direct state injection into the live session.
 
 ## TD-017: Original Mode Keeps Source-Authentic Balance Rough Edges
 
@@ -312,8 +313,8 @@ Reason:
 
 - These relationships are source-authentic product behavior, not remake regressions.
 - Changing them inside the original ruleset would destroy the fidelity contract just after the parser-backed denominator closed.
-- The uncontrolled progression study and real unassisted sessions must establish actual player bottlenecks before tuning is justified.
-- The current four-seed scripted policy completes 0/4 but is not yet policy-valid and is not human evidence. It does not authorize changing original mode.
+- The historical progression diagnostics characterize automation policy and source-authentic friction; real unassisted sessions must establish actual player bottlenecks before tuning is justified.
+- The original policy completed 0/4, corrected historical candidate `d3696de` completed 4/4, and its retained 32-seed corpus completed 12/32 with every other stop classified. None is human evidence or authority to change original mode.
 
 Enforcement:
 
@@ -321,3 +322,19 @@ Enforcement:
 - Proposals must include before/after faucet, sink, expected-value, completion, death, and abandonment evidence.
 - `content/original` remains immutable except for documented source/parity corrections.
 - `P14V-04`/`P14V-05` own policy-valid automated evidence, `P14V-06` owns the human cohort, and `P14V-08` owns the dated release decision. Until that decision, original mode remains the only release ruleset and the default.
+
+## TD-018: Balance Work Starts As An Isolated, Preregistered Experiment
+
+Decision: balance hypotheses are specified under the separate ruleset ID `balanced-experiment-v1` and player-facing name **Balanced Experiment A**. The specification is not an implementation authorization, release mode, or evidence claim.
+
+Reason:
+
+- Classic parity and experimental tuning answer different product questions and require separate saves, scores, cohorts, and claims.
+- Exact pass/fail hypotheses prevent hull scoring, conversion values, unarmed combat, pacing, offline progress, or Executioner gating from being tuned after seeing a preferred outcome.
+- Human evidence must distinguish foreground-active time, wall time, background-open production, closed-page gaps, and mode exposure before pacing conclusions are credible.
+
+Enforcement:
+
+- Follow `status/balanced-mode-experiment-spec.md`; do not edit `content/original` to implement it.
+- Keep Classic the default. A future implementation needs an explicit product decision, isolated save compatibility, dedicated automated contracts, and a newly frozen schema-v3 cohort.
+- Controlled reachability and policy-seed automation remain diagnostic. Neither may be described as human balance evidence.

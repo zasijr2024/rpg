@@ -1,7 +1,8 @@
 {
   "name": "adr-remake",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0-rc.1",
+  "license": "MPL-2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +16,7 @@
     "study:progression": "node -e \"console.log('Progression policy diagnostic: classified outcomes are not player completion evidence.')\" && vitest run --config vitest.progression.config.ts --reporter=verbose",
     "study:progression:corpus": "node scripts/progression-corpus.mjs --seeds=32 --start=0 --shard-size=4 --jobs=2",
     "study:human": "node scripts/summarize-playtests.mjs",
-    "study:human:gate": "node scripts/summarize-playtests.mjs --require=3",
+    "study:human:gate": "node scripts/summarize-playtests.mjs --require=5",
     "artifact:identity": "node scripts/production-artifact.mjs --dir=dist",
     "test:e2e": "playwright test",
     "test:e2e:parity": "playwright test --project chromium-1366 --project chromium-1920 --project chromium-2560 --project chromium-3840",
