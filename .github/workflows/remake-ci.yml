@@ -175,11 +175,11 @@ jobs:
   release-candidate:
     name: Scheduled cross-browser Release Candidate gate
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 120
     steps:
       - name: Configure canonical source line endings
-        shell: bash
+        shell: pwsh
         working-directory: ${{ github.workspace }}
         run: git config --global core.autocrlf true
 
@@ -200,7 +200,7 @@ jobs:
         run: npm ci
 
       - name: Install all release browsers
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: npx playwright install chromium firefox webkit
 
       - name: Run the complete clean-tree gate
         run: npm run gate:rc
