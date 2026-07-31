@@ -74,6 +74,7 @@ jobs:
       - name: Check out pinned source and remake
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          lfs: true
           submodules: recursive
 
       - name: Use Node.js 24
@@ -133,6 +134,7 @@ jobs:
     steps:
       - name: Report the required pull-request result
         shell: bash
+        working-directory: ${{ github.workspace }}
         env:
           REMAKE_CHANGED: ${{ needs.scope.outputs.remake }}
           SCOPE_RESULT: ${{ needs.scope.result }}
@@ -174,6 +176,7 @@ jobs:
       - name: Check out pinned source and remake
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          lfs: true
           submodules: recursive
 
       - name: Use Node.js 24
