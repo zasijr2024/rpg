@@ -7,6 +7,9 @@ Current key reports:
 - `../AGENTS.md` - mandatory first read for repository sessions and evidence boundaries.
 - `../REMAKE/docs/status/phase-14-post-remediation-next-steps-2026-07-30.md` - active execution sequence, owners, dependencies, and stop conditions.
 - `../REMAKE/docs/status/phase-14-p14v-02-checkpoint-map-2026-07-30.md` - exact 122-path ownership audit, protected worksheet, proposed commit groups, and current maintainer gate.
+- `remediation/P14V-2026-07-12/P14V-02-clean-reproduction-2026-08-01-275c096.md` - current clean Node 24 technical RC pass and unchanged production artifact.
+- `remediation/P14V-2026-07-12/P14V-03-hosted-ci.md` - final hosted run, retry/root-cause, and enforced required-ruleset evidence.
+- `remediation/P14V-2026-07-12/P14V-05-progression-corpus-2026-08-01-275c096.md` - current candidate-specific 32-seed policy corpus and interpretation.
 - `remake_full_evaluation_roast_and_remediation_2026-07-30.md` - current-revision full evaluation, roast, remediation plan, and verification ledger.
 - `current_prototype_full_roasting_audit_2026-07-11.md` - Phase 14 full-product roast, release verdict, remaining risks, and remediation priorities.
 - `phase14_data_parity_report_2026-07-11.md` - source/data denominator, domain coverage, deferred-data accounting, and Phase 14 parity conclusion.

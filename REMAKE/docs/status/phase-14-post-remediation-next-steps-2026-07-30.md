@@ -1,8 +1,8 @@
 # Phase 14 Post-Remediation Next Steps
 
 - Date: 2026-07-30
-- Status: **active execution plan; public Release Candidate remains `HOLD`**
-- Immediate package: `P14V-02`
+- Status: **candidate automation complete; operator evidence open; public Release Candidate remains `HOLD`**
+- Immediate packages: P14V-06 human cohort and P14V-07 real-screen-reader evidence in parallel on frozen candidate `275c096`
 
 ## Authority And Purpose
 
@@ -30,16 +30,24 @@ tagging, publishing, or deploying.
 
 - Branch: `remake/parity`.
 - Integration base: `b0e9222aa3fa2ddebc83761c19536732ba321de8`.
-- Worktree: substantially dirty with tracked and untracked remediation work.
+- Source worktree: protected user worksheet and pre-existing local evidence edits remain excluded; current evidence work is isolated in a clean candidate worktree.
 - Source submodule: `ORIGINAL/` pinned at
   `1fada4620b6c66bd07bf15a3f1eb8223df8bc1d7`.
-- Git remote: none configured.
-- Local integration: Phase 14 parity accepted; Production Beta checks pass.
-- Technical RC: intentionally blocked by the dirty tree.
+- Git remote: authenticated private repository `https://github.com/zasijr2024/rpg.git`.
+- Candidate `C2`: `275c096247e5fe2026e00c1f67eb78cd4668ccaf`.
+- Artifact `A`: `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c` (`sha256-tree-v1`, 16 files, 646,179 bytes).
+- Technical RC: clean Node 24 gate passed on `C2`; artifact identity unchanged.
+- Hosted CI: pull-request run `30700296963` and manual full-RC run `30700299995` passed on `C2`.
+- Required protection: active strict ruleset `20083779` requires `Remake CI required` on the default branch with no bypass actor.
 - Public RC: `HOLD`.
 - Historical clean candidate: `d3696de28218bb6c7645302398e1a4b5fe7cba18`.
 - Historical P14V-05 corpus: retained for `d3696de`, not current-candidate
   evidence.
+- Current P14V-05 corpus: retained for `275c096`; 32/32 seeds classified, 12
+  study-policy completions, 20 policy stops, and zero game-defect or
+  unclassified stops.
+- Frozen operator cohort: `p14v-2026-08-01-275c096-original-classic-01`;
+  ruleset `original`; mode policy `classic-locked`.
 - Human cohort: 0/5 valid schema-v3 sessions.
 - User-owned untracked worksheet:
   `REMAKE/playtests/feedback/p14v-local-session-01.md`; preserve it and do not
@@ -240,8 +248,22 @@ Exit: all 32 exact seeds are present once, the artifact validates, no verified
 game-origin hard/soft lock remains unresolved, and every stop is classified.
 This is policy automation, not a human completion-rate estimate.
 
+Completion 2026-07-30: **PASS** on clean candidate `6de3979`. The formal run
+completed in 2,536.9 seconds under Node `v24.18.1` and npm `11.7.0`. Its
+date/SHA-qualified JSON contains 12 study-policy completions, 161 legal deaths,
+42,692 incidental events, 2,937 combats, 20 policy-classified stops, zero
+game-defect stops, and zero unclassified stops. See
+`REPORTS/remediation/P14V-2026-07-12/P14V-05-progression-corpus-2026-07-30-6de3979.md`.
+
 Phase 2 exit requires both P14V-03 and P14V-05 green on the same candidate.
 Do not spend human or assistive-technology operator time before that point.
+
+Completion 2026-08-01: **PASS** on candidate `275c096`. Pull-request run
+`30700296963`, manual full-RC run `30700299995`, and strict required
+ruleset `20083779` close P14V-03. The separately retained 32-seed corpus
+completed in 2,493.9 seconds with every outcome classified and zero
+game-defect/unclassified stops, closing P14V-05 on the same SHA. Phase 2 exit
+is met.
 
 ## Phase 3 - Operator Evidence In Parallel
 
@@ -354,11 +376,11 @@ Exit criteria:
 | --------------------------------------- | --------------------------- | -------------------------------- |
 | Read-only diff/ownership audit          | engineering + maintainer    | complete; checkpoint map written |
 | Stage/commit checkpoint groups          | maintainer                  | exact groups approved 2026-07-30 |
-| Configure remote, push, PR, dispatch CI | maintainer                  | blocked; no remote/authority     |
-| Run clean local reproduction/corpus     | engineering                 | waits for approved clean SHA     |
-| Configure required checks               | maintainer                  | waits for remote                 |
-| Recruit/run human sessions              | playtest/product owner      | waits for Phase 2 green          |
-| Run real screen reader                  | accessibility operator      | waits for Phase 2 green          |
+| Configure remote, push, PR, dispatch CI | maintainer                  | complete on `275c096`            |
+| Run clean local reproduction/corpus     | engineering                 | P14V-02 and P14V-05 passed       |
+| Configure required checks               | maintainer                  | active ruleset `20083779`        |
+| Recruit/run human sessions              | playtest/product owner      | open; frozen cohort at 0/5       |
+| Run real screen reader                  | accessibility operator      | open; no valid candidate run     |
 | Exact-source/legal/public decision      | product/release owner       | external inputs open             |
 | Deploy and production smoke             | maintainer/release operator | waits for P14V-08 `GO`           |
 | Authorize final tag manifest            | maintainer                  | waits for all gates/host smoke   |
@@ -366,14 +388,14 @@ Exit criteria:
 
 ## Immediate Next Action
 
-Do not add more product features. Phase 0 and its human decision are complete in
-`phase-14-p14v-02-checkpoint-map-2026-07-30.md`. Form only the three approved
-checkpoints, excluding the protected worksheet, then reproduce the resulting
-SHA and artifact from a separate clean Node 24 checkout. Record a new P14V-02
-artifact without overwriting historical `d3696de` evidence.
+Do not add more product features. P14V-02, P14V-03, and P14V-05 passed on
+candidate `275c096` without changing artifact `A`; their separately named
+evidence does not overwrite the `d3696de` or `6de3979` records. Any
+candidate-changing edit restarts P14V-02 and invalidates downstream operator
+evidence.
 
-The next external authorities remain remote/branch-protection access for hosted
-validation, identified human and real-screen-reader operators, and an
-accountable exact-source/legal/public-release owner. Until clean reproduction
-passes, the honest handoff is: **approved `0.1.0-rc.1` checkpoint sequence;
-P14V-02 not yet reproduced; public RC on HOLD.**
+Run P14V-06 and P14V-07 in parallel using the frozen candidate, artifact,
+cohort, ruleset, and mode policy. Human and real-screen-reader observations
+must come from actual operators and cannot be inferred from automation. Honest
+handoff: **candidate automation and enforced hosted controls pass; operator
+packages are open at 0/5 and no valid real-AT run; public RC remains on HOLD.**

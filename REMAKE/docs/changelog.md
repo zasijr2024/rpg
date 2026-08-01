@@ -1,17 +1,33 @@
 # Changelog
 
+## 2026-08-01
+
+### Verified - Hosted candidate automation
+
+- Froze workflow candidate `275c096247e5fe2026e00c1f67eb78cd4668ccaf` after three workflow-only fixes for LFS checkout, canonical CRLF source checkout, required-reporter rooting, and Windows visual-baseline execution.
+- Passed the clean Node 24 technical RC gate in 1,541.6 seconds with 77 files / 550 tests and unchanged 16-file, 646,179-byte artifact `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`.
+- Retained a separately named 32-seed corpus for `275c096`: 12 policy completions, 20 policy stops, 161 legal deaths, 42,692 incidental events, 2,937 combats, and zero game-defect/unclassified stops.
+- Pull-request run `30700296963` and manual full-RC run `30700299995` passed on the exact candidate. Active strict ruleset `20083779` requires stable context `Remake CI required` on the default branch with no bypass actor.
+- Closed P14V-02, P14V-03, and P14V-05 for `275c096`; froze schema-v3 cohort `p14v-2026-08-01-275c096-original-classic-01` with ruleset `original` and mode policy `classic-locked`. P14V-06 remains 0/5 and P14V-07 has no valid real-AT run.
+
 ## 2026-07-30
 
 ### Controlled - Post-remediation release handoff
 
+- Finalized the synchronized local handoff at `ca177fee971c71f0cb7a09b571989af3dc1b3849`. Its full 19-path `C..H` delta is evidence/status only; a fresh detached Node 24 install/build reproduced the same 16-file, 646,179-byte artifact and reported all three technical gates `READY`.
+- Committed P14V-05 and hosted-deferral evidence at `1d505dc8069ea55d688ae67d0bdd523908b0bc56`. Its 17-path `C..F` delta is evidence/status only; a separate clean Node 24 install/build reproduced artifact `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`, and Parity Complete, Production Beta, and Technical RC all reported `READY`.
+- Completed replacement P14V-05 on clean candidate `6de3979`: eight validated four-seed shards retained a new date/SHA-qualified 32-seed artifact in 42m17s under Node 24. It records 12 study-policy completions, 161 legal deaths, 42,692 incidental events, 2,937 combats, 20 policy-classified stops, and zero game-defect or unclassified stops. The historical `d3696de` pair remains unchanged, and the automated completion rate remains explicitly non-human evidence.
+- Froze replacement candidate `6de3979955719ffae80dd25a7a429d8f8a595368` at package version `0.1.0-rc.1`. A separate clean Node 24 worktree passed the complete technical RC gate in 1,605.3 seconds, both dependency audits reported zero vulnerabilities, and artifact `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c` reproduced after a second build.
+- Clean reproduction failed closed on two newly published advisories before the final pass: PostCSS was updated to `8.5.25` with NanoID `3.3.16`, then brace-expansion to `5.0.9`. Both exact one-file lock updates were isolated, audited, and committed before the candidate was rerun.
 - Added root `AGENTS.md` as the mandatory first read and created the dated post-remediation execution plan with owners, dependencies, exit criteria, invalidation rules, and explicit authority boundaries.
 - Completed P14V-02's read-only path audit in `docs/status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`: 122 dirty paths are accounted for as 71 product/runtime paths, 34 evidence/control paths, 16 handoff paths, and one protected user-owned worksheet. No path is duplicated or unexplained.
 - Received maintainer approval for the three dependency-ordered commits, selected `0.1.0-rc.1` as the pre-freeze package version, and limited Git authorization to the exact listed paths while excluding the protected worksheet.
-- Reconciled onboarding, context, package, evidence, report, Git, operator, owner-decision, and tag documents. Historical `d3696de` evidence remains immutable; P14V-05 is reopened for a separately named replacement-candidate corpus.
+- Reconciled onboarding, context, package, evidence, report, Git, operator, owner-decision, and tag documents. Historical `d3696de` evidence remains immutable; candidate `6de3979` now owns a separately named replacement corpus.
 - Hardened the human release floor so only first-time participants count and every gated run is explicitly bound to the frozen revision, canonical artifact identity, cohort, ruleset, and mode policy. A bare gate now fails closed instead of trusting self-reported cohort identity.
 - Reworked pull-request CI to always report stable branch-protection context `Remake CI required` while keeping the full three-engine verification scope-aware and fail-closed.
 - Defined candidate `C` / artifact `A` / evidence descendant `F` lineage, actual-production-host smoke, and a non-circular P14V-09 pre-tag authorization followed by tag verification/publication evidence.
-- No remote was configured, no workflow was dispatched, and no pull request, deployment, tag, human session, assistive-technology observation, public-release owner decision, or publication claim was made.
+- Configured authenticated private remote `zasijr2024/rpg` for P14V-03. Its first non-rewriting fast-forward push failed closed before updating any ref because candidate history contains one tracked 124,776,960-byte AssetRipper executable above GitHub's 100 MB limit; private rulesets also require GitHub Pro or an explicit public-visibility decision. No workflow was dispatched, and no pull request, deployment, tag, human session, assistive-technology observation, public-release owner decision, or publication claim was made.
+- The maintainer deferred GitHub publication after that fail-closed result. No Git LFS history migration, GitHub plan upgrade, repository visibility change, or candidate re-freeze is authorized by the deferral.
 
 ### Verified - Evidence-contract hardening
 

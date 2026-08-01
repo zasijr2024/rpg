@@ -36,7 +36,7 @@ wording. The current-status blocks, active next-steps plan, and package ledger
 take precedence. For release work, also run `npm run closure:status` from
 `REMAKE/` and report the expected blockers rather than hiding them.
 
-## Current Truth - 2026-07-30
+## Current Truth - 2026-08-01
 
 Reverify this snapshot at session start:
 
@@ -47,20 +47,48 @@ Reverify this snapshot at session start:
   locally implemented and verified as a Production Beta integration.
 - Historical candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18`
   and its diagnostic artifacts remain evidence for that revision only.
-- The current behavior/tooling changes require a new clean candidate and a new
-  candidate-specific 32-seed corpus before human collection.
-- No Git remote is configured.
+- Historical post-remediation candidate `6de3979` and finalized local handoff
+  `ca177fe` retain their clean local evidence.
+- Current hosted candidate `C2` is
+  `275c096247e5fe2026e00c1f67eb78cd4668ccaf`; its clean Node 24 technical RC
+  gate passed and artifact `A` remains
+  `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`.
+- Verified evidence checkpoint `F1` is
+  `1d505dc8069ea55d688ae67d0bdd523908b0bc56`. `git diff C..F` contains 17
+  evidence/status paths only, and a clean Node 24 `npm ci` plus `npm run build`
+  reproduced exactly `A`; Parity, Production Beta, and Technical RC all report
+  `READY` there.
+- Finalized local handoff checkpoint `H` is
+  `ca177fee971c71f0cb7a09b571989af3dc1b3849`. Its full `C..H` delta is 19
+  evidence/status paths only; a separate clean Node 24 install/build again
+  reproduced exactly `A`, with all three technical gates `READY`.
+- The candidate-specific 32-seed P14V-05 corpus passed on `C2`: 12
+  study-policy completions, 20 policy-classified stops, and zero game-defect or
+  unclassified stops. This is automation evidence, not a player statistic.
+- P14V-03 passed on `C2`: pull-request run `30700296963` and manual full-RC
+  run `30700299995` succeeded, and active ruleset `20083779` strictly
+  requires `Remake CI required` on the default branch with no bypass actor.
+- Git remote `origin` is configured as the private repository
+  `https://github.com/zasijr2024/rpg.git`; GitHub CLI is authenticated as its
+  admin. Remote `remake/parity` and draft PR #1 point to `C2`.
 - Public Release Candidate status is `HOLD`.
 - P14V-02 Phase 0 is complete: all 122 pre-checkpoint dirty paths were
   classified, the three exact groups were approved, package version
   `0.1.0-rc.1` was selected, and only those groups were authorized for Git
   writes. The protected user worksheet remains excluded.
-- Immediate package: reproduce the final checkpoint from a separate clean
-  checkout under Node 24, record its exact SHA and artifact, then proceed to
-  hosted CI and the replacement candidate corpus.
+- The published lineage materializes the 124,776,960-byte AssetRipper
+  executable through Git LFS. The workflow-only fixes materialize LFS inputs,
+  reproduce canonical CRLF source checkout, and run the visual full-RC gate on
+  Windows; the bounded change lane remains on Ubuntu.
 - Human release evidence is 0/5 valid schema-v3 sessions.
-- The artifact identity in the July 30 report identifies the dirty local
-  integration build. It is not a frozen candidate artifact.
+- Operator binding is frozen as candidate `C2`, artifact `A`, cohort
+  `p14v-2026-08-01-275c096-original-classic-01`, ruleset `original`, and
+  mode policy `classic-locked`.
+- The original source worktree retains its pre-existing evidence/status edits
+  and protected untracked worksheet; neither is operator evidence.
+- The current P14V-02 record owns the frozen candidate artifact identity. The
+  earlier evaluation report's dirty-integration identity happens to match but
+  is not the candidate proof.
 
 Update this section whenever an authoritative candidate or gate state changes.
 
@@ -229,6 +257,7 @@ authorities together:
 Keep the July 30 roast as an audit/verification record, not a live task board.
 The honest current label is:
 
-**Phase 14 parity and repository-side roast remediation are implemented in an
-uncommitted Production Beta integration; clean Release Candidate evidence is
-open.**
+**Candidate `275c096` has clean local RC, candidate-specific corpus, hosted
+change-lane/full-RC, and enforced required-check evidence; operator packages
+P14V-06/P14V-07 are open at 0/5 and no real-AT run, and public RC remains on
+`HOLD`.**

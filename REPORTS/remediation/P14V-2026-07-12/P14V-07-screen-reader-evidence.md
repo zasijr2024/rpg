@@ -1,25 +1,26 @@
 # P14V-07 Screen-Reader Evidence
 
-Status: `WAITING_FOR_P14V_02_P14V_03_P14V_05_AND_OPERATOR`
+Status: `OPEN_FOR_REAL_AT_OPERATOR`
 Overall result: `PENDING`
 
-P14V-01 supplied the tested normal-clock, console-free `?manualFixture=space-realtime` Space fixture. Historical candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18` was superseded by the 2026-07-30 remediation before real assistive-technology evidence was collected. Final observations begin only after P14V-02, P14V-03, and replacement-candidate P14V-05 pass, and may be recorded only by a real screen-reader operator against that exact candidate/artifact. The `testHarness=1&testSeed=space-slice` route remains automation-only and cannot satisfy the one-minute flight contract.
+P14V-01 supplied the tested normal-clock, console-free `?manualFixture=space-realtime` Space fixture. Historical candidates collected no qualifying real assistive-technology evidence. P14V-02, P14V-03, and P14V-05 now pass on `275c096`; final observations may be recorded only by a real screen-reader operator against that exact candidate/artifact. The `testHarness=1&testSeed=space-slice` route remains automation-only and cannot satisfy the one-minute flight contract.
 
 ## Candidate Environment
 
-| Field                                      | Recorded value                       |
-| ------------------------------------------ | ------------------------------------ |
-| Git revision                               | `PENDING_POST_REMEDIATION_CANDIDATE` |
-| Worktree state                             | `PENDING`                            |
-| Build mode and URL per scenario            | `PENDING`                            |
-| Real-time Space fixture proof/URL          | `PENDING`                            |
-| Operating system                           | `PENDING`                            |
-| Browser/version                            | `PENDING`                            |
-| Screen reader/version                      | `PENDING`                            |
-| Operator                                   | `PENDING`                            |
-| Date/time/timezone                         | `PENDING`                            |
-| Speech or braille observed                 | `PENDING`                            |
-| Method preventing visual Canvas assistance | `PENDING`                            |
+| Field                                      | Recorded value                                                            |
+| ------------------------------------------ | ------------------------------------------------------------------------- |
+| Git revision                               | `275c096247e5fe2026e00c1f67eb78cd4668ccaf`                                |
+| Production artifact                        | `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c` |
+| Worktree state                             | clean candidate required                                                  |
+| Build mode and URL per scenario            | `PENDING`                                                                 |
+| Real-time Space fixture proof/URL          | `PENDING`                                                                 |
+| Operating system                           | `PENDING`                                                                 |
+| Browser/version                            | `PENDING`                                                                 |
+| Screen reader/version                      | `PENDING`                                                                 |
+| Operator                                   | `PENDING`                                                                 |
+| Date/time/timezone                         | `PENDING`                                                                 |
+| Speech or braille observed                 | `PENDING`                                                                 |
+| Method preventing visual Canvas assistance | `PENDING`                                                                 |
 
 ## Manual Scenario Record
 
@@ -32,11 +33,11 @@ P14V-01 supplied the tested normal-clock, console-free `?manualFixture=space-rea
 
 ## Automated Companion Evidence
 
-| Check                                     | Exact command/result                                                                             |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Cross-browser accessibility lane          | Historical `d3696de`: `npm run test:e2e:release` passed 30/30; new candidate result `PENDING`    |
-| Served-production active-Space lazy route | Historical `d3696de`: `npm run test:e2e:production` passed 15/15; new candidate result `PENDING` |
-| Normal candidate integration gate         | Historical `d3696de`: `npm run gate:rc` passed; new candidate result `PENDING`                   |
+| Check                                     | Exact command/result                                                             |
+| ----------------------------------------- | -------------------------------------------------------------------------------- |
+| Cross-browser accessibility lane          | `275c096`: release/a11y lanes passed inside clean local and hosted full-RC gates |
+| Served-production active-Space lazy route | `275c096`: production smoke passed across Chromium, Firefox, and WebKit          |
+| Normal candidate integration gate         | `275c096`: local `npm run gate:rc` and hosted full-RC run `30700299995` passed   |
 
 ## Defects, Retries, And Exceptions
 

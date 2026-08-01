@@ -268,9 +268,6 @@ describe("release gate separation", () => {
     expect(phaseOwnedOpenIds(phase14Planning, "P14V-2026-07-12")).toEqual([
       "P14R-06",
       "P14R-09",
-      "P14V-02",
-      "P14V-03",
-      "P14V-05",
       "P14V-06",
       "P14V-07",
       "P14V-08",

@@ -2,10 +2,10 @@
 
 Status: `WAITING_FOR_P14V_08_DECISION`
 
-P14V-09 has not started. Candidate
-`d3696de28218bb6c7645302398e1a4b5fe7cba18` is historical and was superseded by
-the 2026-07-30 remediation. A new product candidate `C` and artifact `A` must
-complete P14V-02 through P14V-08 before final authorization.
+P14V-09 has not started. Historical candidates remain revision-specific
+evidence. Current product candidate `C2` and artifact `A` have completed
+P14V-02 through P14V-05; P14V-06 through P14V-08 must complete before final
+authorization.
 
 This package is deliberately pre-tag. A tagged commit cannot record the result
 of its own future tag operation or contain its own literal full hash. Tag
@@ -16,8 +16,8 @@ release operation and produce append-only post-tag evidence.
 
 | Field                              | Recorded value                                                               |
 | ---------------------------------- | ---------------------------------------------------------------------------- |
-| Product candidate `C`              | `PENDING`                                                                    |
-| Production artifact `A`            | `PENDING`                                                                    |
+| Product candidate `C2`             | `275c096247e5fe2026e00c1f67eb78cd4668ccaf`                                   |
+| Production artifact `A`            | `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`    |
 | Final evidence-only descendant `F` | revision: the commit containing this manifest, resolved by the annotated tag |
 | `git diff C..F` classification     | `PENDING` - evidence/status/session records only                             |
 | Clean rebuild identity on `F`      | `PENDING` - must equal `A`                                                   |

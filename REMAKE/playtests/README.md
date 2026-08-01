@@ -4,14 +4,14 @@ This folder is the authority for the human-session evidence requested by the Pha
 
 Collection contract: **schema version 3, before any human evidence is collected**. Version 2 did not distinguish wall time, foreground-active time, background-open production, closed-page gaps, or Classic/Hyper exposure and therefore cannot support a release pacing claim. No version-2 record qualifies for the release-decision cohort.
 
-Candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18` is historical technical evidence only. It predates the schema-v3/remediation decision and is not the eligible v3 collection candidate. Before recruitment, the product/release owner must freeze a new post-remediation SHA, production artifact identity, cohort ID, ruleset, and mode policy. The artifact ID must use the canonical `sha256:` plus 64 lowercase hexadecimal characters produced by `npm run artifact:identity`. Verify that exact served `dist/` with `npm run artifact:identity -- --dir=<candidate-dist> --expect=<artifact ID>` before every session.
+Historical candidates are not eligible for the schema-v3 cohort. The frozen collection binding is revision `275c096247e5fe2026e00c1f67eb78cd4668ccaf`, artifact `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`, cohort `p14v-2026-08-01-275c096-original-classic-01`, ruleset `original`, and mode policy `classic-locked`. Verify the exact served `dist/` with `npm run artifact:identity -- --dir=<candidate-dist> --expect=sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c` before every session.
 
 ## Cohort Contract
 
 - Use one exact clean production revision, ruleset, mode policy, and artifact identity for the cohort.
 - Use a fresh browser profile and cleared storage for every participant.
 - Recruit unique first-time participants for release evidence. Record only de-identified IDs and an experience category; do not store names or contact details.
-- Five valid same-cohort sessions are the minimum release-evidence sample. Continue one session at a time up to eight when completion, abandonment, mode exposure, or bottleneck outcomes remain materially inconsistent.
+- Five valid same-cohort sessions are the minimum release-evidence sample. At five, add one session at a time up to eight while completion/abandonment is split 2/3 or no primary bottleneck appears in at least three records; stop when neither condition holds or at eight. This rule is frozen before session one.
 - Choose one mode policy before collection:
   - `classic-locked`: Classic for the entire session, represented by one `classic` entry at `wallStartedAt`;
   - `hyper-locked`: Hyper for the entire session, represented by one `hyper` entry at `wallStartedAt`;
@@ -25,7 +25,7 @@ Candidate `d3696de28218bb6c7645302398e1a4b5fe7cba18` is historical technical evi
 Inspect the complete CLI with `node scripts/summarize-playtests.mjs --help`. Run the frozen-candidate gate by replacing every uppercase placeholder in this command:
 
 ```text
-npm run study:human:gate -- --expected-revision=FROZEN_40_CHARACTER_SHA --expected-artifact-id=sha256:FROZEN_64_CHARACTER_LOWERCASE_HEX --expected-cohort-id=FROZEN_COHORT_ID --expected-ruleset=FROZEN_RULESET --expected-mode-policy=FROZEN_MODE_POLICY
+npm run study:human:gate -- --expected-revision=275c096247e5fe2026e00c1f67eb78cd4668ccaf --expected-artifact-id=sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c --expected-cohort-id=p14v-2026-08-01-275c096-original-classic-01 --expected-ruleset=original --expected-mode-policy=classic-locked
 ```
 
 The gate is a record-validity, candidate-binding, and minimum-count check. It is not proof of satisfaction, a population completion rate, or release quality.

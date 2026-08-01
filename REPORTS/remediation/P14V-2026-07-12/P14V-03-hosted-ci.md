@@ -1,29 +1,61 @@
 # P14V-03 Hosted CI Validation
 
-Candidate revision: `PENDING_POST_REMEDIATION_CANDIDATE`
-Status: `BLOCKED_NO_CONFIGURED_REMOTE_OR_CANDIDATE`
+- Date completed: 2026-08-01
+- Candidate revision: `275c096247e5fe2026e00c1f67eb78cd4668ccaf`
+- Repository: `zasijr2024/rpg`
+- Pull request: [#1](https://github.com/zasijr2024/rpg/pull/1)
+- Status: **PASS**
 
-Historical note: revision `d3696de28218bb6c7645302398e1a4b5fe7cba18` had no hosted run and was superseded by the 2026-07-30 remediation. It cannot close this package.
+Historical revision `d3696de` had no hosted run. The first publication attempt
+for the post-remediation lineage failed closed on GitHub's 100 MB blob limit.
+The published remote lineage uses Git LFS for the 124,776,960-byte AssetRipper
+executable; `fc4a2e8` and local candidate `6de3979` otherwise differ only in
+`.gitattributes` and that executable's LFS representation.
 
-The local workflow exists at `.github/workflows/remake-ci.yml` and defines these job contracts:
+## Enforced required context
 
-- `Remake CI required`, an always-present pull-request sentinel intended for branch protection;
-- `Clean install and production verification`, conditional on remake-owned pull-request paths and used for matching pushes to `main`;
-- `Scheduled cross-browser Release Candidate gate` for schedule or manual `workflow_dispatch` events.
+Repository ruleset
+[P14V required pull-request validation](https://github.com/zasijr2024/rpg/rules/20083779)
+is active on the default branch. It requires strict successful status context
+`Remake CI required`, blocks deletion and non-fast-forward updates, has no
+bypass actors, and reports that the authenticated maintainer cannot bypass it.
 
-## Hosted Evidence
+## Final hosted evidence
 
-| Field                          | Recorded value                                                                                                                                                                                                                                               |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Git remote                     | none; `git remote -v` and remote configuration returned no entries on the 2026-07-14 initial check, the post-P14V-06 recheck, or the 2026-07-30 remediation recheck                                                                                          |
-| GitHub CLI                     | unavailable on the current host (`gh` is not installed); secondary to the missing authorized repository target                                                                                                                                               |
-| Action-version preflight       | Local workflow pins immutable full SHAs for `actions/checkout` v6.0.2, `actions/setup-node` v6.4.0, and `actions/upload-artifact` v4.6.2; the tooling contract verifies those pins and the three-engine change lane, while hosted execution remains unproven |
-| Protected required check       | `PENDING`; configure branch protection to require `Remake CI required`, then prove an out-of-scope pull request reports success and an in-scope candidate cannot pass it without the full verification lane                                                  |
-| Candidate hosted SHA           | `PENDING`                                                                                                                                                                                                                                                    |
-| Change-lane run URL/ID         | `PENDING`                                                                                                                                                                                                                                                    |
-| Change-lane result             | `PENDING`                                                                                                                                                                                                                                                    |
-| Manual technical-RC run URL/ID | `PENDING`                                                                                                                                                                                                                                                    |
-| Manual technical-RC result     | `PENDING`                                                                                                                                                                                                                                                    |
-| Retry/root-cause record        | `PENDING`                                                                                                                                                                                                                                                    |
+| Field                    | Recorded value                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| Workflow revision        | `275c096247e5fe2026e00c1f67eb78cd4668ccaf`                                                 |
+| Pull-request change lane | [run 30700296963](https://github.com/zasijr2024/rpg/actions/runs/30700296963), **SUCCESS** |
+| Required context         | `Remake CI required`, **SUCCESS**                                                          |
+| Manual full technical RC | [run 30700299995](https://github.com/zasijr2024/rpg/actions/runs/30700299995), **SUCCESS** |
+| Hosted Node target       | Node 24                                                                                    |
+| Required ruleset         | ID `20083779`, active, strict, default branch                                              |
 
-No branch was pushed, pull request opened, workflow dispatched, or branch-protection rule changed. Those are external mutations and also require a configured repository destination. The local workflow now runs on every pull request, classifies remake-owned paths, always reports the stable `Remake CI required` sentinel, installs Chromium/Firefox/WebKit for in-scope changes, runs the bounded served-production smoke across all three engines, and retains the scheduled/manual three-browser `npm run gate:rc` job. The sentinel fails closed when classification fails or an in-scope verification job does not succeed; an out-of-scope pull request can succeed only when the expensive job is actually skipped. Only hosted execution can validate that configuration on the target service. To close P14V-03, first freeze and reproduce the new candidate, identify the authorized GitHub repository, configure its remote and authenticated dispatch path, publish that exact revision, require `Remake CI required`, prove both out-of-scope and in-scope pull-request behavior, run the manual technical-RC workflow on the same SHA, and record their URLs/results here. A run on a different behavior revision does not satisfy this package.
+The pull-request run passed classification, clean install, parity artifacts,
+type boundaries, 77 files / 550 tests, lint, formatting, build and budgets,
+dependency audit, and bounded production smoke in Chromium, Firefox, and
+WebKit. The manual run passed the same change lane plus the complete clean-tree
+release-candidate gate on `windows-latest`.
+
+The always-run release-evidence uploader found no `playwright-report` or
+`test-results` directories after the clean pass and, by its explicit
+`if-no-files-found: ignore` policy, retained no failure artifact. The workflow
+logs and run identities remain the hosted evidence.
+
+## Retry and root-cause record
+
+1. Runs `30587879143` and `30587896837` failed because checkout left the
+   tracked LFS object as a pointer; the required reporter also inherited the
+   `REMAKE` working directory before checkout.
+2. Commit `eca2203` enabled LFS checkout and rooted the reporter. Runs
+   `30664476790` and `30664480747` then failed parity because Linux checkout
+   normalized the pinned original source to LF.
+3. Commit `091bce0` configured canonical CRLF checkout. Pull-request run
+   `30668777468` passed, while dispatch run `30668782676` exposed the
+   Windows-only visual baseline contract on Ubuntu.
+4. Commit `275c096` kept the bounded change lane on Ubuntu and moved the full
+   visual RC gate to Windows. Both final runs passed on the same SHA.
+
+P14V-03 is closed for this candidate. This record does not claim human,
+assistive-technology, product-owner, production-host, tag, or publication
+evidence.
