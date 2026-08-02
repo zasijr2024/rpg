@@ -2,7 +2,7 @@
 
 ## Current Authoritative Status
 
-Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope. Public `Release Candidate` sign-off is still on `HOLD`. Revision `d3696de` and its clean technical-RC/policy corpus are historical evidence; current remediation requires a new clean candidate and candidate-specific 32-seed corpus. Program `P14V-2026-07-12` still must reproduce that candidate, prove hosted CI and required protection, retain the replacement corpus, collect five schema-v3 unassisted sessions, perform a normal-clock real-screen-reader Space flight, record balance/product and exact-source/legal-owner decisions, smoke the production host, and authorize/verify the final tag. Repository license/NOTICE artifacts are implemented but do not grant publication authority.
+Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope. Public `Release Candidate` sign-off remains on `HOLD`. Revisions `d3696de` and `6de3979` retain historical evidence. Current hosted candidate `275c096247e5fe2026e00c1f67eb78cd4668ccaf` passed the clean Node 24 technical RC gate and a separately named 32-seed P14V-05 corpus with zero game-defect or unclassified stops; artifact `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c` is unchanged. Pull-request run `30700296963` and manual full-RC run `30700299995` passed on that SHA. Active ruleset `20083779` strictly requires `Remake CI required` on the default branch with no bypass actor, closing P14V-03. Program `P14V-2026-07-12` now requires five schema-v3 unassisted sessions on the frozen cohort, a normal-clock real-screen-reader Space flight, balance/product and exact-source/legal-owner decisions, production-host smoke, and final tag authorization/verification. Repository license/NOTICE artifacts are implemented but do not grant publication authority.
 
 Session contract: root `AGENTS.md`. Active execution plan:
 `docs/status/phase-14-post-remediation-next-steps-2026-07-30.md`. Exact P14V-02
@@ -180,7 +180,7 @@ Goal: recreate the pinned latest web version of _A Dark Room_ in a modern, stabl
 
 ## Post-Parity Instructions
 
-Phase 14 parity remains closed. Historical revision `d3696de28218bb6c7645302398e1a4b5fe7cba18` passed the local technical RC gate and retains four-seed/32-seed diagnostic evidence, but current remediation supersedes it as a candidate. Immediate package: `P14V-02`. Follow `docs/status/phase-14-post-remediation-next-steps-2026-07-30.md`: review and reconcile the uncommitted remediation diff, then - only with explicit maintainer authorization - create coherent candidate checkpoints and reproduce the technical RC gate from a separate clean checkout. A replacement candidate-specific P14V-05 corpus and hosted CI must pass before human or real-screen-reader evidence begins. Do not reopen a completed roadmap phase to hide expansion, redesign, or an unlabelled rebalance.
+Phase 14 parity remains closed. Historical revisions `d3696de` and `6de3979` retain revision-specific evidence. Current candidate `275c096` passed P14V-02, P14V-03, and P14V-05 with the same production artifact. P14V-06 human evidence and P14V-07 real-screen-reader evidence are now the open parallel packages. Do not reopen a completed roadmap phase to hide expansion, redesign, or an unlabelled rebalance.
 
 ## Historical Phase Instructions (Superseded)
 

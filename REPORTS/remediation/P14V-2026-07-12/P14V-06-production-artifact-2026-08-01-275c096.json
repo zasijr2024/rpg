@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "kind": "p14v-production-artifact-evidence",
+  "revision": "275c096247e5fe2026e00c1f67eb78cd4668ccaf",
+  "ruleset": "original",
+  "modePolicy": "classic-locked",
+  "cohortId": "p14v-2026-08-01-275c096-original-classic-01",
+  "recordedAt": "2026-08-01",
+  "sourceWorktree": "F:\\ADR20-P14V-CI-FIX",
+  "sourceWorktreeState": "clean at candidate gate; dirty evidence-only descendant at manifest revalidation",
+  "command": "npm run artifact:identity -- --dir=dist --json",
+  "identity": {
+    "schemaVersion": 1,
+    "kind": "adr-production-artifact-identity",
+    "algorithm": "sha256-tree-v1",
+    "artifactId": "sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c",
+    "fileCount": 16,
+    "totalBytes": 646179,
+    "files": [
+      {
+        "path": ".vite/manifest.json",
+        "bytes": 3048,
+        "sha256": "b805c533185d98a7365f2b9f197f0c084d7efb3fc47db972f4c85eb4265d20cc"
+      },
+      {
+        "path": "LICENSE.txt",
+        "bytes": 16734,
+        "sha256": "d7fc444cae8da4b95b9d0356b145dfc530d45b16965da953fa02dbb9ce004572"
+      },
+      {
+        "path": "NOTICE.txt",
+        "bytes": 721,
+        "sha256": "9ad934da663930b43a6e2403b9cdbf7f814ad93b77f7db6441f0d1b91e53ef44"
+      },
+      {
+        "path": "assets/FabricatorView--w7DXr85.js",
+        "bytes": 139,
+        "sha256": "4b7aade6d58090255e2ebb31c843e6450ae75b72030ecad7fa86946fdd03ef05"
+      },
+      {
+        "path": "assets/FabricatorView-B8oGovQ_.js",
+        "bytes": 1461,
+        "sha256": "1f1e0475fa409c8da6d2606bd2c287333b39df9d399920e36535d2021f3ea7af"
+      },
+      {
+        "path": "assets/ShipView-CedqmX-x.js",
+        "bytes": 2281,
+        "sha256": "1b8b944f5ff2bb178349323f09ae79561ccad11695c4ae9f181341472b64212b"
+      },
+      {
+        "path": "assets/ShipView-Dx2ko2Q_.js",
+        "bytes": 133,
+        "sha256": "2ed4c50f46e41dc5b058ba43faffc67ac09de699cabe5f96d0a0b1e59e99546e"
+      },
+      {
+        "path": "assets/SpaceEnding-DmKeRlz0.js",
+        "bytes": 2085,
+        "sha256": "b1bb4f6ac39360b97470b5f83d6fb0e871b5f24775e2dc744ae098c70619cbf9"
+      },
+      {
+        "path": "assets/SpaceSpatialFeed-CSzdMJ1l.js",
+        "bytes": 2825,
+        "sha256": "4b34b1919075abbe1401fb3713d2714c9bf6e5d35249f1e0fdef9dcfaa5827b8"
+      },
+      {
+        "path": "assets/SpaceView-BFV5DBuo.js",
+        "bytes": 3422,
+        "sha256": "b7f3772ee450567b7d604291e6e721eee63ebc8d61a74c3ca7e7e7a8edab2d49"
+      },
+      {
+        "path": "assets/SpaceView-DxrFCSr1.js",
+        "bytes": 134,
+        "sha256": "5be3becf8b18c0901d1e2d5def6fab4a9835d03aaef3ffdc5bce342154fb2c6b"
+      },
+      {
+        "path": "assets/event-catalog-Byjh9k3q.js",
+        "bytes": 151593,
+        "sha256": "6ba7b9a9bb220d6a94c154932ff905bcc420ef23069ff1b167b4192fe67f409e"
+      },
+      {
+        "path": "assets/index-BswYPewC.css",
+        "bytes": 23614,
+        "sha256": "ae820ff3b1ce97e6312d237d33fcea2cdc82fbaf04b263f0f56ffd3bf98fdb2d"
+      },
+      {
+        "path": "assets/index-kPxU-eWe.js",
+        "bytes": 436405,
+        "sha256": "924e05e49222fdf04a8c454cebf706d7ac65c864c97f773ed757b9197846dafd"
+      },
+      {
+        "path": "assets/jsx-runtime-DGeXAQPT.js",
+        "bytes": 939,
+        "sha256": "c2d44aaf9f8fb72cd9cdab2793140bcf8ca534918e10ead6e78d59535cc9ab36"
+      },
+      {
+        "path": "index.html",
+        "bytes": 645,
+        "sha256": "ff2dae949e13fed777e21aaae542b34c962c5c1b55b39eae10f811abe6958725"
+      }
+    ]
+  }
+}

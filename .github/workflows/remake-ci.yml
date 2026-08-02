@@ -71,9 +71,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - name: Configure canonical source line endings
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        run: git config --global core.autocrlf true
+
       - name: Check out pinned source and remake
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          lfs: true
           submodules: recursive
 
       - name: Use Node.js 24
@@ -133,6 +139,7 @@ jobs:
     steps:
       - name: Report the required pull-request result
         shell: bash
+        working-directory: ${{ github.workspace }}
         env:
           REMAKE_CHANGED: ${{ needs.scope.outputs.remake }}
           SCOPE_RESULT: ${{ needs.scope.result }}
@@ -168,12 +175,18 @@ jobs:
   release-candidate:
     name: Scheduled cross-browser Release Candidate gate
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 120
     steps:
+      - name: Configure canonical source line endings
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+        run: git config --global core.autocrlf true
+
       - name: Check out pinned source and remake
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          lfs: true
           submodules: recursive
 
       - name: Use Node.js 24
@@ -187,7 +200,7 @@ jobs:
         run: npm ci
 
       - name: Install all release browsers
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: npx playwright install chromium firefox webkit
 
       - name: Run the complete clean-tree gate
         run: npm run gate:rc

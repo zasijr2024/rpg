@@ -1,31 +1,29 @@
 # P14V-06 Unassisted Human Playtests
 
-Candidate revision: `PENDING_POST_REMEDIATION_FREEZE`
-Status: `WAITING_FOR_P14V_02_P14V_03_P14V_05`
+Candidate revision: `275c096247e5fe2026e00c1f67eb78cd4668ccaf`
+Status: `OPEN_FOR_OPERATOR_COLLECTION`
 Valid sessions: `0`
 Required minimum: `5`
 Maximum conflict-resolution sample: `8`
 
-The July candidate and artifact below are historical automation evidence. No
-human records were collected against them, and schema v3 plus the 2026-07-30
-remediation retired that empty cohort. Human collection must wait for a new
-clean production revision/artifact, hosted required-check proof, replacement
-candidate corpus, and declared cohort/ruleset/mode policy.
+The July candidates remain historical automation evidence and collected no
+human records. Candidate automation and hosted controls now pass on the frozen
+August binding below. No human result is inferred from those automated gates.
 
 ## Cohort Identity
 
-| Field                  | Required/recorded value                                              |
-| ---------------------- | -------------------------------------------------------------------- |
-| Revision               | `PENDING`                                                            |
-| Ruleset                | `original`                                                           |
-| Mode policy            | `PENDING` (`classic-locked`, `hyper-locked`, or `timeline-recorded`) |
-| Cohort ID              | `PENDING`                                                            |
-| Production artifact ID | `PENDING`                                                            |
-| Operator protocol      | `REMAKE/playtests/README.md`                                         |
-| Session schema         | version 3                                                            |
-| Session directory      | `REMAKE/playtests/sessions/`                                         |
-| Experience eligibility | release floor: `first-time` only                                     |
-| Conflict rule          | `PENDING_PREREGISTRATION_BEFORE_SESSION_1`                           |
+| Field                  | Required/recorded value                                                                                                                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Revision               | `275c096247e5fe2026e00c1f67eb78cd4668ccaf`                                                                                                                                                                            |
+| Ruleset                | `original`                                                                                                                                                                                                            |
+| Mode policy            | `classic-locked`                                                                                                                                                                                                      |
+| Cohort ID              | `p14v-2026-08-01-275c096-original-classic-01`                                                                                                                                                                         |
+| Production artifact ID | `sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`                                                                                                                                             |
+| Operator protocol      | `REMAKE/playtests/README.md`                                                                                                                                                                                          |
+| Session schema         | version 3                                                                                                                                                                                                             |
+| Session directory      | `REMAKE/playtests/sessions/`                                                                                                                                                                                          |
+| Experience eligibility | release floor: `first-time` only                                                                                                                                                                                      |
+| Conflict rule          | At five valid first-time sessions, add one at a time up to eight while completion/abandonment is split 2/3 or no primary bottleneck appears in at least three records; stop when neither condition holds or at eight. |
 
 ## Collection Status
 
@@ -35,19 +33,20 @@ not a product failure. After each real session, run `npm run study:human`.
 After at least five valid unique first-time records, run:
 
 ```text
-npm run study:human:gate -- --expected-revision=<C> --expected-artifact-id=<A> --expected-cohort-id=<cohort> --expected-ruleset=<ruleset> --expected-mode-policy=<policy>
+npm run study:human:gate -- --expected-revision=275c096247e5fe2026e00c1f67eb78cd4668ccaf --expected-artifact-id=sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c --expected-cohort-id=p14v-2026-08-01-275c096-original-classic-01 --expected-ruleset=original --expected-mode-policy=classic-locked
 ```
 
 Retain active/wall distributions here. Internal record consistency without
 that external candidate binding cannot close P14V-06.
 
 The old artifact identity remains retained in `P14V-06-production-artifact.json`
-as historical evidence only. Before every new session, the operator must run
-`npm run artifact:identity -- --dir=<candidate-dist> --expect=<new-artifact-id>`
+as historical evidence only. The current identity is retained in
+`P14V-06-production-artifact-2026-08-01-275c096.json`. Before every new
+session, the operator must run
+`npm run artifact:identity -- --dir=<candidate-dist> --expect=sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`
 against the exact `dist/` being served.
 
 ## Result
 
-`PENDING` - requires P14V-03/P14V-05 and real unassisted first-time
-participants. P14V-06 remains open; P14R-09 closes only when this package
-passes.
+`PENDING` - requires real unassisted first-time participants. P14V-06 remains
+open at 0/5; P14R-09 closes only when this package passes.

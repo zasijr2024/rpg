@@ -1,10 +1,10 @@
 # P14V-02 Phase 0 Checkpoint Map
 
 - Date: 2026-07-30
-- Status: **exact groups approved; checkpoint formation authorized**
+- Status: **historical exact-group map; authorized sequence executed**
 - Branch: `remake/parity`
 - Integration base: `b0e9222aa3fa2ddebc83761c19536732ba321de8`
-- Candidate status: **not frozen**
+- Candidate status: **frozen later at `6de3979`; finalized handoff `ca177fe`**
 
 ## Purpose And Authority Boundary
 
@@ -237,8 +237,9 @@ Review focus:
 - `Remake CI required` always reports and chains in-scope work to the full
   three-engine lane;
 - historical `d3696de` policy/corpus evidence remains immutable;
-- replacement P14V-05 is open, automated policy is not player pacing, Classic
-  remains unchanged, and Balanced Experiment A remains proposal-only;
+- replacement P14V-05 was open at map creation and later closed on `6de3979`;
+  automated policy is not player pacing, Classic remains unchanged, and
+  Balanced Experiment A remains proposal-only;
 - P14V-09 uses a non-circular pre-tag authorization/post-tag evidence model.
 
 Required verification: human-gate syntax/help/schema checks, fully bound empty
@@ -327,3 +328,14 @@ The maintainer recorded all three required decisions on 2026-07-30:
 
 Form the checkpoints in the recorded order, then reproduce the final SHA and
 artifact from a separate clean Node 24 checkout. Public RC remains `HOLD`.
+
+## Execution Outcome Addendum
+
+The authorized sequence produced checkpoints `acce535`, `80d6bb6`, and
+`0f55d71`, followed by two isolated dependency-advisory lockfile commits. Clean
+candidate `6de3979` passed the full Node 24 technical RC gate and P14V-05's
+candidate-specific 32-seed corpus. Finalized local handoff `ca177fe` contains
+only 19 evidence/status paths beyond the candidate and cleanly rebuilds artifact
+`sha256:147e06733788a771a8a3598c383b0f7b2103fec705ac6dabb10f101f3a95386c`.
+The protected worksheet remains outside Git. Hosted P14V-03 is deferred, so
+public RC remains `HOLD`.

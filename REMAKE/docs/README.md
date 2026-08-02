@@ -6,13 +6,13 @@ Current readiness:
 
 - Phase 14 Full Parity QA is accepted for the pinned desktop gameplay/UI scope; see `status/phase-14-full-parity-qa.md`.
 - The connected visible-control route runs from fresh Room through World, canonical Mines, Executioner Blueprint, Fabricator, Ship, Space, and score ending in Chromium, Firefox, and WebKit.
-- Historical candidate `d3696de` passed Parity Complete, Production Beta, and the technical Release Candidate gate, and its P14V-05 32-seed corpus is retained for that revision. Current remediation requires a new clean candidate and candidate-specific corpus; public sign-off still requires hosted CI/required protection, five schema-v3 human sessions, real-screen-reader evidence, exact-source/legal-owner and product decisions, production-host smoke, and final tag authorization/verification.
+- Historical candidates `d3696de` and `6de3979` retain revision-specific evidence. Current hosted candidate `275c096` passed clean Node 24 technical RC reproduction, its separately named P14V-05 corpus, both hosted workflow lanes, and enforced required-check validation; public sign-off still requires five schema-v3 human sessions, real-screen-reader evidence, exact-source/legal-owner and product decisions, production-host smoke, and final tag authorization/verification.
 - The scripted ending is controlled reachability evidence, not pacing evidence; see `status/controlled-reachability-trace.md` for the deterministic milestone trace, the original 0/4 and historical clean-candidate 4/4 policy diagnostics, and the retained 32-seed P14V corpus. None is a player completion rate.
 - Parser-backed parity measurement now exposes 2,547 stable event/scene/button/transition/effect/reward requirements in `DATA/parity-graph.json`.
 - Executioner parity is finalized against its complete 798-requirement source graph, with organic World entry/clear consequences and exhaustive headless branch contracts.
 - Phase 14 closes the declared parity scope with 284 completed checklist items, 3 linked deviations, and no open/partial items.
-- The repository-side remediation from the 2026-07-30 evaluation is organized as an approved three-checkpoint integration; see `../../REPORTS/remake_full_evaluation_roast_and_remediation_2026-07-30.md` for verification status. Candidate `d3696de` and its corpus remain historical; a replacement clean candidate must be frozen before human or real assistive-technology collection begins.
-- P14V-02's audit classified all 122 pre-checkpoint dirty paths exactly once. The approved sequence, `0.1.0-rc.1` choice, and protected user worksheet are recorded in `status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`; separate clean reproduction is next.
+- The current workflow candidate and clean reproduction are recorded in `../../REPORTS/remediation/P14V-2026-07-12/P14V-02-clean-reproduction-2026-08-01-275c096.md`; its production artifact is identical to the retained `6de3979`/ `ca177fe` local evidence lineage.
+- P14V-02's audit classified all 122 pre-checkpoint dirty paths exactly once. The approved sequence, `0.1.0-rc.1` choice, and protected user worksheet are recorded in `status/phase-14-p14v-02-checkpoint-map-2026-07-30.md`.
 
 Recommended reading order:
 
